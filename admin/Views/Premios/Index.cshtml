@@ -1,0 +1,353 @@
+﻿@using ProyectoCalidad.Domain.Utilities
+@using ProyectoCalidad.Models.Paging;
+@model IEnumerable<ProyectoCalidad.Domain.Entities.Premio>
+
+@{
+    ViewBag.Title = "Mantenimiento de Premios";
+
+
+    MensajesViewModel mensaje = new MensajesViewModel();
+
+    if (TempData["mensaje"] != null)
+    {
+        mensaje = TempData.Get<MensajesViewModel>("mensaje");
+    }
+}
+
+@section Style{
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+}
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Premios </h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        @Html.ActionLink("Inicio", "Index", "Home")
+                    </li>
+                    <li class="active">
+                        Premios
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end row -->
+
+
+    <div class="row">
+        <div class="col-sm-4">
+            @Html.ActionLink("Nuevo Premio", "CrearPremio", null, new { @class = "btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30", data_animation = "fadein", data_overlaySpeed = "200", data_overlayColor = "#36404a" })
+            @*<a href="#custom-modal" class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
+                data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add New Agent</a>*@
+        </div>
+        <div class="col-lg-12">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-sm-8">
+
+                        @*@using (Html.BeginForm())
+                            {
+                                <div class="form-group search-box">
+                                    @Html.TextBox("Busqueda", ViewBag.CurrentFilter as string, new { @class = "form-control product-search", @placeholder = "Buscar..." })
+                                    <input type="text" id="search-input" class="form-control product-search" placeholder="Search here...">
+                                    <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+                                </div>
+
+                            }*@
+                        
+                    </div>
+                    @*<div class="col-sm-4">
+                            @Html.ActionLink("Nuevo Premio", "CrearPremio", null, new { @class = "btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30", data_animation = "fadein", data_overlaySpeed = "200", data_overlayColor = "#36404a" })
+                            @*<a href="#custom-modal" class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
+                                data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add New Agent</a>
+                        </div>*@
+                </div>
+
+                <div class="table-responsive">
+                    <table id="datatable" class="table table-hover table-colored table-info">
+                        <thead>
+                            <tr>
+                                <th>Tipo de Premio</th>
+                                <th>Guia</th>
+                                <th>Estado</th>
+                                @*<th>Descripci&oacute;n</th>*@
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.OrderBy(x => x.PremioID))
+                            {
+                                <tr>
+
+                                    @*<td>@item.TipoPremio.Descripcion</td>*@
+                                    <td>@item.TipoPremio.Descripcion</td>
+                                    <td>@item.Descripcion</td>
+                                    <td>@Html.Raw(item.Estado ? "<span class='badge badge-success'>Activo</span>" : "<span class='badge badge-danger'>Inactivo</span>")</td>
+                                    
+                                    <td>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                            <ul class="dropdown-menu" role="menu" style="left: -90px;">
+                                                @if (!item.Inmutable)
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("EditarPremio", "Premios", new {id = item.PremioID})" class="table-action-btn"><i class="mdi mdi-pencil text-primary"></i> Editar</a>
+                                                    </li>
+                                                }
+
+                                                <li>
+                                                    <a href="@Url.Action("Index", "Agenda", new {id = item.PremioID})" class="table-action-btn"><i class="mdi mdi-calendar text-primary"></i> Agenda</a>
+
+                                                </li>
+                                                <li>
+                                                    <a onclick="cambiarEstado(@item.PremioID, '@item.Inmutable.ToString()')" class="table-action-btn"><i class="mdi mdi-autorenew text-primary"></i> Cambiar estado</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+                </div> <!-- end table responsive -->
+            </div> <!-- end card-box -->
+            
+        </div> <!-- end col -->
+        
+    </div>
+    <!-- end row -->
+
+
+</div> <!-- container -->
+<!-- Modal -->
+<div id="custom-modal" class="modal-demo">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Add New Agent</h4>
+    <div class="custom-modal-text text-left">
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter name">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+                <label for="position">Contact number</label>
+                <input type="text" class="form-control" id="position" placeholder="Enter number">
+            </div>
+
+
+            <button type="submit" class="btn btn-default waves-effect waves-light">Save</button>
+            <button type="button" class="btn btn-danger waves-effect waves-light m-l-10">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+    <script src="~/Scripts/pages/jquery.form-advanced.init.js"></script>
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/pages/jquery.tooltipster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $("#coverScreen").hide();
+            $('#datatable').dataTable();
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+
+        TableManageButtons.init();
+
+        // mensajes:
+        if ("@mensaje.Tipo".length > 0) {
+            $.confirm({
+                title: '@mensaje.Titulo',
+                content: '@mensaje.Texto',
+                type: '@mensaje.Tipo',
+                typeAnimated: true,
+                boxWidth: '500px',
+                autoClose: 'cerrar|5000',
+                useBootstrap: false,
+                buttons: {
+                    cerrar: function() {}
+                },
+                onClose: function() {
+                    // before the modal is hidden.
+                    $.ajax({
+                        type: 'get',
+                        url: '/sgp_admin/Home/ClearTempData',
+                        success: function() {
+
+                        }
+                    });
+                }
+            });
+        }
+
+        function cambiarEstado(id, estado) {
+            const inmutable = estado;
+            const url = '/sgp_admin/Premios/CambiarEstado/' + id;
+            let msg = 'Va a cambiar el estado de este premio, desea continuar?';
+
+            if (inmutable === 'False') {
+                msg = 'Va a activar el premio, una vez activo no podrá editar este premio mas, desea continuar?';
+            }
+
+            debugger;
+            $.confirm({
+                title: 'Cambio de estado',
+                content: msg,
+                type: 'orange',
+                typeAnimated: true,
+                boxWidth: '500px',
+                useBootstrap: false,
+                buttons: {
+                    Cancelar: function () {
+                        // here the button key 'hey' will be used as the text.
+                        $.alert('Cancelado');
+                    },
+                    Ok: {
+                        text: 'Cambiar Estado', // With spaces and symbols
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            $.ajax({
+                                type: 'get',
+                                url: url,
+                                success: function() {
+                                    $.confirm({
+                                        title: 'Actualizacion completa',
+                                        content: 'El estado fue actualizado',
+                                        type: 'green',
+                                        typeAnimated: true,
+                                        boxWidth: '500px',
+                                        autoClose: 'cerrar|5000',
+                                        useBootstrap: false,
+                                        buttons: {
+                                            cerrar: function() {
+                                                window.location.reload();
+                                            }
+                                        },
+                                        onClose: function() {
+                                            // before the modal is hidden.
+                                            $.ajax({
+                                                type: 'get',
+                                                url: '/sgp_admin/Home/ClearTempData',
+                                                success: function() {
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
+
+
+

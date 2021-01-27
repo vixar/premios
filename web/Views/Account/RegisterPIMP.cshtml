@@ -1,0 +1,748 @@
+﻿@using Microsoft.AspNet.Identity
+@model WebPublico.WebUI.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registro Cuenta - PIMP";
+    var perfil = ViewBag.perfil;
+}
+
+
+@section style{
+    <link href="~/Content/assets/css/select2.min.css" rel='stylesheet' type='text/css'>
+}
+
+<div class="main">
+    <div class="page-header larger parallax custom" style="background-image:url(assets/images/page-header-bg.jpg)">
+        <div class="container">
+            <h1>Registro</h1>
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index","Home")">Inicio</a></li>
+                <li><a href="#">Premio PIMP</a></li>
+                <li class="active">Registro</li>
+            </ol>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <div class="container">
+        @using (Html.BeginForm("RegisterPIMP", "Account", FormMethod.Post, new
+        {
+            role = "form",
+            enctype = "multipart/form-data",
+            id = "formularioRegistro"
+        }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <h2 class="mb30">Registro de cuenta de usuario</h2>
+            <div class="row">
+                @if (ViewBag.perfil == "postulante")
+                {
+                    <div class="col-sm-6 ">
+                        <div class="form-group">
+                            <label>
+                                Unidad Postulante
+                            </label>
+                            @Html.DropDownList("OrganismoID", null, "Seleccione el organismo al que pertenece", new { @id = "selUser", @class = "form-control", @placeholder = "Seleccione un organismos" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 ">
+                        <div class="form-group">
+                            <label>
+                                Tipo de perfíl
+                            </label>
+                            @Html.DropDownList("Role", null, new { @class = "form-control" })
+                        </div><!-- End .radio -->
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-12 ">
+                        <div class="form-group">
+                            <label>
+                                Tipo de Perfíl
+                            </label>
+                            @Html.DropDownList("Role", null, new { @class = "form-control" })
+                        </div><!-- End .radio -->
+                    </div>
+                }
+
+            </div>
+
+            if (ViewBag.perfil == "postulante")
+            {
+                <!-- Contact form trigger -->
+                @*<button style="background-color: #00ab66" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-register-form">
+                        Registrela
+                    </button>*@
+            }
+            <div id="formulario">
+                <br />
+                @if (ViewBag.perfil == "evaluador")
+                {
+
+                    <div class="col-sm-6 ">
+                        <label> Currículum de evaluador <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+                        <input id="cv" type="file" name="curriculum" class="btn btn-primary" placeholder="Currículum" required="" title="Es obligatorio subir su currículum">
+                        @Html.ValidationMessageFor(model => model.cv, "", new { @class = "text-danger" })
+                    </div>
+                }
+            </div>
+            @*<p class="">En caso de no encontrar la institución que busca use este botón para registrarla</p>*@
+            <label> Género <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+            <div class="row">
+                <div class="col-sm-2 ">
+                    <div class="radio">
+                        <label class="custom-radio-wrapper">
+                            <span class="custom-radio-container">
+                                <input type="radio" id="GeneroM" name="Genero" value="Masculino">
+                                <span class="custom-radio-icon"></span>
+                            </span>
+                            <span>Femenino</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-2 ">
+                    <div class="radio">
+                        <label class="custom-radio-wrapper">
+                            <span class="custom-radio-container">
+                                <input type="radio" id="GeneroF" name="Genero" value="Femenino">
+                                <span class="custom-radio-icon"></span>
+                            </span>
+                            <span>Masculino</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>Número de Cédula</label> <i style="color: #ce8a8a" class="fa fa-asterisk"></i>
+                        @Html.TextBoxFor(m => m.NumeroDocumentoIdentidad, new { @class = "form-control", @placeholder = "000-00000000-0" })
+                        @Html.ValidationMessageFor(model => model.NumeroDocumentoIdentidad, "", new { @class = "text-danger" })
+                        @*@Html.ValidationMessageFor(x => x.NumeroDocumentoIdentidad, "", new { @class = "text-danger" })*@
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>Nombre(s) <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+                        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", @placeholder = "Nombre(s)" })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>Apellido(s) <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+                        @Html.TextBoxFor(m => m.Apellido, new { @class = "form-control", @placeholder = "Apellido(s)" })
+                        @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>Cargo en la institución  <i style="color:#ce8a8a" class="fa fa-asterisk"></i></label>
+                        @Html.TextBoxFor(m => m.Cargo, new { @class = "form-control", @placeholder = "ej: Supervisor de Piso" })
+                        @*@Html.ValidationMessageFor(model => model.Cargo, "", new { @class = "text-danger" })*@
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+
+
+
+
+            </div><!-- End .row -->
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Correo Electrónico <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Correo Electrónico", @required = "required" })
+                        @*@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })*@
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Confirmación Correo Electrónico</label>
+                        <input type="text" id="confemail" class="form-control" placeholder="Confirmación de correo" onblur="confirmEmail()">
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+            </div><!-- End .row -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label>Contraseña <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+
+                            </div>
+                            <div class="col-xs-6">
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password pull-right"></span>
+                            </div>
+
+                        </div>
+
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Abcd-451", id = "toggle-password" })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="col-xs-10">
+                            <label>Confirmación de Contraseña <i style="color: #ce8a8a" class="fa fa-asterisk"></i></label>
+
+                        </div>
+                        <div class="col-xs-2">
+                            <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-confirm-password pull-right"></span>
+                        </div>
+
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "confirmar", @onblur = "confirmPwd()", id = "toggle-confirm-password" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", @placeholder = "Número de Teléfono" })
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Número de extensión</label>
+                        @Html.TextBoxFor(m => m.TelefonoSecundario, new { @class = "form-control", @placeholder = "Número de Extension" })
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+            </div>
+
+            <div class="mb10"></div><!-- space -->
+
+            <div class="form-group mb0">
+                <div class="checkbox">
+                    <label class="custom-checkbox-wrapper">
+                        <span class="custom-checkbox-container">
+                            <input type="checkbox" value="true" name="PoliticaPrivacidad">
+                            <span class="custom-checkbox-icon"></span>
+                        </span>
+                        <span>He leído y estoy de acuerdo con la <a target="_blank" href="https://map.gob.do/politicas-de-privacidad/">Política de Privacidad</a>.</span>
+                        @Html.ValidationMessageFor(model => model.PoliticaPrivacidad, "", new { @class = "text-danger" })
+                    </label>
+                </div><!-- End .checkbox -->
+            </div><!-- End .form-group -->
+
+            <div class="form-group mb25">
+                <div class="checkbox">
+                    <label class="custom-checkbox-wrapper">
+                        <span class="custom-checkbox-container">
+                            <input type="checkbox" value="true" name="PoliticaUso">
+                            <span class="custom-checkbox-icon"></span>
+                        </span>
+                        <span>He leído y estoy de acuerdo con los <a target="_blank" href="https://map.gob.do/terminos-de-uso/">Términos de Uso</a></span>
+                        @Html.ValidationMessageFor(model => model.PoliticaUso, "", new { @class = "text-danger" })
+                    </label>
+                </div><!-- End .checkbox -->
+            </div><!-- End .form-group -->
+
+            <div class="form-group mb25" id="coordinador">
+                <div class="checkbox">
+                    <label class="custom-checkbox-wrapper" style="background-color: #84d835; padding: 10px;">
+                        <span class="custom-checkbox-container">
+                            <input type="checkbox" value="true" name="IsCoordinador">
+                            <span class="custom-checkbox-icon"></span>
+                        </span>
+                        <span><strong>Soy el Coordinador del equipo de evaluadores internos</strong></span>
+                    </label>
+                </div><!-- End .checkbox -->
+            </div><!-- End .form-group -->
+            if (perfil == "postulante")
+            {
+            <div class="form-group mb5">
+                <input type="submit" id="submit" class="btn btn-custom min-width" value="Crear Usuario" disabled="disabled">
+                <a href="javascript:history.back()" class="btn btn-default min-width" value="Crear Usuario"> Cancelar </a>
+            </div><!-- End .from-group -->
+            }
+            else
+            {
+                <div class="form-group mb5">
+                    <input type="submit" id="submit" class="btn btn-custom min-width" value="Crear Usuario">
+                </div><!-- End .from-group -->
+            }
+
+    }
+    </div><!-- End .container -->
+    </div>
+
+
+    @section Scripts {
+
+
+        @Scripts.Render("~/bundles/jqueryval")
+
+
+        <script src="~/Content/assets/js/jquery.min.js"></script>
+        <script src="~/Content/assets/js/jquery.inputmask.bundle.js"></script>
+
+
+        <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+        <script src="~/Content/assets/js/select2.min.js"></script>
+
+
+        @*<script src="/sgp/Content/assets/js/jquery.min.js"></script>
+            <script src="/sgp/Content/assets/js/jquery.inputmask.bundle.js"></script>
+
+
+            <script src="/sgp/Content/assets/sweetalert2.all.min.js"></script>
+            <script src="/sgp/Content/assets/js/select2.min.js"></script>*@
+
+        <!-- Optional: include a polyfill for ES6 Promises for IE11 and Android browser -->
+
+
+        <script src="~/Content/assets/js/bootstrap-filestyle.min.js"></script>
+
+
+        <script type="text/javascript">
+            var spinnerVisible = false;
+            function showProgress() {
+                s
+                if (!spinnerVisible) {
+                    $("div#spinner").fadeIn("fast");
+                    spinnerVisible = true;
+                }
+            };
+            function hideProgress() {
+                if (spinnerVisible) {
+                    var spinner = $("div#spinner");
+                    spinner.stop();
+                    spinner.fadeOut("fast");
+                    spinnerVisible = false;
+                }
+            };
+        </script>
+
+        <script>
+            $(".toggle-password").click(function () {
+
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $("#toggle-password");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+
+            $(".toggle-confirm-password").click(function () {
+
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $("#toggle-confirm-password");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+
+            //VALIDACIÓN DE USUARIOS Y DE COORDINADOR
+
+            $('#selUser').on('change',
+                function () {
+                    var valor = $('#selUser').val();
+                    $.ajax({
+                        type: "GET",
+                        url: "/sgp/Account/InstitucionTieneCoordinador?OrganismoID=" + valor,
+                        contentType: "html",
+                        success: function (response) {
+
+                            if (response.cantidad === 3) {
+                                Swal.fire({
+                                    title: "Equipo Completo!",
+                                    text: "Lo sentimos, esta institución tiene su equipo completo",
+                                    type: "warning",
+                                    confirmButtonText: 'De Acuerdo'
+                                });
+                                Swal.fire({
+                                    title: 'Equipo Completo!',
+                                    text: "Lo sentimos, esta unidad tiene su equipo completo",
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De acuerdo'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+
+                                $("#submit").prop("disabled", false);
+
+
+                                if (response.HasCoordinado) {
+
+                                    $("#coordinador").attr("style", "display:none");
+
+                                } else {
+                                    $("#coordinador").removeAttr("style", "display:none");
+                                }
+                            }
+
+
+
+
+                        }
+                    });
+                });
+
+            $('#sector').on('change', function () {
+                var valor = $('#sector').val();
+                console.log(valor);
+
+                if (valor === "Educativo") {
+                    $("#ClasificacionSectorEducativo").removeAttr("style", "display:none");
+                    $("#ClasificacionSectorSalud").attr("style", "display:none");
+
+
+                    $('input:radio[name="ClasificacionSectorEducativo"]').change(
+                        function () {
+                            let valor = $(this).val();
+                            console.log(valor);
+                            //EDUCACION
+                            if (valor === "Dirección Regional") {
+                                //MOSTRAR
+                                $("#listaDireccion").attr("style", "display:none;");
+                                $("#RNC").prop("required", true);
+
+                                //OCULTAR
+                                $("#ListaDistrito").attr("style", "display:none");
+                                $("#codigoCentroEducativo").attr("style", "display:none");
+                            }
+                            if (valor === "Distrito Educativo") {
+                                //MOSTRAR
+                                $("#listaDireccion").removeAttr("style", "display:none");
+                                $("#ListaDistrito").attr("style", "display:none");
+                                $("#RNC").prop("required", true);
+
+                                //OCULTAR
+                                $("#codigoCentroEducativo").attr("style", "display:none");
+                            }
+                            if (valor === "Centro Educativo") {
+                                //MOSTRAR
+                                $("#listaDireccion").removeAttr("style", "display:none");
+                                $("#ListaDistrito").removeAttr("style", "display:none");
+                                $("#codigoCentroEducativo").removeAttr("style", "display:none");
+                                $("#codigoCentroEducativo").prop("required", true);
+
+                                //OCULTAR
+                            }
+                        });
+
+                } else if (valor === "Salud") {
+                    $("#ClasificacionSectorSalud").removeAttr("style", "display:none");
+                    $("#ClasificacionSectorEducativo").attr("style", "display:none");
+
+
+                    $('input:radio[name="ClasificacionSectorSalud"]').change(
+                        function () {
+                            let valor = $(this).val();
+                            console.log(valor);
+                            //SALUD
+                            //if (valor === "SRS") {
+                            //    console.log(valor);
+                            //    //MOSTRAR
+                            //    $("#ListaRegion").removeAttr("style", "display:none");
+
+                            //    //OCULTAR
+                            //    $("#ListaDps").attr("style", "display:none");
+                            //    $("#codigoCentroSalud").attr("style", "display:none");
+                            //}
+                            if (valor === "DPS") {
+                                console.log(valor);
+                                $("#ListaRegion").removeAttr("style", "display:none");
+                                $("#ListaDps").removeAttr("style", "display:none");
+
+                                //OCULTAR
+                                $("#codigoCentroSalud").attr("style", "display:none");
+                            }
+                            if (valor === "Otros") {
+                                console.log(valor);
+                                $("#ListaRegion").removeAttr("style", "display:none");
+                                $("#ListaDps").removeAttr("style", "display:none");
+                                $("#codigoCentroSalud").removeAttr("style", "display:none");
+
+                                //OCULTAR
+
+                            }
+                        });
+
+                } else {
+                    $("#ClasificacionSectorEducativo").attr("style", "display:none");
+                    $("#ClasificacionSectorSalud").attr("style", "display:none");
+                }
+            });
+            //$("input").on("click",
+            //    function () {
+            //        var valor = $("input:checked");
+            //        valor = valor[1].id;
+            //        //EDUCACION
+            //        if (valor === "direccion") {
+            //            //MOSTRAR
+            //            $("#listaDireccion").removeAttr("style", "display:none;");
+
+            //            //OCULTAR
+            //            $("#ListaDistrito").attr("style", "display:none");
+            //            $("#codigoCentroEducativo").attr("style", "display:none");
+            //        }
+            //        if (valor === "distrito") {
+            //            //MOSTRAR
+            //            $("#listaDireccion").removeAttr("style", "display:none");
+            //            $("#ListaDistrito").removeAttr("style", "display:none");
+
+            //            //OCULTAR
+            //            $("#codigoCentroEducativo").attr("style", "display:none");
+            //        }
+            //        if (valor === "centro") {
+            //            //MOSTRAR
+            //            $("#listaDireccion").removeAttr("style", "display:none");
+            //            $("#ListaDistrito").removeAttr("style", "display:none");
+            //            $("#codigoCentroEducativo").removeAttr("style", "display:none");
+
+            //            //OCULTAR
+            //        }
+            //        //SALUD
+            //        if (valor === "SRS") {
+            //            console.log(valor);
+            //            //MOSTRAR
+            //            $("#ListaRegion").removeAttr("style", "display:none");
+
+            //            //OCULTAR
+            //            $("#ListaDps").attr("style", "display:none");
+            //            $("#codigoCentroSalud").attr("style", "display:none");
+            //        }
+            //        if (valor === "DPS") {
+            //            console.log(valor);
+            //            $("#ListaRegion").removeAttr("style", "display:none");
+            //            $("#ListaDps").removeAttr("style", "display:none");
+
+            //            //OCULTAR
+            //            $("#codigoCentroSalud").attr("style", "display:none");
+            //        }
+            //        if (valor === "Otros") {
+            //            console.log(valor);
+            //            $("#ListaRegion").removeAttr("style", "display:none");
+            //            $("#ListaDps").removeAttr("style", "display:none");
+            //            $("#codigoCentroSalud").removeAttr("style", "display:none");
+
+            //            //OCULTAR
+
+            //        }
+            //    });
+
+
+        </script>
+        <script>
+            $("#cv").filestyle({ buttonText: "Curriculum" });
+
+            $(document).ready(function () {
+
+
+                //var value = $("#cv").value();
+                $("#cv").change(function () {
+                    var val = $("#cv").val();
+                });
+            });
+        </script>
+        <script>
+        $(document).ready(function () {
+
+            if ('@TempData["mensaje"]' === 'existe') {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Ya Existe!',
+                    html: '@TempData["texto"]'
+                });
+            }
+
+            if ('@TempData["mensaje"]' === 'guardado') {
+                Swal.fire({
+                    position: 'top',
+                    type: 'success',
+                    title: 'Nueva Institución Creada',
+                    showConfirmButton: true
+                });
+            }
+
+
+
+
+
+            $("#Telefono").inputmask("(999) 999-9999");
+            $("#TelefonoSecundario").inputmask("9999");
+            $("#TelefonoOrganismo2").inputmask("9999");
+            $("#TelefonoOrganismo1").inputmask("(999) 999-9999");
+
+            $("#NumeroDocumentoIdentidad").inputmask("999-9999999-9");
+            $("#RNC").inputmask("999-999999-9");
+        });
+        </script>
+        <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // Initialize select2
+            $("#selUser").select2();
+
+
+        });
+
+        var mensajeRegister = '@ViewBag.mensajeRegister';//viene desde el controlador registro
+
+
+
+        if (mensajeRegister) {
+            Swal.fire(
+                'Archivo Incorrecto',
+                'El tipo de archivo que intenta subir no es válido pruebe usando: .pdf, .doc. docx',
+                'Gracias'
+            );
+        }
+
+        function success(data) {
+            Swal.fire({
+                position: 'top-end',
+                type: 'success',
+                title: 'Registro completo',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+
+        function failure() {
+            Swal.fire({
+                type: 'error',
+                title: 'Registro invalido',
+                text: 'revise que haya completado todos los campos',
+                footer: 'si persiste, comuniquese con el MAP'
+            });
+        }
+
+        function complete() {
+            $("#InstitucionNombre").attr("style", "display=none");
+        }
+
+        function valor(elem) {
+            if (elem === "Postulante") {
+                $("#postulante").removeAttr("style=display: none");
+            } else {
+                $("#postulante").attr("style=display: none");
+            }
+        }
+
+        function confirmCV() {
+            var cv = $("#cv").val();
+
+            if (cv === "") {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Campo Vacío',
+                    text: 'Debe seleccionar su curriculum para continuar con el proceso'
+                });
+            }
+        }
+
+        function confirmEmail() {
+
+
+            var email = document.getElementById("Email").value;
+
+            var confemail = document.getElementById("confemail").value;
+
+            if (email !== confemail) {
+                document.getElementById("confemail").value = "";
+                document.getElementById("Email").value = "";
+
+                Swal.fire({
+                    title: "Hubo un error!",
+                    text: "Verifque que los correos electrónicos sean iguales",
+                    type: "error",
+                    confirmButtonText: 'De Acuerdo'
+                });
+
+
+
+            }
+        }
+
+        function confirmPwd() {
+
+
+            var pwd = document.getElementById("Password").value;
+            var cpwd = document.getElementById("ConfirmPassword").value;
+
+            console.log(pwd);
+
+        }
+        </script>
+        <script>
+            //REGULAR EXPRESSION
+
+            function regexNombre() {
+                var str = $('#nombre').val();
+                var res = str.replace(/^[, ]+|[, ]+$|[, ]+/g, " ").trim();
+                $('#nombre').val(res);
+            }
+
+
+
+            //MUNICIPIOS
+            $("#ProvinciaID").change(function () {
+                var provinciaId = $(this).val();
+                debugger;
+                console.log("provinciaID", provinciaId);
+                $.ajax({
+                    type: "post",
+                    url: "/sgp/Account/GetMunicipioList?provinciaId=" + provinciaId,
+                    contentType: "html",
+                    success: function (response) {
+                        $("#MunicipioID").empty();
+                        $("#MunicipioID").append(response);
+                    }
+                });
+            });
+
+            //DISTRITOS
+            $("#DireccionRegionalID").change(function () {
+                var DireccionRegionalID = $(this).val();
+                debugger;
+                console.log("DireccionRegionalID", DireccionRegionalID);
+                $.ajax({
+                    type: "post",
+                    url: "/sgp/Account/GetDistritosEducativosList?DireccionRegionalID=" + DireccionRegionalID,
+                    contentType: "html",
+                    success: function (response) {
+                        $("#DistritoEducativoID").empty();
+                        $("#DistritoEducativoID").append(response);
+                    }
+                });
+            });
+
+            //DPS
+            $("#SRSID").change(function () {
+                var SRSID = $(this).val();
+                debugger;
+                console.log("SRSID", SRSID);
+                $.ajax({
+                    type: "post",
+                    url: "/sgp/Account/GetDPSList?SRSID=" + SRSID,
+                    contentType: "html",
+                    success: function (response) {
+                        $("#DPSID").empty();
+                        $("#DPSID").append(response);
+                    }
+                });
+            });
+
+        </script>
+    }

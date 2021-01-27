@@ -1,0 +1,341 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sistema de Premios a la Calidad";
+
+    var mensaje = ViewBag.mensaje;
+}
+
+<div class="row">
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-info">
+            <i class="mdi mdi-chart-areaspline widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Statistics">Postulantes PNC</p>
+                <h2 class="text-white"><span data-plugin="counterup">525</span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>2018:</b> 60</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-primary">
+            <i class="mdi mdi-layers widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Organismos Reconocidos en el Premio Nacional">Reconocidos PNC</p>
+                <h2 class="text-white"><span data-plugin="counterup">215 </span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>2018:</b> 22</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-danger">
+            <i class="mdi mdi-access-point-network widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Postulates la Premio Provincial">Postulantes PP</p>
+                <h2 class="text-white"><span data-plugin="counterup">251</span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>2018:</b> 194 </p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-success">
+            <i class="mdi mdi-account-convert widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Organismos Reconocidos en el Premio Provincial">Reconocidos PP</p>
+                <h2 class="text-white"><span data-plugin="counterup">102 </span> <small><i class="mdi mdi-arrow-down text-danger"></i></small></h2>
+                <p class="m-0"><b>2018:</b> 61</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+</div>
+<!-- end row -->
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card-box">
+            <h4 class="header-title m-t-0 m-b-30">Postulantes por año</h4>
+
+            <div id="website-stats" style="height: 320px;" class="flot-chart"></div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card-box">
+            <h4 class="header-title m-t-0">Reconocidos por año</h4>
+
+            <div class="pull-right m-b-30">
+                <div> @*id="reportrange" class="form-control">
+                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                    <span></span>*@
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div id="donut-chart">
+                <div id="donut-chart-container" class="flot-chart" style="height: 240px;">
+                </div>
+            </div>
+
+            <p class="text-muted m-b-0 m-t-15 font-13 text-overflow">Organismos reconocidos por año, en todas las premiciones de calidad</p>
+        </div>
+    </div>
+
+</div>
+<!-- end row -->
+
+
+<div class="row">
+
+
+    <!-- end col -->
+
+    <div class="col-md-12">
+        <div class="panel panel-color panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">Últimos Ganadores</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table table-hover m-0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Organismo</th>
+                                <th>Premio Nacional</th>
+                                <th>Version</th>
+                                <th>Premio Internacional</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>
+                                <img src="~/Images/users/rating.svg" />
+                                @*<img src="/Images/users/avatar-6.jpg" alt="user" class="thumb-sm img-circle mdi mdi-trophy-award" />*@
+                            </th>
+                            <td>
+                                <h5 class="m-0">Instituto Politécnico Padre Bartolomé Vegh (D. E. 15-03)</h5>
+                                <p class="m-0 text-muted font-13"><small>Gran Premio</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2018</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">1</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Hospital Pediátrico Dr. Hugo Mendoza</h5>
+                                <p class="m-0 text-muted font-13"><small>2016: Medalla de Oro</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2017</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">2</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Instituto Dominicano de Aviación Civil –IDAC-</h5>
+                                @*<p class="m-0 text-muted font-13"><small>Programmer</small></p>*@
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2016</td>
+                            <td>Reconocimiento Oro. Premio Iberoamericana de la Calidad (FUNDIBEQ), 2018</td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">3</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Hospital Quirúrgico y Traumatológico Prof. Juan Bosch</h5>
+                                <p class="m-0 text-muted font-13"><small>2014: Medalla de Oro</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2015</td>
+                            <td>Reconocimiento Plata. Premio Iberoamericana de la Calidad (FUNDIBEQ), 2017</td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">4</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Junta de Aviación Civil</h5>
+                                <p class="m-0 text-muted font-13"><small>2013: Medalla de Oro</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2014</td>
+                            <td>Reconocimiento Plata. Premio Iberoamericana de la Calidad (FUNDIBEQ), 2018</td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">5</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Seguro Nacional de Salud (SeNaSa)</h5>
+                                <p class="m-0 text-muted font-13"><small>2009: Medalla de Oro</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2013</td>
+                            <td>Reconocimiento Plata. Premio Iberoamericano a la Calidad de FUNDIBEQ, 2015</td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                <span class="avatar-sm-box bg-primary">6</span>
+                            </th>
+                            <td>
+                                <h5 class="m-0">Instituto Tecnológico de las Ameritas (ITLA)</h5>
+                                <p class="m-0 text-muted font-13"><small>2010: Medalla de Oro</small></p>
+                            </td>
+                            <td>Gran Premio</td>
+                            <td>2012</td>
+                            <td>Mención Especial Premio Iberoamericana de la Calidad (FUNDIBEQ), 2013</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                </div> <!-- table-responsive -->
+            </div> <!-- end panel body -->
+        </div>
+        <!-- end panel -->
+    </div>
+    <!-- end col -->
+
+</div>
+<!-- end row -->
+
+
+
+
+@section Style
+{
+    <!-- date range picker -->
+    <link href="../plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- time picker -->
+    <link href="~/Scripts/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <!-- color picker -->
+    <link href="~/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/Scripts/plugins/clockpicker/css/bootstrap-clockpicker.min.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <!-- Flot chart js -->
+    <script src="~/plugins/flot-chart/jquery.flot.min.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.time.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.tooltip.min.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.resize.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.pie.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.selection.js"></script>
+    <script src="~/plugins/flot-chart/jquery.flot.crosshair.js"></script>
+
+    <script src="~/Scripts/plugins/moment/moment.js"></script>
+    <script src="~/Scripts/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/Scripts/plugins/timepicker/bootstrap-timepicker.js"></script>
+    <script src="~/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/Scripts/plugins/clockpicker/js/bootstrap-clockpicker.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <!-- Dashboard init -->
+    <script src="~/Scripts/pages/jquery.dashboard_2.js"></script>
+    
+    <script>
+        var permiso = '@ViewBag.sinequipo';
+        if (permiso) {
+            Swal.fire(
+                'Aun sin Equipo',
+                'Aún no tiene equipo asignado',
+                'Por favor intentelo mas tarde'
+            );
+        }
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+            }
+
+
+
+            if ('@TempData["mensaje"]' === 'institucionNoExiste') {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Sin Resultado',
+                    text: '@TempData["texto"]'
+                });
+            }
+
+            if ('@TempData["mensaje"]' === 'idCero') {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Cambio de Estado',
+                    text: '@TempData["texto"]'
+                });
+            }
+        });
+
+        $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+        $('#reportrange').daterangepicker({
+            format: 'MM/DD/YYYY',
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment(),
+            minDate: '01/01/2005',
+            maxDate: '12/31/2018',
+            dateLimit: {
+                days: 60
+            },
+            showDropdowns: true,
+            showWeekNumbers: true,
+            timePicker: false,
+            timePickerIncrement: 1,
+            timePicker12Hour: true,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            opens: 'left',
+            drops: 'down',
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-success',
+            cancelClass: 'btn-default',
+            separator: ' to ',
+            locale: {
+                applyLabel: 'Submit',
+                cancelLabel: 'Cancel',
+                fromLabel: 'From',
+                toLabel: 'To',
+                customRangeLabel: 'Custom',
+                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                firstDay: 1
+            }
+        }, function (start, end, label) {
+            console.log(start.toISOString(), end.toISOString(), label);
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        });
+    </script>
+
+}

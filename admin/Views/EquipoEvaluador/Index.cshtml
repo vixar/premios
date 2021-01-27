@@ -1,0 +1,754 @@
+﻿@*@model IEnumerable<ProyectoCalidad.Domain.Entities.EquipoEvaluador>*@
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using WebGrease.Css.Extensions
+@model IEnumerable<ProyectoCalidad.WebUI.Models.EquipoEvaluadorViewModel>
+@{
+    ViewBag.Title = "Asignación de Memoria";
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var usuario = userManager.FindById(User.Identity.GetUserId());
+
+
+    List<SelectListItem> evaluadores = new List<SelectListItem>();
+
+
+}
+
+@section Style{
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+}
+
+
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Asignar Memoria</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+
+                <li class="active">
+                    Asignación de Memoria
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<div class="row">
+    <div class="col-sm-4">
+        @{
+            //var premio = ViewBag.Premio;
+            var premioid = ViewBag.premioID;
+        }
+
+        <a href="@Url.Action("CrearEquipoEvaluador", "EquipoEvaluador", new { id=premioid })" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Asignar Memoria</a>
+    </div><!-- end col -->
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+            @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                <p class="text-muted font-13 m-b-30">
+                    The Buttons extension for DataTables provides a common set of options, API methods and
+                    styling to display buttons on a page that will interact with a DataTable. The core
+                    library provides the based framework upon which plug-ins can built.
+                </p>*@
+
+            <table id="datatable-buttons" class="table table-striped table-colored table-info">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(1)" style="cursor: pointer;">Equipo</th>
+                        <th>Evaluadores</th>
+                        <th>Memorias Asignadas</th>
+                        <th>Estado</th>
+                        <th>Premio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<td>
+                                        @Html.DisplayFor(modelItem => item.Postulantes)
+                                    </td>*@
+                                <td>
+                                    @item.Equipo.Nombre - @item.Equipo.Descripcion
+                                </td>
+                                <td>
+                                    <div class="btn-group bootstrap-select">
+                                        <select class="selectpicker" data-style="btn-default" tabindex="-98" onchange="evaluadorSeleccionado(this.value, 1, @item.EquipoID)">
+
+                                            <option value=0 selected="selected">Evaluadores</option>
+                                            @foreach (var listaEvaluadores in item.Evaluadores)
+                                            {
+                                                foreach (var e in listaEvaluadores)
+                                                {
+                                                    <option value="@e.EvaluadorPremioID">  @e.Usuario.Nombre @e.Usuario.Apellido</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="btn-group bootstrap-select">
+                                        <select class="selectpicker" data-style="btn-default" tabindex="-98" onchange="evaluadorSeleccionado(this.value, 2, @item.EquipoEvaluadorID)">
+
+                                            <option value=0 selected="selected" style="color:gray">Memorias</option>
+                                            @foreach (var i in item.InstitucionesPostulantes)
+                                            {
+
+                                                <option value="@i.InstitucionPostulanteID">@i.InstitucionNombre</option>
+
+
+                                            }
+                                        </select>
+                                    </div>
+                                </td>
+
+                                @if (item.EquipoEstado)
+                                {
+                                    <td>
+                                        Activo
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        Suspendido
+                                    </td>
+                                }
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Premio.TipoPremio.Siglas)
+                                </td>
+                                <td>
+
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                        <ul class="dropdown-menu" role="menu" style="left: -120px">
+                                            <li>
+                                                <a href="@Url.Action("EditarEquipoEvaluador", "EquipoEvaluador", new {id = item.EquipoID, premioID = premioid})"><i class="mdi mdi-lead-pencil"></i> Editar</a>
+                                            </li>
+
+                                            <li>
+                                                <a id="tooltip-html" data-placement="top" title="Este botón generará los campos necesarios para que los evaluadores puedan realizar sus puntuaciones y observaciones" style="cursor: pointer" onclick="confirmacion(@item.EquipoID, '@usuario.Nombre', '@usuario.PasswordHash')">
+                                                    <i class="fa fa-question"></i>
+
+                                                    Generar Base de Puntuación
+
+                                                </a>
+
+                                            </li>
+                                            @{
+                                                List<GuiaPostulantePuntuacion> gpp = ViewBag.gpp;
+                                            }
+                                            @if(item.InstitucionesPostulantes.Any(x => gpp.Any(a => a.InstitucionPostulanteID == x.InstitucionPostulanteID)))
+                                            {
+                                                <li>
+                                                    <a id="tooltip-html-1" data-placement="top" title="La notificacíon será enviada por correo electrónico a todo el equipo" style="cursor: pointer" onclick="enviarEmail(@item.EquipoID)"> <i class="mdi mdi-email-open"></i> Enviar Notificación</a>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <a class="disabled" style="cursor: not-allowed" id="tooltip-html-1" data-placement="top" title="Este botón se activará cuando haya generado las tablas de puntuaciones de los evaluadores"> <i class="mdi mdi-email-open"></i> Enviar Notificación</a>
+                                                </li>
+                                            }
+
+
+                                        </ul>
+                                    </div>
+
+                                    @*<a href="@Url.Action("IndexPorEquipo", "Evaluador", new{id = item.EquipoPostulancionesID})" class="table-action-btn h3 " style="padding-right: 10px"><i class="mdi mdi-account-multiple"></i></a>*@
+
+
+                                    @*<input type="checkbox" id="switch4" data-switch="success" checked="">
+                                        <label style="margin: 5px 0 0 0;" for="switch4" data-on-label="Yes" data-off-label="No"></label>*@
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <p>No hay elementos que mostrar</p>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="evaluador-modal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color ">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" value="" id="evaluadorID" />
+                    <div class="">
+                        <div class="text-center">
+                            <div class="member-card">
+                                @*<div class="thumb-xl member-thumb m-b-10 center-block">
+
+
+                                        <img src="assets/images/users/avatar-1.jpg" class="img-circle img-thumbnail" alt="profile-image">
+
+
+                                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                                    </div>*@
+
+                                <div class="">
+                                    <img id="imagen" src="~/images/users/avatar-2.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                                    <h2 class="m-b-5" id="nombre">Mark A. McKnight</h2>
+                                    <p class="text-muted"></p>
+                                    <h4 class="m-b-5" id="email"></h4>
+                                    <h4 class="m-b-5" id="rol"></h4>
+                                    <input type="hidden" id="eeid" value="" />
+
+                                </div>
+
+                                @*<button type="button" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Follow</button>
+                                    <button type="button" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Message</button>*@
+
+                                @*<p class="text-muted font-13 m-t-20">
+                                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                                    </p>*@
+
+                                <hr>
+
+                                @*<div class="text-left">
+
+
+                                        <p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15" id="email"></span></p>
+
+                                        <p class="text-muted font-13"><strong>Rol :</strong> <span class="m-l-15" id="rol"></span></p>
+                                    </div>*@
+
+
+                                <button type="button" class="btn btn-danger waves-effect m-t-10 waves-light remover" id="" onclick="removerDatosUsuarioFromEquipo(this.id, 1)">Remover datos</button>
+                                @*<a href="@Url.Action("Index", "Evaluador", new {id = premioid})" class="btn btn-primary btn-block waves-effect m-t-10 waves-light">Message</a>*@
+                                @*<ul class="social-links list-inline m-t-30">
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Remover del equipo">Remover</a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="@Url.Action("Index", "Evaluador", new {id = premioid})" data-original-title="Ir al perfíl">Perfil</a>
+                                        </li>
+                                    </ul>*@
+                                <hr />
+                                <button class="btn btn-default" data-dismiss="modal" aria-label="Close" onclick="cerrarModal()">Cerrar</button>
+                            </div>
+
+                        </div> <!-- end card-box -->
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div id="remover-memoria-modal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color ">
+                <div class="panel-heading">
+                </div>
+                <div class="panel-body">
+                    <div class="">
+                        <div class="text-center">
+                            <div class="member-card">
+                                @*<div class="thumb-xl member-thumb m-b-10 center-block">
+
+
+                                        <img src="assets/images/users/avatar-1.jpg" class="img-circle img-thumbnail" alt="profile-image">
+
+
+                                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                                    </div>*@
+
+                                <div class="">
+                                    <h2 class="m-b-5" id="institucion">Mark A. McKnight</h2>
+                                    <p class="text-muted"></p>
+                                    <input type="hidden" id="eeid2" value="" />
+                                </div>
+
+                                @*<button type="button" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Follow</button>
+                                    <button type="button" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Message</button>*@
+
+                                @*<p class="text-muted font-13 m-t-20">
+                                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                                    </p>*@
+
+                                <hr>
+
+                                @*<div class="text-left">
+
+
+                                        <p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15" id="email"></span></p>
+
+                                        <p class="text-muted font-13"><strong>Rol :</strong> <span class="m-l-15" id="rol"></span></p>
+                                    </div>*@
+
+
+                                <button type="button" class="btn btn-danger waves-effect m-t-10 waves-light remover" id="" onclick="removerDatosUsuarioFromEquipo(this.id, 2)">Remover datos</button>
+                                @*<a href="@Url.Action("Index", "Evaluador", new {id = premioid})" class="btn btn-primary btn-block waves-effect m-t-10 waves-light">Message</a>*@
+                                @*<ul class="social-links list-inline m-t-30">
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Remover del equipo">Remover</a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="@Url.Action("Index", "Evaluador", new {id = premioid})" data-original-title="Ir al perfíl">Perfil</a>
+                                        </li>
+                                    </ul>*@
+                                <hr />
+                                <button class="btn btn-default" data-dismiss="modal" aria-label="Close" onclick="cerrarModal()">Cerrar</button>
+                            </div>
+
+                        </div> <!-- end card-box -->
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<div id="coverScreen" class="LockOn">
+</div>
+@section scripts{
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+    <script src="~/Scripts/pages/jquery.form-advanced.init.js"></script>
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/pages/jquery.tooltipster.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script>
+        "use strict";
+
+        //EVNIO DE NOTIFICACIÓN POR CORREO ELECTRÓNICO
+        function enviarEmail(id) {
+            Swal.fire({
+                    title: 'Confirmación',
+                    text: "Enviar notificación a los evaluadores en este equipo",
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si',
+                    cancelButtonText: 'No'
+            }).then((result) => {
+
+                if (result.value) {
+
+                        var url = '';
+
+                        url = '@Url.Action("EnviarNotificacionEvaluadoresPorEquipo", "EquipoEvaluador")';
+
+                        url += '/' + id;
+
+                        $("#coverScreen").show();
+
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success: function(response) {
+                                if (response.mensaje === "True") {
+                                    $("#coverScreen").hide();
+                                    Swal.fire({
+                                        title: 'Enviado!',
+                                        html: 'Todos los evaluadores recibiran su notificación',
+                                        type: 'success',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    //$("#coverScreen").show().setTimeout(function() {
+
+                                    //    location.reload();
+
+                                    //    },
+                                    //    2000);
+                                } else {
+                                    if (response.tipo === "error") {
+                                        Swal.fire(
+                                            response.mensaje,
+                                            response.texto,
+                                            response.tipo
+                                        );
+                                    }
+                                    if (response.tipo === "warning") {
+                                        Swal.fire(
+                                            response.mensaje,
+                                            response.texto,
+                                            response.tipo
+                                        );
+                                    }
+                                    Swal.fire(
+                                        'Hubo un error',
+                                        'No se pudo realizar la operación',
+                                        'error'
+                                    );
+                                }
+                            }
+                        });
+
+                    }
+                });
+        }
+
+
+        //DATOS DE LA PUNTUACIÓN
+        function generarDatos(id, nombre, con) {
+            debugger;
+            $.ajax({
+                type: "get",
+                url: "/sgp_admin/Evaluador/GenerarGuiaPuntuacion?equipoID=" + id,
+                username: nombre,
+                password: con,
+                success: function (data) {
+                    $("#coverScreen").hide();
+                    debugger;
+                    if (data === "True") {
+                        Swal.fire(
+                            'Generados!',
+                            'Todos los campos fueron generados satisfactoriamente',
+                            'success'
+                        );
+                        setTimeOut(function() {
+                                location.reload();
+                            },
+                            3000);
+                    } else {
+                        Swal.fire(
+                            'Cancelado',
+                            'el equipo evaluador no pudo ser encontrado, favor verifique si existe un equipo evaluador',
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+
+
+        function evaluadorSeleccionado(val, tipo, eeId) {
+            console.log("evaluador", val +", "+ eeId);
+            if (val > 0) {
+                var url = "";
+                if (tipo === 1) {
+                    url  = '@Url.Action("GetEvaluadorInfo", "Evaluador")';
+                }
+                if (tipo === 2) {
+                    url  = '@Url.Action("GetInstitucionInfo", "InstitucionPostulante")';
+                }
+                url += "/" + val;
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(response) {
+                        var json = JSON.parse(response);
+                        //console.log(json);
+                        //si el tipo es 1 (evaluador)
+                        if (tipo === 1) {
+                            if (json.EvaluadorPremioID > 0) {
+                                $("#imagen").attr("src", "/sgp_admin/Usuarios/Imagenes/" + json.Usuario.Imagen);
+                                $("#nombre").text(json.Usuario.Nombre + " " + json.Usuario.Apellido);
+                                $("#email").text(json.Usuario.Email);
+                                $("#rol").text(json.Usuario.Role);
+                                $(".remover").prop("id", json.EvaluadorPremioID);
+                                $("#eeid").val(eeId);
+
+
+                                $("#evaluador-modal").show(300);
+                            }
+                        }
+                        //si el tipo es 2 (institucion postulante)
+                        else {
+                            if (json.InstitucionPostulanteID > 0) {
+                                console.log(json);
+                                $("#institucion").text(json.InstitucionNombre);
+
+                                $("#eeid2").val(eeId);
+                                console.log($("#eeid2").val());
+
+                                $(".remover").prop("id", json.InstitucionPostulanteID);
+                                $("")
+
+                                //debugger;
+                                $("#remover-memoria-modal").show(300);
+                            }
+                        }
+
+                        //console.log(response);
+                        //if (response.resp) {
+
+                        //}
+                    }
+                });
+            }
+        }
+        
+        function cerrarModal() {
+            $("#evaluador-modal").hide(300);
+            $("#remover-memoria-modal").hide(300);
+
+        }
+
+        //Remover datos del evaluadore relacionados al equipo y la guia postulante
+        function removerDatosUsuarioFromEquipo(val, tipo) {
+            var eeId = $("#eeid").val();
+            console.log("HOLA=", eeId + " - " + val);
+            if (val > 0) {
+                Swal.fire({
+                    title: 'Está de acuerdo?',
+                    text: "Va a eliminar toda la información de la guia, y del equipo relacionadas a este evaluador!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Remover!'
+                }).then((result) => {
+                    if (result.value) {
+                        var url = '';
+                        if (tipo === 1) {
+                            url = '@Url.Action("RemoverDatosEvaluadorFromEquipoAndGuiaPostulante", "Evaluador")';
+                        } else {
+                            url = '@Url.Action("RemoverDatosMemoriaFromEquipoAndEvaluador", "InstitucionPostulante")';
+                        }
+
+                        url += '?id=' + val + "&eeid=" + eeId;
+                        console.log(url);
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success: function(response) {
+                                if (response === "True") {
+                                    Swal.fire({
+                                        title: 'Listo!',
+                                        html: 'Toda la información ha sido removida',
+                                        type: 'success',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    setTimeout(function() {
+
+                                        location.reload();
+
+                                        },
+                                        2000);
+                                } else {
+                                    Swal.fire(
+                                        'Hubo un error',
+                                        'No se pudo realizar la operación',
+                                        'errro'
+                                    );
+                                }
+                            }
+                        });
+
+                    }
+                });
+            }
+        }
+
+        function confirmacion(id, nombre, con) {
+            debugger;
+
+            Swal.fire({
+                title: 'Confirmar',
+                html: "Va a generar los campos de puntuación para los evaluadores asignados a este equipo, una ves generados no podrán ser editados, desea continuar?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Generar'
+            }).then((result) => {
+                debugger;
+                if (result.value) {
+
+                    $("#coverScreen").show();
+
+                    generarDatos(id, nombre, con);
+
+                }
+            });
+
+
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $("#coverScreen").hide();
+            $('#datatable').dataTable({
+                "pageLength": 3
+                
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+               
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init(60);
+
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("datatable-buttons");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+    </script>
+}
+

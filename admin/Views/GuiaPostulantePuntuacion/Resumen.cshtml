@@ -1,0 +1,145 @@
+﻿@model List<List<ProyectoCalidad.WebUI.Models.ResumenPuntuacionViewModel>>
+
+@{
+    ViewBag.Title = "Resumen";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Resumen de puntuación</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+
+                <li class="active">
+                    Puntuación
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>regresar a la lista</a>
+    </div><!-- end col -->
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card-box">
+            
+
+
+            <h1 class="title bg-primary text-center p-t-10"> Tabla de Resumen de Puntuación</h1>
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="text-center">@ViewBag.institucion.InstitucionNombre</h3>
+
+                    <div class="card-box" style="margin-top: 20px">
+
+                        <h1 class="title bg-warning text-center p-t-10">Gran Total</h1>
+                        <h1 style="font-size: 90px;" class="title text-center p-t-10"> @ViewBag.total<small style="font-size: 35px">ptos.</small></h1>
+                    </div>
+
+
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Criterio</th>
+                                <th>Total</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.criterios)
+                            {
+
+                                <tr>
+
+                                    <td>
+                                        @item.CriterioCodigo
+                                    </td>
+                                    <td>
+                                        @item.Total 
+                                    </td>
+
+
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+
+
+            </div>
+
+        @*<div class="row">
+            <div class="col-md-6">
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>SubCriterio</th>
+
+                        @foreach (var e in ViewBag.evaluadores)
+                        {
+                            <th>@e</th>
+                        }
+                        <th>Total</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in ViewBag.Subcriterios)
+                    {
+
+                        <tr>
+
+                            <td>
+                                @item.SubCriterioCodigo
+                            </td>
+                            @foreach (var e in ViewBag.evaluadores)
+                            {
+                                <td>@item.PromedioEvaluador</td>
+                            }
+                            <td>
+                                @item.PromedioEvaluador
+                            </td>
+
+
+                        </tr>
+                    }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>*@
+
+
+        </div>
+
+    </div>
+</div>
+@*@foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Crirterios.Nombre
+            </td>
+            <td>
+                @item.Total
+            </td>
+        </tr>
+    }*@

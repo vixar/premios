@@ -1,0 +1,11 @@
+﻿@model ProyectoCalidad.Domain.Entities.Municipios
+
+<option value=""> -- Seleccione el Municipio --</option>
+
+@if (ViewBag.MunicipiosList != null)
+{
+    foreach (var item in ViewBag.MunicipiosList)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+}

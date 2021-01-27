@@ -1,0 +1,344 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.RegistroOrganismo>
+
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+@section Style{
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Organismos</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Organismo")">Organismos</a>
+                    </li>
+                    <li class="active">
+                        Lista de Organismos
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                    <p class="text-muted font-13 m-b-30">
+                        The Buttons extension for DataTables provides a common set of options, API methods and
+                        styling to display buttons on a page that will interact with a DataTable. The core
+                        library provides the based framework upon which plug-ins can built.
+                    </p>*@
+                <h4>Exportar tabla:</h4>
+                <table id="datatable-buttons" class="table table-striped  table-colored table-info">
+                    <thead>
+                        <tr>
+
+                            <th style="width: 205px">Nombre</th>
+                            <th>RNC</th>
+                            <th style="width: 302px;">Direccion</th>
+
+                            <th style="width:15px">Sector</th>
+
+                            <!--Educación-->
+                            <th>Clasificación Sector Educativo</th>
+                            <th>Direccion Regional</th>
+                            <th>Distrito Educativo</th>
+                            <th>Código</th>
+
+                            <!--Salud-->
+                            <th>Clasificación Sector Salud</th>
+                            @*<th>SRS</th>
+                                <th>DPS</th>*@
+
+                            <th>Teléfono 1</th>
+                            <th>Teléfono 2</th>
+                            <th>Email</th>
+                            <th>Web</th>
+
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var organismo in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.Nombre)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.RNC)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.DireccionFisica)
+                                </td>
+                                <td style="width: 15px">
+                                    @Html.DisplayFor(modelItem => organismo.Sector)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.ClasificacionSectorEducativo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.DireccionRegional)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.DistritoEducativo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.CodigoCentroEducativo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.ClasificacionSectorSalud)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.TelefonoOrganismo1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.TelefonoOrganismo2)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => organismo.Web)
+                                </td>
+                                <td>
+                                    <button type="button" onclick="aceptarOrganismo(@organismo.OrganismoID)" class="btn btn-primary btn-sm"><i class="fa fa-check" style="font-size: 15px"></i></button>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#rechazado-modal-@organismo.OrganismoID"><i class="fa fa-times" style="font-size: 16px"></i></button>
+
+                                </td>
+                            </tr>
+
+                            <!--Modal-->
+
+                            <div id="rechazado-modal-@organismo.OrganismoID" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog">
+                                    <div class="modal-content p-0 b-0">
+                                        <div class="panel panel-color panel-primary">
+                                            <div class="panel-heading">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h3 class="panel-title">Motivo</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                @using (Html.BeginForm("RechazarOrganismo", "RegistroOrganismo", FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+                                                    @Html.Hidden("RegistroOrganismoID", organismo.OrganismoID)
+                                                    <div class="form-group">
+                                                        <label class="control-label">Debe de escribir un motivo</label>
+                                                        <textarea class="form-control" name="motivo" placeholder="Escriba una razón para enviar el correo electrónico" required oninvalid="this.setCustomValidity('Este campo es obligatorio')"></textarea>
+
+                                                    </div>
+                                                    <hr />
+                                                    <div class="pull-right">
+                                                        <button type="submit" class="btn btn-primary waves-effec">Enviar Notificación</button>
+                                                        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                                                    </div>
+
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div id="coverScreen" class="LockOn">
+</div>
+
+
+@section scripts{
+    @*<script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+        <script src="~/Scripts/pages/jquery.tooltipster.js"></script>*@
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+
+    <script>
+
+        function aceptarOrganismo(id) {
+            Swal.fire({
+                title: 'Activar Organismo',
+                html: "Va a activar esta institución para poder postular, está seguro?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Activar!'
+            }).then((result) => {
+                if (result.value) {
+                    var organismoId = id;
+
+                    $("#coverScreen").show();
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/sgp_admin/RegistroORganismo/AceptarOrganismo?organismoId=" + organismoId,
+                        success: function (data) {
+                            if (data.success) {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Email No Enviado',
+                                    html: '@TempData["texto"]'
+                                });
+                                window.location.reload();
+                            } else {
+                                $("#coverScreen").hide();
+                                Swal.fire({
+                                    type: 'success',
+                                    title: 'Email Enviado',
+                                    html: 'El correo ha sido enviado correctamente'
+                                });
+                                location.reload();
+                            }
+                            
+                        }
+
+
+                    });
+
+                    //setTimeout(function(){
+                    //    $("#coverScreen").hide();
+                    //}, 4000);
+
+
+                }
+            });
+        }
+        
+        $(document).ready(function () {
+            $("#coverScreen").hide();
+
+            if ('@TempData["mensaje"]' === 'emailEnviado') {
+                $("#coverScreen").hide();
+                Swal.fire({
+                    type: 'success',
+                    title: 'Email Enviado',
+                    html: '@TempData["texto"]'
+                });
+
+            }
+            if ('@TempData["mensaje"]' === 'emailNoEnviado') {
+                Swal.fire({
+                    type: 'warning',
+                    title: 'Email No Enviado',
+                    html: '@TempData["texto"]'
+                });
+
+            }
+            if ('@TempData["institucionNoExiste"]' === 'error') {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Email No Enviado',
+                    html: '@TempData["texto"]'
+                });
+
+            }
+            // Tooltips Initialization
+
+
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+
+    </script>
+}
+

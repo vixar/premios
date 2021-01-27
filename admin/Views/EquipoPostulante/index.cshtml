@@ -1,0 +1,203 @@
+﻿@*@model IEnumerable<ProyectoCalidad.Domain.Entities.EquipoEvaluador>*@
+@model IEnumerable<ProyectoCalidad.WebUI.Models.EquipoEvaluadorViewModel>
+@{
+    ViewBag.Title = "Asignar de Memoria";
+}
+
+@section Style{
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Asignar Memoria</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+                
+                <li class="active">
+                    Asignar Memoria
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<div class="row">
+    <div class="col-sm-4">
+    @{
+        var premio = ViewBag.Premio;
+        var premioid = premio.PremioID;
+     }
+
+        <a href="@Url.Action("CrearEquipoPostulante", "EquipoPostulante", new { id=premioid })" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Asignar Memoria</a>
+    </div><!-- end col -->
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+            @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                <p class="text-muted font-13 m-b-30">
+                    The Buttons extension for DataTables provides a common set of options, API methods and
+                    styling to display buttons on a page that will interact with a DataTable. The core
+                    library provides the based framework upon which plug-ins can built.
+                </p>*@
+
+            <table id="datatable-buttons" class="table table-striped  table-colored table-info">
+                <thead>
+                    <tr>
+                        <th>Postulantes</th>
+                        <th>Equipo</th>
+                        <th>Estado</th>
+                        <th>Premio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Postulantes)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EquipoDescripcion)
+                        </td>
+
+                        @if (item.EquipoEstado)
+                        {
+                            <td>
+                                Activo
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                Suspendido
+                            </td>
+                        }
+
+                        <td>
+                            @*@Html.DisplayFor(modelItem => item.Premio.Descripcion)*@
+                        </td>
+                        <td>
+                            @*<a href="@Url.Action("IndexPorEquipo", "Evaluador", new{id = item.EquipoPostulancionesID})" class="table-action-btn h3 " style="padding-right: 10px"><i class="mdi mdi-account-multiple"></i></a>*@
+                            <a href="@Url.Action("EditarEquipoPostulante", "EquipoPostulante", new{id = item.EquipoID})" class="table-action-btn h3" style="padding-right: 10px"><i class="mdi mdi-lead-pencil"></i></a>
+                            <input  type="checkbox" id="switch4" data-switch="success" checked="">
+                            <label style="margin: 5px 0 0 0;"  for="switch4" data-on-label="Yes" data-off-label="No"></label>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+    
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+                 
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+
+    </script>
+}
+

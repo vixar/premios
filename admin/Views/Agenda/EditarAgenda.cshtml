@@ -1,0 +1,85 @@
+﻿@model  ProyectoCalidad.Domain.Entities.Agendas
+
+@{
+    ViewBag.Title = "Editar Agendas";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Agendas</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Tipo Documento <strong>@Model.Descripcion</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarAgenda", "Agenda", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+    {
+        @Html.HiddenFor(x => x.AgendaID)
+
+
+        @Html.ValidationSummary(true)
+
+
+
+        <div class="form-group">
+            <label for="Descripcion" class="col-md-3 control-label">Actividad</label>
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.Actividad, new { @class = "form-control", @placeholder = "Actividad de la Agenda." })
+                @Html.ValidationMessageFor(x => x.Actividad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="Descripcion" class="col-md-3 control-label">Actividad</label>
+            <div class="col-md-9">
+                @Html.TextAreaFor(model => model.Descripcion, 4, 55, new { @class = "form-control", @placeholder = "Descripcion de Actividad de la Agenda.", maxlength = 254 })
+                @*@Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripcion de Actividad de la Agenda." })*@
+                @Html.ValidationMessageFor(x => x.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Orden" class="col-md-3 control-label">Orden</label>
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.Orden, new { @class = "form-control", @placeholder = "Orden de Actividad de la Agenda." })
+                @Html.ValidationMessageFor(x => x.Orden, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="FechaHoraInicio" class="col-md-3 control-label">Fecha Hora Inicio</label>
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.FechaHoraInicio, new { @class = "form-control", @placeholder = "Fecha Hora Inicio de Actividad de la Agenda." })
+                @Html.ValidationMessageFor(x => x.FechaHoraInicio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="FechaHoraFinal" class="col-md-3 control-label">Fecha Hora Final</label>
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.FechaHoraFinal, new { @class = "form-control", @placeholder = "Fecha Hora Final de Actividad de la Agenda." })
+                @Html.ValidationMessageFor(x => x.FechaHoraFinal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="EstadoActividad" class="col-md-3 control-label">Estado Actividad</label>
+            <div class="col-md-9">
+                @Html.DropDownList("EstadoActividad", new SelectList(new[] { "Activo", "Suspendido", "Inactivo" }), "Elija un estatus", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <button type="submit" class="btn btn-info">Registrar datos</button>
+                @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+}
+    </div>
+</div>
+
+@section sideMenu
+{
+    <ul class="nav nav-sidebar">
+        <li class="active">@Html.ActionLink("Regresar a Tipo Documento", "Index")</li>
+        <li>@Html.ActionLink("Regresar al inicio", "Index", "Home")</li>
+    </ul>
+}

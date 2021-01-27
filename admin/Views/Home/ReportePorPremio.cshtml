@@ -1,0 +1,238 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model  IEnumerable<ProyectoCalidad.Domain.Entities.Premio>
+
+@{
+    List<EvaluadorPremio> evaluador = null;
+    Jurado jurado = null;
+    Secretaria secretaria = null;
+
+    if (ViewBag.evaluador != null)
+    {
+        evaluador = ViewBag.evaluador;
+    }
+
+    if (ViewBag.jurado != null)
+    {
+        jurado = ViewBag.jurado;
+    }
+
+    if (ViewBag.secretaria != null)
+    {
+        secretaria = ViewBag.secretaria;
+    }
+
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+
+    if (Model != null)
+    {
+        if (secretaria != null)
+        {
+            if (secretaria.Premio.TipoPremio.Siglas == "PNC")
+            {
+                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-chart-bar"></i><span>Secretaria</span> <span class="menu-arrow"></span></a>
+
+            }
+
+        }
+        else
+        {
+            <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-chart-bar"></i><span>Reportes</span> <span class="menu-arrow"></span></a>
+
+        }
+
+
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li class="has_menu">
+
+                    @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+                    {
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas <span class="menu-arrow"></span></a>
+
+                        <ul class="list-unstyled">
+                            @if (item.TipoPremio.Siglas == "PNC" || item.TipoPremio.Siglas == "PPC")
+                            {
+                                <li><a href="@Url.Action("PuntuacionTotalPorInstitucion", "Reportes", new {PremioID = item.PremioID})">Puntuación por Institución</a></li>
+
+                                <li><a href="@Url.Action("SeleccionInstitucion", "Reportes", new {PremioID = item.PremioID, userID = user.Id})">Puntuación por Evaluadores</a></li>
+
+                            }
+                            @if (item.TipoPremio.Siglas == "PIMP")
+                            {
+                                <li>
+                                    <a href="@Url.Action("GeneralPIMP", "Reportes", new {siglas = item.TipoPremio.Siglas})">General </a>
+                                    @*<a href="@Url.Action("ConsideracionesFinales", "Reportes", new {siglas = item.TipoPremio.Siglas})">Consideraciones Finales</a>*@
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("UnidadesAsignadas", "Reportes", new {siglas = item.TipoPremio.Siglas})">Unidades Asignadas/No Asignadas</a>
+
+                                </li>
+                            }
+
+                            <li>
+                                <a href="@Url.Action("ActaDeliberacion", "ActaDeliberacion", new {siglas = item.TipoPremio.Siglas})">Actas de deliberación</a>
+
+                            </li>
+
+                            @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                        </ul>
+                    }
+                    @if (evaluador != null)
+                    {
+                        foreach (var e in evaluador)
+                        {
+                            if (e.IsManager && e.PremioID == item.PremioID)
+                            {
+
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas <span class="menu-arrow"></span></a>
+
+                                <ul class="list-unstyled">
+                                    <li><a href="@Url.Action("PuntuacionTotalPorInstitucion", "Reportes", new {PremioID = item.PremioID})">Puntuación por Institución</a></li>
+                                    <li><a href="@Url.Action("SeleccionInstitucion", "Reportes", new {PremioID = item.PremioID, userID = user.Id})">Puntuación por Evaluadores</a></li>
+
+                                    @*<li><a href="@Url.Action("PuntuacionPreliminar", "Reportes", new {PremioID = item.PremioID})">Puntuación Perliminar</a></li>*@
+
+                                    @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                        <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                                </ul>
+
+
+                            }
+                        }
+
+                    }
+                    @if (jurado != null)
+                    {
+
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i> @jurado.Premio.TipoPremio.Siglas <span class="menu-arrow"></span></a>
+
+
+                        <ul class="list-unstyled">
+                            @if (jurado.Premio.TipoPremio.Siglas == "PIMP")
+                            {
+                                <li>
+                                    <a href="@Url.Action("GeneralPIMP", "Reportes", new {siglas = item.TipoPremio.Siglas})">General </a>
+                                    @*<a href="@Url.Action("ConsideracionesFinales", "Reportes", new {siglas = item.TipoPremio.Siglas})">Consideraciones Finales</a>*@
+                                </li>
+                                if (jurado.Presidente == true)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("UnidadesAsignadas", "Reportes", new {siglas = item.TipoPremio.Siglas})">Unidades Asignadas/No Asignadas</a>
+                                    </li>
+
+                                    @*<li>
+                                            <a href="@Url.Action("ActaDeliberacion", "ActaDeliberacion", new {siglas = item.TipoPremio.Siglas})">Actas de deliberación</a>
+                                        </li>*@
+
+                                }
+
+                            }
+                            @if (jurado.Premio.TipoPremio.Siglas == "PNC")
+                            {
+                                <li>
+                                    <a href="@Url.Action("GeneralPNC", "Reportes", new {siglas = item.TipoPremio.Siglas})">General </a>
+                                    @*<a href="@Url.Action("ConsideracionesFinales", "Reportes", new {siglas = item.TipoPremio.Siglas})">Consideraciones Finales</a>*@
+                                </li>
+                                if (jurado.Presidente == true)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("UnidadesAsignadas", "Reportes", new {siglas = item.TipoPremio.Siglas})">Memorias Asignadas/No Asignadas</a>
+                                    </li>
+
+                                    @*<li>
+                                            <a href="@Url.Action("ActaDeliberacion", "ActaDeliberacion", new {siglas = item.TipoPremio.Siglas})">Actas de deliberación</a>
+                                        </li>*@
+
+                                }
+
+                            }
+                            @if (user.Role == "ADMIN")
+                            {
+                                <li><a href="@Url.Action("PuntuacionTotalPorInstitucion", "Reportes", new {PremioID = item.PremioID})">Puntuación por Institución</a></li>
+                                <li><a href="@Url.Action("SeleccionInstitucion", "Reportes", new {PremioID = item.PremioID, userID = user.Id})">Puntuación por Evaluadores</a></li>
+                                if (jurado.Presidente == true)
+                                {
+                                    @*<li>
+                                            <a href="@Url.Action("ActaDeliberacion", "ActaDeliberacion", new {siglas = item.TipoPremio.Siglas})">Actas de deliberación</a>
+
+                                        </li>*@
+                                }
+                            }
+
+
+                            @*<li><a href="@Url.Action("PuntuacionPreliminar", "Reportes", new {PremioID = item.PremioID})">Puntuación Perliminar</a></li>*@
+
+                            @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                        </ul>
+
+
+
+
+
+                    }
+
+                    @if (secretaria != null)
+                    {
+
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i> @secretaria.Premio.TipoPremio.Siglas <span class="menu-arrow"></span></a>
+
+
+                        <ul class="list-unstyled">
+                            @if (secretaria.Premio.TipoPremio.Siglas == "PIMP")
+                            {
+                                <li>
+                                    <a href="@Url.Action("GeneralPIMP", "Reportes", new {siglas = item.TipoPremio.Siglas})">General </a>
+                                    @*<a href="@Url.Action("ConsideracionesFinales", "Reportes", new {siglas = item.TipoPremio.Siglas})">Consideraciones Finales</a>*@
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("UnidadesAsignadas", "Reportes", new {siglas = item.TipoPremio.Siglas})">Unidades Asignadas/No Asignadas</a>
+                                </li>
+                            }
+                            @if (secretaria.Premio.TipoPremio.Siglas == "PNC")
+                            {
+                                <li>
+                                    <a href="@Url.Action("GeneralPNC", "Reportes", new {siglas = item.TipoPremio.Siglas})">General </a>
+                                    @*<a href="@Url.Action("ConsideracionesFinales", "Reportes", new {siglas = item.TipoPremio.Siglas})">Consideraciones Finales</a>*@
+                                </li>
+
+
+                            }
+                            else
+                            {
+                                <li><a href="@Url.Action("PuntuacionTotalPorInstitucion", "Reportes", new {PremioID = item.PremioID})">Puntuación por Institución</a></li>
+                                <li><a href="@Url.Action("SeleccionInstitucion", "Reportes", new {PremioID = item.PremioID, userID = user.Id})">Puntuación por Evaluadores</a></li>
+
+                            }
+
+                            <li>
+                                <a href="@Url.Action("ActaDeliberacion", "ActaDeliberacion", new {siglas = item.TipoPremio.Siglas})">Actas de deliberación</a>
+
+                            </li>
+
+                            @*<li><a href="@Url.Action("PuntuacionPreliminar", "Reportes", new {PremioID = item.PremioID})">Puntuación Perliminar</a></li>*@
+
+                            @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                        </ul>
+
+
+                    }
+
+                </li>
+
+
+            }
+        </ul>
+
+    }
+
+}

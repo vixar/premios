@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.EquipoEvaluador>
+
+@{
+    ViewBag.Title = "Evaluadores participantes por año/registrados  ";
+}
+
+<hr />
+<h2><span class="glyphicon glyphicon-user"></span>&nbsp;o	Evaluadores participantes por año/registrados : </h2>
+<hr />
+
+
+<br />
+<table>
+    <tr>
+        <th>
+            Descripcion Equipo
+        </th>
+        <th>
+            Premio
+        </th>
+        <th>
+            InstitucionPostulantes
+        </th>
+        <th>
+            Equipo
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Premio.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InstitucionPostulantes.InstitucionNombre)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Equipo.Nombre)
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+<br />

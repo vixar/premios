@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNet.Identity
+@model ProyectoCalidad.Domain.Entities.EvaluadorPremio
+
+@{
+
+    ProyectoCalidad.Domain.Entities.ApplicationUser user = ViewBag.user;
+
+    if ( User.Identity.GetUserId() == Model.UsuarioID)
+    {
+        <button class="btn btn-primary m-b-15" onclick="createModal('@Url.Action("puntuarSubCriterio", "GuiaPostulantes", new {GuiaPostulantePuntuacionID = ViewBag.gpid, criterioID = ViewBag.criterio})')">Evaluar <i class="mdi mdi-pencil-box"></i></button>
+
+    }
+}

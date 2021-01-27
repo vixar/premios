@@ -1,0 +1,99 @@
+﻿@using ProyectoCalidad.Models.Paging;
+@model IPagedList<ProyectoCalidad.Domain.Entities.PostulantesAgenda>
+
+@{
+                /**/
+
+                ViewBag.Title = "Mantenimiento de Postulantes Agenda";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-tasks"></span>&nbsp;Mantenimiento de Postulantes Agenda</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span>&nbsp;B&uacute;squeda</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="Busqueda" class="col-md-3 control-label">Buscar estado</label>
+                    <div class="col-md-9">
+                        @Html.TextBox("Busqueda", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Estado a buscar." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-3">
+                        <button type="submit" class="btn btn-default">Buscar estado</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;Listado de Postulantes Agenda</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+
+                    <th>Agenda</th>
+                    <th>Postulante</th>
+                    <th>Actividad</th>
+                    <th>FechaHora Aprobado</th>
+
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Agendas.Descripcion</td>
+                        <td>@Html.ActionLink(item.Postulantes.PostulantesID.ToString(), "EditarPostulantesAgenda", new { criterioID = item.PostulanteAgendaID })</td>
+                        <td>@item.Actividad</td>
+                        <td>@item.FechaHoraAprobado</td>
+                        <td>@item.Estado</td>
+                        <td>
+                            @using (Html.BeginForm("InactivarCriterio", "Criterios"))
+                            {
+                                @Html.Hidden("postulanteAgendaID", item.PostulanteAgendaID)
+                                <input type="submit" value="Inactivar / Activar" class="btn btn-info btn-xs" />
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            @{
+                RouteValueDictionary r = new RouteValueDictionary();
+                r.Add("to", Request["to"]);
+                r.Add("from", Request["from"]);
+                r.Add("text", Request["text"]);
+            }
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, r)
+        </div>
+    </div>
+</div>
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Crear Postulante Agenda", "PostulanteAgenda", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

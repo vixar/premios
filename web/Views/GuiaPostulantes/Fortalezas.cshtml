@@ -1,0 +1,145 @@
+﻿@using System.Web.UI.WebControls
+@using Microsoft.Ajax.Utilities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model IEnumerable<ProyectoCalidad.Domain.Entities.GuiaPostulantes>
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <br />
+            <br />
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="card-box">
+                        <h1 class="m-t-0 header-title" style="font-family: 'Oswald', sans-serif;">Reporte de Fortalezas</h1>
+                        <div class="page-title-box pull-right">
+                            <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light">
+                                <img src="~/Content/assets/images/print-png-image-65244.png" style="width: 30px"/>
+                            </a>
+                            <a class="btn btn-primary" href="javascript:window.history.back()">Regresar</a>
+                        </div>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            @{
+                var criterios = Model.Select(x => x.CriterioID).Distinct().ToList();
+
+                for (int i = 0; i < criterios.Count(); i++)
+                {
+
+                    var c = Model.FirstOrDefault(x => x.CriterioID == criterios[i]);
+
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="m-t-0 header-title" style="font-family: 'Oswald', sans-serif;"><b>@c.CriterioCodigo - @c.CriterioNombre</b></h3>
+                                <p class="text-muted m-b-30" style="font-size: 15px">
+                                    @c.CriterioDescripcion
+                                </p>
+                            </div>
+
+
+
+                        </div>
+                        <!--end criterio-->
+                        @{
+                            var sub = Model.Where(x => x.CriterioID == c.CriterioID).DistinctBy(x => new {x.SubCriterioID, x.SubCriterioDescripcion, x.SubCriterioCodigo}).ToList();
+
+                            foreach (var s in sub)
+                            {
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <hr/>
+                                        <h3 class="m-t-0 header-title"><b>@s.SubCriterioCodigo - @s.SubCriterioDescripcion </b></h3>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 col-md-6">
+                                                <div class="card-box">
+                                                    @{
+                                                        var ejes = Model.Where(x => x.SubCriterioID == s.SubCriterioID).DistinctBy(x => new {x.EjemploID, x.EmeploDescripcion, x.EmeploCodigo}).ToList();
+
+                                                        var total = ejes.Count;
+                                                        var conteo = ejes.Count;
+
+                                                        foreach (var e in ejes)
+                                                        {
+                                                            if (e.PuntosFuertes == null)
+                                                            {
+                                                                conteo--;
+                                                            }
+
+
+                                                        }
+                                                    }
+
+
+                                                    <table class="table table-bordered table-striped" id="">
+                                                        <thead class="bg-primary text-white">
+                                                        <tr class="table-primary text-center">
+                                                            <th style="text-align: center;" class="col-lg-1 ">#</th>
+                                                            <th style="text-align: center; width:40%">Ejemplos</th>
+                                                            <th style="text-align: center; width:40%">Puntos Fuertes</th>
+
+
+
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @{
+
+                                                            var ejemplos = Model.Where(x => x.SubCriterioID == s.SubCriterioID).DistinctBy(x => new {x.EjemploID, x.EmeploDescripcion, x.EmeploCodigo}).ToList();
+                                                            foreach (var e in ejemplos)
+                                                            {
+                                                                <tr>
+                                                                    <td style="text-align: center;" class="col-lg-1" scope="row">@e.EmeploCodigo </td>
+                                                                    <td style="text-align: justify;">@e.EmeploDescripcion</td>
+                                                                    <td style="text-align: justify;">@e.PuntosFuertes</td>
+
+
+                                                                </tr>
+                                                            }
+
+                                                        }
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+
+                        <!--end loop subcriterios-->
+                    </div>
+
+                }
+            }
+
+
+            <!--end loop criterios-->
+
+        </div>
+
+    </div>
+
+</div>
+

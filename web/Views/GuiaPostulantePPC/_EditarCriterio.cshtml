@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.Domain.Entities.GuiaPostulantePuntuacion
+
+<script type="text/javascript">
+    $(function () {
+        $('#btsave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+
+    });
+</script>
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    //var evidencia = Model.Evidencia;
+    //var e = Path.GetFileName(evidencia);
+}
+
+@using (Html.BeginForm("EditarGuiaPostulantePuntuacion", "GuiaPostulantePuntuacion", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.InstitucionPostulanteID);
+    @Html.HiddenFor(model => model.EquipoEvaluadorID);
+    @Html.HiddenFor(model => model.GuiaPostulantePuntuacionID);
+    @Html.HiddenFor(model => model.SubCriterioID);
+    @Html.Hidden("FechaHora", DateTime.Now);
+    @Html.HiddenFor(model => model.EvaluadorID);
+    @Html.HiddenFor(model => model.NombreEvaluador);
+
+
+
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><i class="fa fa-times-circle"></i></span>
+        </button>
+        <h4 class="modal-title">Calificar Criterio</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+
+            <div class="panel panel-primary panel-border">
+
+                @*INICIO: Encabezado del formulario*@
+                <div class="panel-heading">
+                    <h2 class="panel-title">Ejemplo</h2>
+                    <div class="space"></div>
+                </div>
+                @*INICIO: Encabezado del formulario*@
+
+
+                @*INICIO: Formulario*@
+
+                <div class="card-box">
+                    <div class="col-md-12">
+                        <b> @ViewBag.subcriterio.SubCriterioCodigo - @ViewBag.subcriterio.SubCriterioDescripcion</b>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Nombre" class="col-md-3 control-label">P</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.PuntuacionP, new { @class = "form-control", @placeholder = "0 a 100" })
+                        </div>
+                        <label for="Nombre" class="col-md-3 control-label">D</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.PuntuacionD, new { @class = "form-control", @placeholder = "0 a 100" })
+                        </div>
+                        <label for="Nombre" class="col-md-3 control-label">C</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.PuntuacionC, new { @class = "form-control", @placeholder = "0 a 100" })
+                        </div>
+                        <label for="Nombre" class="col-md-3 control-label">A</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(x => x.PuntuacionA, new { @class = "form-control", @placeholder = "0 a 100" })
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <label for="Comentarios" class="col-md-3 control-label">Comentarios</label>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(x => x.Comentario, new { @class = "form-control", @placeholder = "Comentario" })
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer">
+                    <input class="btn btn-primary active" id="btsave" type="submit" value="Guardar" />
+                    <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+
+                @*FIN: Formulario*@
+
+            </div>
+
+        </div>
+    </div>
+}

@@ -1,0 +1,81 @@
+﻿@model ProyectoCalidad.WebUI.Models.ComentariosEvaluadoresViewModel
+
+@{
+    var evidencias = ViewBag.evidencias;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btsave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+
+    });
+</script>
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var id = (int)ViewBag.ipID;
+
+}
+
+<div class="modal-body">
+    <div class="form-horizontal">
+        <div class="">
+
+            <div class="row">
+                @using (Html.BeginForm("GuardarComentariosEvaluadoresJsono", "GuiaPostulantes", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+                {
+                    @Html.HiddenFor(x => x.EvaluadorID)
+                    @Html.HiddenFor(x => x.EjemploID)
+                    @Html.HiddenFor(x => x.GuiaPostulanteID)
+                    @Html.Hidden("InstitucionPostulanteID", id)
+
+                  
+                    <div class="col-sm-12">
+                        <div class="card-box">
+                            <h4>Comentarios</h4>
+                            <hr />
+                            <div class="form-group">
+                                <label for="Nombre" class="col-md-3 control-label">Fortalezas</label>
+                                <div class="col-md-6">
+                                    @Html.TextAreaFor(x => x.Fortalezas, new {@class = "form-control", id = "elm1", @placeholder = "Cometarios relacionados a las fortalezas."})
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Apellido" class="col-md-3 control-label">Informe de Retorno</label>
+                                <div class="col-md-6">
+                                    @Html.TextAreaFor(x => x.InformRetorno, new {@class = "form-control", id = "elm2", @placeholder = "Comentarios relacionados al informe de retorno."})
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cedula" class="col-md-3 control-label">Punto de vista</label>
+                                <div class="col-md-6">
+                                    @Html.TextAreaFor(x => x.PuntoDeVista, new {@class = "form-control", id = "elm3", @placeholder = "Punto de vista"})
+                                </div>
+
+
+                            </div>
+                            <hr/>
+                            <div class="">
+                                <button type="button" onclick="wys(@Model.EvaluadorID, @Model.EjemploID, @Model.GuiaPostulanteID, @id)" class="btn btn-primary">Guardar comentarios</button>
+
+                            </div>
+                        </div>
+                        
+
+                    </div>
+
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+

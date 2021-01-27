@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.Domain.Entities.Organismo
+
+@{
+    var usuario = ViewBag.usuario;
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+}
+@{
+    if (Model != null)
+    {
+        if (Model.Sector == "Interno")
+        {
+            if (user.Role == "POSTULANTE" || user.Role == "COORDINADOR-COMITE-INTERNO" || user.Role == "ADMIN")
+            {
+                @*<li class="dropdown" style=" font-size: 1.2em;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Unidad Postulante<span class="angle"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown" href="@Url.Action("InstitucionesPostulantesPorUsuario", "InstitucionPostulante", new { id = User.Identity.GetUserId(), siglas = "PIMP" })">Perfil</a></li>
+                    </ul>
+                </li>*@
+                <li class="dropdown" style=" font-size: 1.2em;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Unidad Postulante<span class="angle"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown" href="@Url.Action("Perfil", "Organismo", new { id = User.Identity.GetUserId(), siglas = "PIMP"  })">Perfil</a></li>
+                    </ul>
+                </li>
+
+            }
+
+
+        }
+        else
+        {
+            if (user.Role == "POSTULANTE" || user.Role == "COORDINADOR-COMITE-INTERNO" || user.Role == "ADMIN")
+            {
+                @*<li class="dropdown" style=" font-size: 1.2em;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Institución<span class="angle"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown" href="@Url.Action("InstitucionesPostulantesPorUsuario", "InstitucionPostulante", new { id = User.Identity.GetUserId(), sigals = "PNC" })">Perfil</a></li>
+                        </ul>
+                    </li>*@
+                <li class="dropdown" style=" font-size: 1.2em;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Institución<span class="angle"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown" href="@Url.Action("Perfil", "Organismo", new { id = User.Identity.GetUserId(), siglas = "PNC"  })">Perfil</a></li>
+                    </ul>
+                </li>
+            }
+            if (user.Role == "POSTULANTE-PPC" || user.Role == "COORDINADOR-COMITE-INTERNO" || user.Role == "ADMIN")
+            {
+                @*<li class="dropdown" style=" font-size: 1.2em;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Institución<span class="angle"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown" href="@Url.Action("InstitucionesPostulantesPorUsuario", "InstitucionPostulante", new { id = User.Identity.GetUserId(), siglas = "PPC" })">Perfil</a></li>
+                        </ul>
+                    </li>*@
+                <li class="dropdown" style=" font-size: 1.2em;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Insitución<span class="angle"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="dropdown" href="@Url.Action("Perfil", "Organismo", new { id = User.Identity.GetUserId(), siglas = "PPC"  })">Perfil</a></li>
+                    </ul>
+                </li>
+            }
+        }
+    }
+
+
+
+    @*if (HttpContext.Current.User.IsInRole("EVALUADOR-EXTERNO") ||
+            HttpContext.Current.User.IsInRole("COORDINADOR-EVALUADOR-EXTERNO") ||
+            HttpContext.Current.User.IsInRole("ADMIN"))
+        {
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Evaluadores<span class="angle"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a class="dropdown" href="@Url.Action("CrearEvaluador", "Evaluador", new {UsuarioID = User.Identity.GetUserId()})">Inscripción</a></li>
+                    <li><a class="dropdown" href="@Url.Action("CrearInstitucionPostulante", "InstitucionPostulante", new { id = User.Identity.GetUserId() })">Premios a evaluar</a></li>
+                    <li><a class="dropdown" href="@Url.Action("CrearInstitucionPostulante", "InstitucionPostulante", new { id = User.Identity.GetUserId() })">Equipo de trabajo</a></li>
+                </ul>
+            </li>
+
+        }*@
+
+
+}

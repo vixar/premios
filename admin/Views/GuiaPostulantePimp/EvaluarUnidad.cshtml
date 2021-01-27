@@ -1,0 +1,167 @@
+﻿
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-book"></span> Referencias</h3>
+
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <a href="@Url.Action("VerTablaPuntuacion", "Home" , new{premioID=premio.PremioID})" target="_blank" class="btn btn-primary waves-effect waves-light">Tabla de Puntuación</a>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+            @using (@Html.BeginForm("GuardarEvaluacion", "GuiaPostulantePuntuacionPimp", FormMethod.Post))
+            {
+                int criterioID = Convert.ToInt32(criterioSeleccionado);
+                for (int i = 0; i < criterios.Count(); i++)
+                {
+                    var c = Model.GuiaPostulantes.FirstOrDefault(x => x.CriterioID == criterios[i]);
+
+                    if (criterios[i] == criterioID)
+                    {
+                        <div class="row">
+                            <div class="form-group">
+                                <h3 for="Nombre" class="col-md-12">Área de evaluación</h3>
+                                <div class="col-md-12">
+                                    <textarea class="form-control" name="ComentarioJurado" placeholder="Comentarios"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioUno,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+
+                                    @*<input id="puntuacionUno" type="number" name="puntuacionUno" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionUno" class="text-muted">Memoria de Postulación. Resultados del Autodiagnóstico</h4>
+
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioDos,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionUno" type="number" name="puntuacionUno" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionDos" class="text-muted">Implementación de Buena(s) Prática(s)</h4>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioTres,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionTres" type="number" name="puntuacionTres" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionTres" class="text-muted">Interés, relevancia y carácter innovador y/o creativo de la(s) Buena(s) Práctica(s). Repercusión de la(s) uniciativa(s) en la imagen pública del MAP</h4>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioCuatro,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionCuatro" type="number" name="puntuacionCuatro" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionCuatro" class="text-muted">Consistencia en su implementación, costos, rigor en los mecanismos de control, seguimiento y validación de la(s) práctica(s)</h4>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioCinco,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionCinco" type="number" name="puntuacionCinco" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionCinco" class="text-muted">Aplicaciones de tecnologías de la información en la racionalización, simplificación, mejora y transparencia de la gestión y de los procesos</h4>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioSeis,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionSeis" type="number" name="puntuacionSeis" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionSeis" class="text-muted">Usuarios afectados e impacto de la atención a los mismos(extensos y/o internos)</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioSiete,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionSiete" type="number" name="puntuacionSiete" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionSiete" class="text-muted">Beneficios para el área de donde se implementó la(s) práctica(s) y las posibilidades de replicarla(s) en otras áreas. Implicaciones en el proceso de mejora continua del área</h4>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(x => x.GuiaPostulantePuntuacionPimp.FirstOrDefault
+                                        (a => a.CriterioID == criterioID).PuntuacionCriterioOcho,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })
+                                    @*<input id="puntuacionOcho" type="number" name="puntuacionOcho" value="" class="form-control"/>*@
+                                    <h4 for="puntuacionOcho" class="text-muted">Incidencia de la(s) iniciativa(s) en la mejora de los indicadores contenidos en el Plan Operativo del área</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-5">
+
+                            </div>
+                            <div class="col-sm-2">
+                                <a class="btn btn-teal" style="text-align: center" href="@Url.Action("")"><i class="mdi mdi-clipboard-text"></i> Guardar cambios </a>
+
+                            </div>
+                            <div class="col-sm-5">
+
+                            </div>
+                        </div>
+                    }
+                }
+
+
+
+
+            }
+
+
+            <!--end loop criterios-->
+
+        </div>
+    </div>
+
+
+    <!-- end row -->
+
+    <div class="hidden-print">
+
+    </div>
+
+</div>

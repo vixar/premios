@@ -1,0 +1,10 @@
+﻿@model ProyectoCalidad.Domain.Entities.PremioGuia
+<option value=""> -- Selección de la Guía --</option>
+
+@if (ViewBag.guiaList != null)
+{
+    foreach (var item in ViewBag.guiaList)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+}

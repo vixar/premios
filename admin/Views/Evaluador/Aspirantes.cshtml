@@ -1,0 +1,453 @@
+﻿@using System.ServiceModel.Activities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.Domain.Migrations
+@model IEnumerable<ProyectoCalidad.Domain.Entities.ApplicationUser>
+
+@{
+    ViewBag.Title = "Lista de Aspirantes";
+    var mensaje = ViewBag.mensaje;
+    var premioID = ViewBag.premioID;
+
+    List<SelectListItem> Roles = new List<SelectListItem>();
+    Roles.Add(new SelectListItem()
+    {
+        Text = "COORDINADOR-EVALUADOR-EXTERNO",
+        Value = "COORDINADOR-EVALUADOR-EXTERNO"
+    });
+    Roles.Add(new SelectListItem()
+    {
+        Text = "EVALUADOR-EXTERNO",
+        Value = "EVALUADOR-EXTERNO"
+    });
+
+}
+
+
+@section Style{
+
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+@{
+    @*if (Request.IsAuthenticated)
+    {
+
+        @Html.Action("Breadcrumb", "Home", new { controllerName = "Evaluador", viewName = "Aspirantes", premioID = premioID });
+
+
+    }*@
+}
+
+<div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Aspirantes</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="#">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#">Aspirantes</a>
+                    </li>
+                    <li class="active">
+                        Listado
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="javascript:window.history.back();" class="btn btn-danger btn-bordered waves-effect waves-light m-l-10 m-b-20" data-animation="fadein" data-plugin="custommodal"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+    </div><!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+            @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                <p class="text-muted font-13 m-b-30">
+                    The Buttons extension for DataTables provides a common set of options, API methods and
+                    styling to display buttons on a page that will interact with a DataTable. The core
+                    library provides the based framework upon which plug-ins can built.
+                </p>*@
+
+            <table id="datatable-buttons" class="table table-striped  table-colored table-info">
+                <thead>
+                    <tr>
+                        <th class="text-center">Imagen</th>
+                        <th class="text-center">Usuario</th>
+                        @*<th class="text-center">Motivo</th>*@
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">Rol</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @{
+                        var num = 0;
+
+                    }
+                    @foreach (var item in Model.Where(x => x.Role == "EVALUADOR-EXTERNO"))
+                    {
+                        num++;
+                        var NombreCompleto = item.NombreCompleto(item.Nombre, item.Apellido);
+                        var imagen = Path.GetFileName(item.Imagen);
+
+                        <tr>
+                            <td class="user-box text-center">
+                                @if (imagen != "Default.jpg")
+                                {
+                                    <a href="@Url.Action("PerfilEvaluador", "Account", new {id = item.Id, PremioID=ViewBag.premioID  })" class="dropdown-toggle waves-effect waves-light user-link" data-toggle="dropdown" aria-expanded="true">
+                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img">
+
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="" class="dropdown-toggle waves-effect waves-light user-link" data-toggle="dropdown" aria-expanded="true">
+                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img thumbnail">
+
+                                    </a>
+                                }
+
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => NombreCompleto)
+                            </td>
+                            @*<td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.Comentario)
+                                </td>*@
+                            @if (item.IsActive)
+                            {
+                                <td class="text-center">
+                                    Activo
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-center">
+                                    Inactivo
+                                </td>
+                            }
+
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            <td class="text-center">
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a target="_blank" href="@Url.Action("VerCV", "Account", new {userID = item.Id, premioID = premioID})">Ver CV</a>
+                                        </li>
+                                        <li>
+                                            <a target="_blank" href="@Url.Action("VerCompromisoEtico", "Account", new {userID = item.Id, premioID = premioID})">Ver código ético</a>
+                                        </li>
+
+                                        <li>
+                                            <a style="cursor: pointer" onclick="activarAceptarModal('@item.Id') ">Aceptar</a>
+                                        </li>
+
+                                        <li>
+                                            <a style="cursor: pointer" onclick="activarModal('@item.Id', @premioID)">Rechazar</a>
+                                        </li>
+                                        @if (User.IsInRole("ADMIN") || User.IsInRole("COORDINADOR-COMITE-INTERNO"))
+                                        {
+                                            @*<li>
+                                                    <a href="@Url.Action("ListaEquiposEvaluadores", "InstitucionPostulante", new {InstitucionPostulanteID = item.InstitucionPostulanteID})"><i class=" mdi mdi-library-plus"></i> Evaluadores</a>
+                                                </li>*@
+                                        }
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="rechazado-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Motivo</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("RechazarAspirante", "Evaluador", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="userId" name="userId" value="">
+                        var pid = ViewBag.PremioID;
+                        <input type="hidden" id="PremioID" name="PremioID" value="@pid" />
+                        //@Html.Hidden("")
+                        <div class="form-group">
+                            <label class="control-label">Debe de escribir un motivo</label>
+                            <textarea class="form-control" name="motivo" placeholder="Escriba una razón para enviar el correo electrónico" required oninvalid="this.setCustomValidity('Este campo es obligatorio')"></textarea>
+
+                        </div>
+                        <hr />
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-primary waves-effec">Enviar Notificación</button>
+                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div id="aceptar-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Role</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("AceptarEvaluador", "Evaluador", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        var pid = ViewBag.PremioID;
+                        <input type="hidden" id="UsuarioID" name="UsuarioID" value="" />
+                        <input type="hidden" id="PremioID" name="PremioID" value="@premioID" />
+                        //@Html.Hidden("")
+                        @*<div class="form-group">
+                                <label class="control-label">Seleccione un tipo de rol para este usuario</label>
+                                @Html.DropDownList("RolSeleccionado", Roles, new { @class = "form-control" })
+                            </div>*@
+                        <hr />
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-primary waves-effec">Enviar Notificación</button>
+                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- end row -->
+@section scripts{
+
+    <!-- Tooltipster js -->
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/Pages/jquery.tooltipster.js"></script>
+
+
+    <!-- DataTable js -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script>
+
+
+        function activarModal(id, premioid) {
+
+            $("#userId").val(id);
+
+            $("#rechazado-modal").modal();
+
+            //alert("modal activo " + id);
+
+        }
+
+        function activarAceptarModal(id) {
+
+            $("#UsuarioID").val(id);
+
+            $("#aceptar-modal").modal();
+
+            //alert("modal activo " + id);
+
+        }
+
+
+
+        //Activar/Desactivar Evaluador
+
+        //Activar/Desactivar Evaluador
+
+        function fn(id, i) {
+            console.log("varibale input: ", i.id);
+            var $this = this.checked;
+            debugger;
+            $('#' + i.id).change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/Aspirante?id=" + id,
+                    success: function (data) {
+                        if (data === "True") {
+                            $("#" + i.id).each(function () {
+                                this.checked = true;
+                                location.reload();
+                            });
+                        } else {
+                            $("#" + i.id).each(function () {
+                                this.checked = false;
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+        };
+
+
+        //datatable
+        $(document).ready(function () {
+
+
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                    //footer: '<a href>Why do I have this issue?</a>'
+                });
+            }
+
+
+
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+
+
+
+            //MENSAJES
+                if('@TempData["tipo"]' === "success") {
+                    debugger;
+                    Swal.fire({
+                        type: '@TempData["tipo"]',
+                        title: '@TempData["mensaje"]',
+                        html: '@TempData["texto"]'
+                    });
+
+                }
+            if('@TempData["tipo"]' === "error") {
+                debugger;
+                Swal.fire({
+                    type: '@TempData["tipo"]',
+                    title: '@TempData["mensaje"]',
+                    html: '@TempData["texto"]'
+                });
+
+            }
+
+
+            //--> END
+
+        });
+        TableManageButtons.init();
+
+    </script>
+}

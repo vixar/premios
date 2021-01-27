@@ -1,0 +1,16 @@
+﻿
+@model ProyectoCalidad.Domain.Entities.Ejemplos
+
+<option value=" ">
+    Selecciona el Ejemplo
+</option>
+
+@{
+    if (ViewBag.EjemploID != null)
+    {
+        foreach (var item in ViewBag.EjemploID)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    }
+}

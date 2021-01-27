@@ -1,0 +1,96 @@
+﻿@using ProyectoCalidad.Models.Paging;
+@model IPagedList<ProyectoCalidad.Domain.Entities.Criterio>
+
+@{
+    ViewBag.Title = "Mantenimiento de Criterios";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-tasks"></span>&nbsp;Mantenimiento de Criterios</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span>&nbsp;B&uacute;squeda</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="Busqueda" class="col-md-3 control-label">Buscar estado</label>
+                    <div class="col-md-9">
+                        @Html.TextBox("Busqueda", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Estado a buscar." })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-3">
+                        <button type="submit" class="btn btn-default">Buscar estado</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;Listado de Criterios</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Fecha Actualizacion</th>
+                    <th>Ponderacion</th>
+
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Codigo</td>
+                        <td>@Html.ActionLink(item.Nombre, "EditarCriterio", new { criterioID = item.CriterioID })</td>
+                        <td>@item.FechaHora</td>
+                        <td>@item.Ponderacion</td>
+                        <td>@item.Estado</td>
+                        <td>
+                            @using (Html.BeginForm("InactivarCriterio", "Criterios"))
+                            {
+                                @Html.Hidden("criterioID", item.CriterioID)
+                                <input type="submit" value="Inactivar / Activar" class="btn btn-info btn-xs" />
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            @{
+                RouteValueDictionary r = new RouteValueDictionary();
+                r.Add("to", Request["to"]);
+                r.Add("from", Request["from"]);
+                r.Add("text", Request["text"]);
+            }
+            @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, r)
+        </div>
+    </div>
+</div>
+
+@section sideMenu
+{
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Crear Criterios", "CrearCriterio", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

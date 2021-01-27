@@ -1,0 +1,110 @@
+﻿
+@model WebPublico.WebUI.Models.OrganismoViewModel
+
+
+@section style{
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+    <link href="~/Content/premio.css" rel="stylesheet" />
+
+}
+
+<div class="page-header larger parallax custom" style="background-image:url(~/Content/assets/images/MAP/m1.png)">
+    <div class="container">
+        <h1>PERFÍL DE LA  @Html.Raw(Model.Organismo.Nombre.ToString())</h1>
+        <ol class="breadcrumb">
+            <li><a href="/Home/Index">Inicio</a></li>
+            <li><a href="#">Organismo</a></li>
+            <li class="active">Perfíl</li>
+        </ol>
+    </div><!-- End .container -->
+
+</div><!-- End .page-header -->
+
+
+<div class="container">
+    <h2 class="title text-center" style="font-family: 'Oswald', sans-serif;">DATOS DEL ORGANISMO</h2>
+
+    <div class="row">
+        <table class="table table-primary table-bordered">
+            <thead>
+                <tr>
+                    <th>RNC</th>
+                    <th>Organismo</th>
+                    <th>Funcionario</th>
+                    <th>Sector</th>
+                    <th>Dirección</th>
+                    <th>Estado Actual</th>
+                    <th style="width:30px">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Organismo.RNC</td>
+                    <td>@Model.Organismo.Nombre</td>
+                    <td>@Model.Organismo.FuncionarioNombre @Model.Organismo.FuncionarioApellido</td>
+                    <td>@Model.Organismo.Sector</td>
+                    <td>
+                        @Model.Organismo.Direccion1 <br />
+                        @Model.Organismo.Direccion2 <br />
+                        @Model.Organismo.DireccionFisica
+                    </td>
+                    <td>@Model.Organismo.Estado </td>
+                    <td>
+                        <a href="@Url.Action("EditarOrganismoByOrganismoId", "Organismo", new { organismoId = Model.Organismo.OrganismoID })" class="btn btn-custom">Editar</a>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <div class="clearfix mb25 visible-xs visible-sm"></div><!-- margin -->
+    </div>
+    <br />
+
+    <h2 class="title text-center" style="font-family: 'Oswald', sans-serif;">POSTULACIONES</h2>
+
+    <div class="row">
+        @if (Model.InstitucionesPostulantes.Any())
+        {
+
+            <table class="table table-primary table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Premio</th>
+                        <th>Guia</th>
+                        <th>Estado</th>
+                        <th style="width:30px">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.InstitucionesPostulantes)
+                    {
+                        <tr>
+                            <td>@item.InstitucionPostulanteID</td>
+                            <td>@item.Premio.Descripcion</td>
+                            <td>@item.PremioGuia.Descripcion</td>
+                            <td>@item.Estado</td>
+                            <td>
+                                <a href="@Url.Action("Perfil", "InstitucionPostulante", new {id = item.InstitucionPostulanteID})" class="btn btn-custom">Perfíl</a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+
+        }
+        else
+        {
+            <div class="text-center">
+                No hay postulación registrada
+
+            </div>
+        }
+
+
+    </div><!-- End .row -->
+</div><!-- End .container -->

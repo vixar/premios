@@ -1,0 +1,131 @@
+﻿@model  ProyectoCalidad.Domain.Entities.InstitucionPostulante
+
+@{
+    ViewBag.Title = "Editar Postulante";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Postulante</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Criterio <strong>@Model.InstitucionPostulanteID</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarInstitucionPostulante", "InstitucionPostulante", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.InstitucionPostulanteID)
+
+
+            @Html.ValidationSummary(true)
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Premio</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("PremioID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="InstitucionID" class="col-md-3 control-label">InstitucionID</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.InstitucionID, new { @class = "form-control", @placeholder = "Institucion ID." })
+                    @Html.ValidationMessageFor(x => x.InstitucionID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="MaximaAutoridad" class="col-md-3 control-label">M&acute;xima Autoridad</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.MaximaAutoridad, new { @class = "form-control", @placeholder = "Maxima Autoridad." })
+                    @Html.ValidationMessageFor(x => x.MaximaAutoridad, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="FechaCompromiso" class="col-md-3 control-label">Fecha de Compromiso</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.FechaCompromiso, new { @class = "form-control", @placeholder = "Fecha de Compromiso." })
+                    @Html.ValidationMessageFor(x => x.FechaCompromiso, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ComentarioCoordinador" class="col-md-3 control-label">Comentario Coordinador</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.ComentarioCoordinador, new { @class = "form-control", @placeholder = "Comentario de Coordinador." })
+                    @Html.ValidationMessageFor(x => x.ComentarioCoordinador, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ComentarioJurado" class="col-md-3 control-label">Comentario Jurado</label>
+                <div class="col-md-9">
+                    @*@Html.TextBoxFor(x => x.ComentarioJurado, new { @class = "form-control", @placeholder = "Comentario de Jurado." })*@
+                    @Html.TextAreaFor(model => model.ComentarioJurado, 4, 55, new { @class = "form-control", @placeholder = "Comentario de Jurado.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.ComentarioJurado, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Comentario" class="col-md-3 control-label">Comentario</label>
+                <div class="col-md-9">
+                    @*@Html.TextBoxFor(x => x.Comentario, new { @class = "form-control", @placeholder = "Comentario ." })*@
+                    @Html.TextAreaFor(model => model.Comentario, 4, 55, new { @class = "form-control", @placeholder = "Comentario.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Comentario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PuntuacionFinal" class="col-md-3 control-label">Puntuaci&oacute;n Final</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PuntuacionFinal, new { @class = "form-control", @placeholder = "Puntuacion Final ." })
+                    @Html.ValidationMessageFor(x => x.PuntuacionFinal, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @{
+                        bool activo = true; // Model.Estado.Equals("Activo");
+                    }
+                    @Html.CheckBox("EstadoBool", activo, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Registrar datos</button>
+                    @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+<ul class="nav navbar-nav navbar-left">
+    <li>
+        <button class="button-menu-mobile open-left waves-effect waves-light">
+            <i class="mdi mdi-menu"></i>
+        </button>
+    </li>
+    @*<li class="hidden-xs">
+            <form role="search" class="app-search">
+                <input type="text" placeholder="Busqueda..."
+                       class="form-control">
+                <a href=""><i class="fa fa-search"></i></a>
+        </form>
+        </li>*@
+    <li class="hidden-xs">@Html.ActionLink("Regresar a Criterios", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+
+</ul>
+  
+}

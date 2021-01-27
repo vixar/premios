@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNet.Identity
+@*@using SMT_WebUI.Models*@
+
+<div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav navbar-right">
+
+        <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Premios <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Agenda", "Index", "Agenda")</li>
+                <li>@Html.ActionLink("Creacion de Premios", "Index", "Premios")</li>
+                <li>@Html.ActionLink("Postulante", "Index", "Postulantes")</li>
+                <li>@Html.ActionLink("Postulante Documentos", "Index", "PostulanteDocumentos")</li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Guias <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Guia", "Index", "Guia")</li>
+                <li>@Html.ActionLink("Guia Detalle", "Index", "GuiaDetalle")</li>
+                <li>@Html.ActionLink("Guia Postulante", "Index", "GuiaPostulantes")</li>
+                <li>@Html.ActionLink("Criterios", "Index", "Criterios")</li>
+                <li>@Html.ActionLink("Sub Criterios", "Index", "SubCriterios")</li>
+                <li>@Html.ActionLink("Ejemplos", "Index", "Ejemplos")</li>
+            </ul>
+        </li>
+        <li>@Html.ActionLink("Estadisticas", "Index", "Index")</li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administracion <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Tipo de Premio", "Index", "TipoPremio")</li>
+                <li>@Html.ActionLink("Estado Actividad", "Index", "EstadoActividad")</li>
+                <li>@Html.ActionLink("Tipo Documento", "Index", "TipoDocumento")</li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Seguridad <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink("Personas", "Index", "Personas")</li>
+                <li>@Html.ActionLink("Roles", "Index", "Roles")</li>
+            </ul>
+        </li>
+
+        <li><a href="#">Ayuda</a></li>
+        <li><a href="#">Acerca</a></li>
+        <li>@Html.ActionLink("Contacto", "contac", "Home")</li>
+        <li><a href="#">&nbsp;</a></li>
+    </ul>
+</div>

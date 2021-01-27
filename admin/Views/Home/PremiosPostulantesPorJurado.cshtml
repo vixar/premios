@@ -1,0 +1,46 @@
+﻿@using ProyectoCalidad.Domain.Entities
+@model  IEnumerable<ProyectoCalidad.Domain.Entities.Premio>
+
+@{
+
+    ApplicationUser user = null;
+
+    if (ViewBag.user != null)
+    {
+        user = ViewBag.user;
+    }
+
+    if (Model != null && user != null)
+    {
+
+
+        foreach (var item in Model)
+        {
+
+            <li>
+                @if (item.TipoPremio.Siglas == "PIMP")
+                {
+                    <a href="@Url.Action("Index", "InstitucionPostulantePimp", new {PremioID = item.PremioID, UserID = user.Id, siglas = item.TipoPremio.Siglas})"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas</a>
+
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "InstitucionPostulante", new {PremioID = item.PremioID, UserID = user.Id, siglas = item.TipoPremio.Siglas})"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas</a>
+
+                }
+            </li>
+
+
+        }
+
+    }
+    else
+    {
+        <li>
+
+            <p class="text-danger">ID Usuario Inválido</p>
+        </li>
+
+    }
+
+}

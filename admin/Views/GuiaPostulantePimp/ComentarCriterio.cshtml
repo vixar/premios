@@ -1,0 +1,306 @@
+﻿
+
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.WebUI.Models
+@model ProyectoCalidad.WebUI.Models.GuiaPostulantePimpModel
+
+@{
+
+    int c = 0;
+    if (ViewBag.c != null)
+    {
+        c = ViewBag.c.CriterioID;
+    }
+
+    var criterioSeleccionado = ViewBag.CriterioSeleccionado;
+    Mensajes mensaje = new Mensajes();
+    if (ViewBag.mensaje != null)
+    {
+        mensaje = ViewBag.mensaje;
+    }
+}
+
+<h2> @Model.GuiaPostulantePuntuacionPimp.InstitucionPostulante.InstitucionNombre</h2>
+<hr />
+<div class="row">
+    <div class="col-sm-4">
+        @{
+            //var premio = ViewBag.Premio;
+            var premioid = ViewBag.premioID;
+        }
+
+        <a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+    </div><!-- end col -->
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+
+            @if (Model.ComentariosJuradoModel != null && c != null)
+            {
+                var comentario = Model.ComentariosJuradoModel.FirstOrDefault(x => x.CriterioID == c);
+                int numero = 1;
+                if (comentario != null)
+                {
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-box">
+                                <h2 class="header-title m-t-0 m-b-30" style="font-family: 'Oswald', sans-serif;">@ViewBag.c.CriterioNombreCompleto</h2>
+                                <h2 class="header-title m-t-0 m-b-30" style="font-family: 'Oswald', sans-serif;">COMENTARIOS</h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+
+
+                                            <h4 for="Nombre">Puntos Fuertes</h4>
+                                            @Html.TextArea("PuntosFuertes", comentario.PuntosFuertes, new { @class = "form-control", id = "elm1", @placeholder = "Cometarios relacionados a las fortalezas." })
+
+                                            @*<textarea class="form-control" rows="5" id="elm1" val placeholder="Cometarios relacionados a las fortalezas."></textarea>*@
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @{
+                                            numero++;
+                                        }
+
+                                        <div class="form-group">
+                                            <h4 for="Nombre">Áreas de mejora</h4>
+                                            @Html.TextArea("AreaMejora", comentario.AreaMejora, new { @class = "form-control", id = "elm2", @placeholder = "Cometarios relacionados a las fortalezas." })
+
+                                            @*<textarea class="form-control" rows="5" id="elm2" placeholder="Comentarios relacionados al informe de retorno."></textarea>*@
+                                        </div>
+                                    </div>
+
+                                    <button type="button" onclick="wys(@comentario.JuradoID, @comentario.CriterioID, @comentario.InstitucionPostulanteID)" class="btn btn-block btn-primary" id="submit">Guardar comentarios</button>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+
+
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/plugins/tinymce/tinymce.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script>
+
+        function DisplayProgressMessage() {
+            $("#back").prop("disabled", true);
+            $("#submitBack").prop("disabled", true).text("Guardando...");
+            $("#submit").prop("disabled", true).text("Guardando...");
+            $("#submitNext").prop("disabled", true).text("Guardando...");
+            $("#home").prop("disabled", true);
+
+            $(".submit-progress").removeClass("hidden");
+
+            $("body").addClass("submit-progress-bg");
+
+            return true;
+        }
+
+        function DisplayNoneProgressMessage() {
+            $("#back").prop("disabled", false);
+            $("#submitBack").prop("disabled", false);
+            $("#submit").prop("disabled", false);
+            $("#submitNext").prop("disabled", false);
+            $("#home").prop("disabled", false);
+
+            $(".submit-progress").addClass("hidden");
+
+            $("body").removeClass("submit-progress-bg");
+
+            return true;
+        }
+
+        $(document).ready(function() {
+            if ($("#elm1").length > 0) {
+                tinymce.init({
+                    selector: "#elm1",
+                    theme: "modern",
+                    height: 100,
+                    width: "100%",
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar:
+                        "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+
+
+            if ($("#elm2").length > 0) {
+                tinymce.init({
+                    selector: "#elm2",
+                    theme: "modern",
+                    height: 100,
+                    width: "100%",
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar:
+                        "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+
+            if ($("#elm3").length > 0) {
+                tinymce.init({
+                    selector: "#elm3",
+                    theme: "modern",
+                    height: 100,
+                    width: "100%",
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar:
+                        "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+
+            if ("@mensaje.tipo".length > 0) {
+                Swal.fire({
+                    title: "@mensaje.mensaje",
+                    html: "@mensaje.texto",
+                    type: "@mensaje.tipo"
+                });
+            }
+        });
+
+
+        //Envia a guardar la información y se mantiene en el mismo ejemplo
+        function wys(juradoID, criterioID, institucionPostulanteID) {
+
+            //debugger;
+            let tAreaValue0;
+            let tAreaValue1;
+            let tAreaValue2;
+            let id2 = institucionPostulanteID;
+            let id = id2;
+
+            var url = "@Url.Action("GuardarComentariosJuradoJson", "GuiaPostulantePimp")";
+
+            var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+
+            for (i=0; i < tinymce.editors.length; i++){
+                var content = tinymce.editors[i].getContent();
+                if (i === 0) {
+                    tAreaValue0 = content;
+                }
+                if (i === 1) {
+                    tAreaValue1 = content;
+                }
+                if (i === 2) {
+                    tAreaValue2 = content;
+                }
+                //var txtAreaID = tinyMCE.editors[i].id;
+            }
+
+            var model = {
+                JuradoID : juradoID,
+                InstitucionPostulanteID: institucionPostulanteID,
+                CriterioID: criterioID,
+                PuntosFuertes: tAreaValue0,
+                AreaMejora: tAreaValue1,
+            }
+
+            DisplayProgressMessage();
+
+            console.log(model);
+
+            debugger;
+            $.ajax({
+                url: url,
+                type: "POST",
+                //contentType: "application/json",
+                data:  model,
+                success: function (response) {
+                    DisplayNoneProgressMessage();
+                    if (response === "True") {
+                        Swal.fire({
+                            title: "Comentarios actualizados",
+                            html: "Los campos fueron actualizados correctamente",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+
+                        setTimeout(function() {
+
+                                location.reload();
+
+                            },
+                            2000);
+                    } else {
+                        Swal.fire({
+                            title: "Comentarios no actualozados",
+                            html: "Hubo un error al intentar guardar la información",
+                            type: "error",
+                            timer: 5000,
+                            showConfirmButton: true
+                        });
+                    }
+                    @*setTimeout(function () {
+
+                            var url = "@Url.Action("Index", "GuiaPostulantes")";
+
+                            var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+                            window.location.href = url;
+
+                        },
+                        2000);*@
+                }
+            });
+
+
+        }
+
+
+    </script>
+}

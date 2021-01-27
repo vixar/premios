@@ -1,0 +1,810 @@
+﻿@using System.Text.RegularExpressions
+@using System.Web.UI.WebControls
+@using Microsoft.Ajax.Utilities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using WebPublico.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model IEnumerable<ProyectoCalidad.Domain.Entities.GuiaPostulantes>
+
+@{
+    /**/
+
+    ViewBag.Title = "Mantenimiento de Criterios";
+
+    var criterioSeleccionado = ViewBag.CriterioSeleccionado;
+
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    List<PuntuacionPostulantePPCModel> puntuacionTotal = ViewBag.puntuacionTotal as List<PuntuacionPostulantePPCModel>;
+
+    //var listaEvidencias = ViewBag.evidencias;
+
+
+}
+@section style{
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+}
+
+@*section Style
+    {
+        <!-- Plugin Css-->
+        <link rel="stylesheet" href="~/plugins/magnific-popup/css/magnific-popup.css" />
+        <link rel="stylesheet" href="~/plugins/jquery-datatables-editable/datatables.css" />
+    }*@
+
+<div class="page-header larger parallax custom" style="background-image:url(../../Content/assets/images/MAP/m1.png)">
+    <div class="container">
+        <h1>Guía del postulante</h1>
+        <ol class="breadcrumb">
+            <li><a href="/Home/Index" style="font-size:15px">Inicio</a></li>
+            <li><a style="font-size:15px" href="@Url.Action("Index", "GuiaPostulantes", new { InstitucionPostulanteID = Model.First().InstitucionPostulanteID })">Guía Postulante</a></li>
+            <li style="font-size:15px" class="active">Guía</li>
+        </ol>
+    </div><!-- End .container -->
+</div><!-- End .page-header -->
+@*<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span>Busqueda</h3>
+
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm())
+            {
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="Busqueda" class="col-md-3 control-label">Buscar estado</label>
+                        <div class="col-md-9">
+                            @Html.TextBox("Busqueda", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Estado a buscar." })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-3">
+                            <button type="submit" class="btn btn-default">Buscar estado</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>*@
+
+@*<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span> Memoria
+
+
+            </h3>
+
+        </div>
+    </div>*@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+                <h2 class="header-title m-t-0 m-b-30" style="font-family: 'Oswald', sans-serif;">CRITERIOS</h2>
+                @* TABS DE LA GUIA *@
+                <ul class="nav nav-tabs navtab-bg" id="criteriosTab">
+                    @{
+                        var active = "";
+                        var expanded = "false";
+                        var criterios = Model.Select(x => x.CriterioID).Distinct().ToList();
+                        for (int i = 0; i < criterios.Count(); i++)
+                        {
+                            var c = Model.FirstOrDefault(x => x.CriterioID == criterios[i]);
+                            if (i == 0) { active = "active"; expanded = "true"; } else { active = ""; expanded = "false"; }
+
+
+                            <li class="@active">
+                                <a href="#criterio-@c.CriterioID" data-toggle="tab" aria-expanded="@expanded">
+                                    <span class="visible-xs"><i class="fa fa-home"></i></span>
+                                    <span class="hidden-xs" style="font-weight: bolder">Criterio -@c.CriterioCodigo</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                <div class="tab-content">
+                    @{
+                        var num = 1;
+                        for (int i = 0; i < criterios.Count(); i++)
+                        {
+                            if (i == 0) { active = "active"; } else { active = ""; }
+
+                            var c = Model.FirstOrDefault(x => x.CriterioID == criterios[i]);
+
+                            var puntos = puntuacionTotal?.FirstOrDefault(x => x.Criterio.CriterioID == c?.CriterioID);
+
+                            <div class="tab-pane @active" id="criterio-@c.CriterioID">
+                                <div class="card-box" style="background-color:#ffffff">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4 class="m-t-0 header-title" style="font-family: 'Oswald', sans-serif;"><b>@c.CriterioCodigo - @c.CriterioNombre</b></h4>
+                                            <p class="text-muted m-b-30" style="font-size: 15px">
+                                                @c.CriterioDescripcion
+
+                                            </p>
+
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            <div class="input-group" style="border-style: dashed;border-color: #a6e2ca;">
+                                                <span class="input-group-addon" style="padding: 10px;">Total Pre-visita</span>
+                                                <label style="margin-top: 5px; margin-left: 15px;">
+                                                    @if (puntos != null)
+                                                    {
+                                                        @puntos.TotalPre
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @:0
+                                                    }
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3 right">
+
+                                            <div class="input-group" style="border-style: dashed;border-color: #a6e2ca;">
+                                                <span class="input-group-addon" style="padding: 10px;">Total Post-visita</span>
+                                                <label style="margin-top: 5px; margin-left: 15px;">
+                                                    @if (puntos != null)
+                                                    {
+                                                        @puntos.TotalPost
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @:0
+                                                    }
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!--end criterio-->
+                                    @{
+                                        var sub = Model.Where(x => x.CriterioID == c.CriterioID).DistinctBy(x => new { x.SubCriterioID, x.SubCriterioDescripcion, x.SubCriterioCodigo }).OrderBy(x => x.SubCriterioCodigo).ToList();
+
+                                        foreach (var s in sub)
+                                        {
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <hr />
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <h3 class="m-t-0 header-title"><b>@s.SubCriterioCodigo - @s.SubCriterioDescripcion </b></h3>
+                                                        </div>
+                                                        @if (user.IsCoordinador)
+                                                        {
+                                                            List<GuiaPostulantePuntuacionPPC> gppc = ViewBag.guiaPPC as List<GuiaPostulantePuntuacionPPC>;
+                                                    <div class="col-md-3">
+                                                        @*<label class="input-desc">Input Group</label>*@
+                                                        @using (Html.BeginForm("GuardarPuntuacionPPCPostulantePre", "GuiaPostulantePPC", FormMethod.Post, new { id = "form-ejemploEdit", @class = "full-form" }))
+                                                        {
+                                                            if (gppc?.FirstOrDefault(x => x.SubCriterioID == s.SubCriterioID) != null)
+                                                            {
+                                                                @Html.Hidden("guiaPpcId", gppc.FirstOrDefault(x => x.SubCriterioID == s.SubCriterioID)?.GuiaPostulantePuntuacionPPCID)
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.Hidden("guiaPpcId", 0)
+                                                            }
+
+                                                            @Html.Hidden("ipId", s.InstitucionPostulanteID)
+                                                            @Html.Hidden("scId", s.SubCriterioID)
+                                                            @Html.Hidden("guiaPostulanteId", s.GuiaPostulanteID)
+                                                            @Html.Hidden("criterioSeleccionado", (string)criterioSeleccionado)
+
+                                                            <div class="input-group" style="border-style: dashed;border-color: #a6e2ca;">
+                                                                <span class="input-group-addon" style="padding: 0px;"><button class="btn btn-primary" type="submit">Puntuar</button></span>
+                                                                <input type="number" name="puntuacionPre" class="form-control" placeholder="Puntuación Pre">
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                            <div class="col-md-3 right">
+                                                                @*<label class="input-desc">Input Group</label>*@
+                                                                @using (Html.BeginForm("GuardarPuntuacionPPCPostulantePost", "GuiaPostulantePPC", FormMethod.Post, new { id = "form-ejemploEdit", @class = "full-form" }))
+                                                                {
+                                                                    @Html.Hidden("ipId", s.InstitucionPostulanteID)
+                                                                    @Html.Hidden("scId", s.SubCriterioID)
+                                                                    @Html.Hidden("guiaPostulanteId", s.GuiaPostulanteID)
+                                                                    @Html.Hidden("criterioSeleccionado", (string)criterioSeleccionado)
+
+                                                                <div class="input-group" style="border-style: dashed; border-color: #a6e2ca;">
+                                                                    @if (puntos != null)
+                                                                    {
+                                                                        if (puntos.AtivarPost)
+                                                                        {
+                                                                            <span class="input-group-addon" style="padding: 0px;"><button class="btn btn-primary" type="submit">Puntuar</button></span>
+
+                                                                        }
+
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="input-group-addon" style="padding: 0px;"><button class="btn btn-primary" disabled="disabled" type="submit">Puntuar</button></span>
+
+                                                                    }
+                                                                    <input type="number" name="puntuacionPre" class="form-control" placeholder="Puntuación Post">
+                                                                </div>
+                                                                }
+                                                            </div>
+                                                        }
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-6">
+                                                            <div class="card-box">
+                                                                @{
+                                                                    var ejes = Model.Where(x => x.SubCriterioID == s.SubCriterioID).DistinctBy(x => new { x.EjemploID, x.EmeploDescripcion, x.EmeploCodigo }).ToList();
+
+                                                                    var total = ejes.Count;
+                                                                    var conteo = ejes.Count;
+
+                                                                    foreach (var e in ejes)
+                                                                    {
+                                                                        if (e.PuntosFuertes == null || e.AreadeMejoras == null)
+                                                                        {
+                                                                            conteo--;
+                                                                            if (e.PuntosFuertes == null && e.AreadeMejoras != null)
+                                                                            {
+                                                                                conteo++;
+                                                                            }
+                                                                            if (e.PuntosFuertes != null && e.AreadeMejoras == null)
+                                                                            {
+                                                                                conteo++;
+                                                                            }
+
+                                                                        }
+
+                                                                    }
+                                                                }
+
+                                                                <div class="pull-right">
+                                                                    Ejemplos completos: ( @conteo / @total )
+                                                                </div>
+                                                                <table class="table table-bordered table-striped" id="">
+                                                                    <thead class="bg-primary text-white">
+                                                                        <tr class="table-primary text-center">
+                                                                            <th style="text-align: center;" class="col-lg-1 ">#</th>
+                                                                            <th style="text-align: center;">Ejemplos</th>
+                                                                            <th style="text-align: center;">Puntos Fuertes <br />(Detallar Evidencias)</th>
+                                                                            <th style="text-align: center;">Áreas de Mejora</th>
+                                                                            @if (user.Role == "POSTULANTE-PPC")
+                                                                            {
+                                                                                <th style="text-align: center;">Completar/<br />Consultar</th>
+                                                                                @*<th style="text-align: center;">Asignar Evidencia</th>*@
+
+
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <th style="text-align: center;" class="col-sm-2">Ver Evidencias</th>
+                                                                            }
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @{
+
+                                                                            var ejemplos = Model.Where(x => x.SubCriterioID == s.SubCriterioID).DistinctBy(x => new { x.EjemploID, x.EmeploDescripcion, x.EmeploCodigo }).OrderBy(x => x.EmeploCodigo).ToList();
+                                                                            foreach (var e in ejemplos)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td style="text-align: justify;" class="col-lg-1" scope="row">@e.EmeploCodigo </td>
+                                                                                    <td style="text-align: justify; width: 30%">@e.EmeploDescripcion</td>
+                                                                                    <td style="width: 40%; text-align: justify; word-wrap: break-word; word-break: break-all; white-space: normal;">@e.PuntosFuertes</td>
+                                                                                    <td style="width: 20%; text-align: justify; word-wrap: break-word; word-break: break-all; white-space: normal;">@e.AreadeMejoras</td>
+                                                                                    @if (user.Role == "POSTULANTE-PPC")
+                                                                                    {
+                                                                                        @*<td class="actions">
+                                                                                                <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                                                                                                <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                                                                                <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                                                                                                <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                                                                                            </td>*@
+
+                                                                                        <td class="col-sm-2" style="text-align: center; width: 15px">
+                                                                                            @*<button class="btn btn-primary" onclick="createModal('@Url.Action("EditarEjemplo", "GuiaPostulantes", new { id = e.EjemploID, guiaPostulanteID = e.GuiaPostulanteID })')"><i class="fa fa-edit" style="font-size: 18px"></i></button>*@
+                                                                                            <a class="btn btn-primary" href="@Url.Action("EditarEjemplo", "GuiaPostulantePPC", new {id = e.EjemploID, guiaPostulanteID = e.GuiaPostulanteID, criterioSeleccionado = c.CriterioID })"><i class="fa fa-edit" style="font-size: 30px"></i></a>
+
+                                                                                        </td>
+                                                                                        @*<td style="text-align: center">
+                                                                                                <button  class="btn btn-green" onclick="createModal('@Url.Action("listasEvidencias", "GuiaPostulantes", new{EjemploID = e.EjemploID, guiaPostulanteID = e.GuiaPostulanteID})')">
+                                                                                                    <i class="fa fa-plus" style="font-size: 18px"></i>
+                                                                                                </button>
+                                                                                            </td>*@
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td class="col-sm-2">
+                                                                                            <a class="btn btn-primary" href="@Url.Action("EditarEjemplo", "GuiaPostulantePPC", new {id = e.EjemploID, InstitucionPostulanteID = e.InstitucionPostulanteID, guiaPostulanteID = e.GuiaPostulanteID, rol = user.Role, criterioSeleccionado = c.CriterioID})"><i class="fa fa-edit" style="font-size: 30px"></i></a>
+
+                                                                                            @*<button class="btn btn-primary" onclick="createModal('@Url.Action("EditarEjemplo", "GuiaPostulantes", new {id = e.EjemploID, InstitucionPostulanteID = e.InstitucionPostulanteID, rol = user.Role})')"><i class="mdi mdi-eye" style="font-size: 30px"></i></button>*@
+                                                                                        </td>
+                                                                                    }
+
+                                                                                </tr>
+                                                                            }
+
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+
+
+                                    <!--end loop subcriterios-->
+                                </div>
+                            </div>
+
+
+                        }
+
+                    }
+                </div>
+
+            </div>
+        </div> <!-- end col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+
+
+
+
+            <!--end loop criterios-->
+
+        </div>
+
+        <!-- end row -->
+
+        <div class="hidden-print">
+
+        </div>
+
+    </div>
+    <!--end col-->
+    @*}*@
+</div>
+
+
+
+@section modals
+{
+
+    @*<div class="modal fade" id="myModal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modelContent">
+                </div>
+            </div>
+        </div>*@
+
+
+
+
+}
+<!-- Modal -->
+@*<div class="modal fade" id="listaEvidencias" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modelEvidencias">
+            </div>
+        </div>
+    </div>*@
+
+@section scripts
+{
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+    <script src="~/Content/assets/js/bootstrap-filestyle.min.js">
+    </script>
+
+    <script>
+
+        //MESAJES
+
+        if ('@TempData["type"]'.length > 0) {
+            Swal.fire({
+                type: '@TempData["type"]',
+                title: '@TempData["mensaje"]',
+                html: '@TempData["texto"]'
+            });
+
+        }
+
+        //activar el tab-pane antes seleccionado
+
+        $(document).ready(function(){
+            activaTab('criterio-' + '@criterioSeleccionado');
+            debugger;
+        });
+
+        function activaTab(tab){
+            $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+        };
+
+
+
+
+        //--> END
+
+        function AsignacionEvidencia(url, trID) {
+            var trValor = $("#"+trID);
+            trValor.attr("style", "background-color:#49ba173b");
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function (data) {
+                    console.log("data: ", data);
+                    $("form#form-ejemploEdit").submit(function(e) {
+                        e.preventDefault();
+                    });
+                    //location.reload();
+                },
+                error: function() {
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Evidencia No Asiganda',
+                        text: 'No se pudo asignar la evidencia'
+                    });
+                }
+            });
+        }
+
+        @*if ('@ViewBag.ejemploFull'.trim().length > 0) {
+            var alert = '@ViewBag.ejemploFull';
+            debugger;
+            if (alert === 'True') {
+
+                Swal.fire({
+                    type: 'warning',
+                    title: 'Imposible asignar',
+                    text: 'este ejemplo ya tiene 3 evidencias suministradas'
+                });
+                alert = 'False';
+                //return false;
+            }
+        }*@
+
+        $(":file").filestyle({ buttonText: "subir memoria" });
+
+        $(".FilUploader").on("change",
+            function() {
+                var fileExtension = ".pdf";
+                var archivo = $(this).val().split('.').pop().toLowerCase();
+                alert(archivo);
+                if (($(this).val().split('.').pop().toLowerCase(), fileExtension) === -1) {
+                    alert("Only formats are allowed : " + fileExtension.join(', '));
+                }
+            });
+
+        $('.modal').on('shown.bs.modal',
+            function () {
+
+                var chars = $("#PuntosFuertes").val().length;
+
+                //debugger;
+                if (chars < 1000) {
+                    var rest = 1000 - chars;
+                    $("#charNum").html("Caracteres restantes: " + rest);
+                }
+                console.log(chars);
+
+                $("#PuntosFuertes").keyup(function(){
+                    var el = $(this);
+                    console.log(el.val().length);
+                    if(el.val().length >= 1000){
+                        el.val( el.val().substr(0, 1000) );
+                    } else {
+
+                        $("#charNum").text("Caracteres restantes: "  + (999-el.val().length));
+                    }
+                });
+                //valicación de extensión del documento: PRIMERA FASE
+
+
+                var texto = $('#PuntosFuertes').val();
+
+                //debugger;
+                var num = 0;
+                console.log("texto ", texto);
+
+                $('#btnSave').on('click',
+                    function () {
+
+                        let arrEvidencias = [
+                            $("#eDocumento1").val(), $("#eEnlace1").val(), $("#eDocumento2").val(),
+                            $("#eEnlace2").val(), $("#eDocumento3").val(), $("#eEnlace3").val()
+                        ];
+
+                    //EVIDENCIAS
+                    arrEvidencias.forEach(evidencia => {
+                        if (evidencia !== "" && evidencia !== undefined) {
+                            //alert('evidencia', evidencia);
+                            num++;
+                        }
+                    });
+
+                        if (num > 0) {
+                            //debugger;
+                            let listaDocumentos = [
+                                $("#eDocumento1").val(), $("#eDocumento2").val(), $("#eDocumento3").val()
+                            ];
+
+                        //console.log('lista', listaDocumentos);
+
+                            //console.log('archivo', $("#eDocumento1").val().split('.').pop());
+                            listaDocumentos.forEach(documento => {
+                                if (documento.length > 0) {
+                                    let extension = documento.split('.').pop();
+                                    if (extension !== "pdf") {
+                                        Swal.fire({
+                                            type: 'error',
+                                            title: 'Documento Incorrecto',
+                                            text: 'La extensión permitida es .pdf',
+                                        });
+                                    } else {
+                                        //debugger;
+                                        $(this).parents("form:first").submit();
+                                        var hash = window.location.hash;
+                                        $('#criteriosTab a[href="' + hash + '"]').tab('show');
+                                    }
+                                }
+
+                            });
+                            $(this).parents("form:first").submit();
+                            var hash = window.location.hash;
+                            $('#criteriosTab a[href="' + hash + '"]').tab('show');
+                            return;
+                        } else {
+                            //debugger;
+                            let num = 0;
+                            arrEvidencias = [
+                                $("#documento1"), $("#enlace1"), $("#documento2"), $("#enlace2"),
+                                $("#documento3"), $("#enlace3")
+                            ];
+                            arrEvidencias.forEach(evidencia => {
+                                let e = evidencia.is(':disabled');
+                                if (e) {
+                                    num++;
+                                }
+                            });
+
+                            if (num > 0) {
+                                //debugger;
+                                $(this).parents("form:first").submit();
+                            } else {
+                                if (texto.trim().length > 0) {
+                                    alert('Debe de cargar una evidencia o cancelar la operación');
+
+                                } else {
+                                    //alert('guardar');
+                                    //debugger;
+                                    $(this).parents("form:first").submit();
+                                }
+
+                        }
+
+                    }
+
+
+                });
+
+
+                if (texto.length > 0) {
+                    alert('texto ' + texto.length);
+                    $("#evidencias").removeAttr('style', 'display=none');
+                    $("#listaEvidencia").removeAttr('style', 'display=none; ');
+
+                } else {
+                    console.log("puntos fuertes: ", $("#PuntosFuertes"));
+
+
+                    $("#PuntosFuertes").click(function () {
+
+                        //alert('Estoy dentro de Punto Fuertes');
+                        //debugger;
+
+                        alert('blurring');
+                        let texto = $('#PuntosFuertes').val();
+                        console.log("texto on blur ", texto.length);
+
+                        if (texto.trim().length > 0) {
+                            alert('blurring');
+                            $("#evidencias").removeAttr('style', 'display=none');
+                            $("#listaEvidencia").removeAttr('style', 'display=none');
+                        }
+                        else {
+                            if(texto.length )
+                            //$("#evidencias").attr('style', 'display=none');
+                            $('#btnSave').on('click', function () {
+                                alert('Debe de completar el campo Punto Fuerte o cancelar la operación');
+                            });
+                        }
+
+                    });
+                }
+
+                var validacion = '@ViewBag.mensaje';
+
+                if (validacion) {
+                    $("#mensaje").removeAttr("style", "display:none");
+                }
+
+                //VALIDACIONES DE ÁREA DE MEJORA
+
+                var tbody = $("#table tbody");
+
+                if (tbody.children().length !== 0) {
+
+                    var conteo = tbody.children().length;
+
+
+                    var cell = conteo;
+                    cell = parseInt(cell);
+
+                    if (cell === 1) {
+
+                        $("#documento1").attr("disabled", true);
+                        $("#enlace1").attr("disabled", true);
+                    }
+
+                    if (cell === 2) {
+
+                        $("#documento1").prop("disabled", true);
+                        $("#enlace1").prop("disabled", true);
+
+                        $("#documento2").attr("disabled", true);
+                        $("#enlace2").attr("disabled", true);
+                    }
+
+
+                    if (cell === 3) {
+
+                        $("#documento1").prop("disabled", true);
+                        $("#enlace1").prop("disabled", true);
+
+                        $("#documento2").attr("disabled", true);
+                        $("#enlace2").attr("disabled", true);
+
+                        $("#documento3").attr("disabled", true);
+                        $("#enlace3").attr("disabled", true);
+                    }
+
+
+                }
+
+                $(":file").filestyle({ buttonText: "subir archivo" });
+
+
+                $("#documento1").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaDocumento1").removeAttr('style', 'margin-top: 22px; display:none');
+                        $("#evidenciaEnlace1").attr('style', 'margin-top: 22px; display:none');
+
+
+                    }
+
+
+                });
+                $("#enlace1").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaEnlace1").removeAttr('style', 'margin-top: 22px; display:none');
+                        $("#evidenciaDocumento1").attr('style', 'margin-top: 22px; display:none');
+                    }
+
+
+                });
+
+                $("#documento2").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaDocumento2").removeAttr('style', 'margin-top: 22px; display:none');
+                        $("#evidenciaEnlace2").attr('style', 'margin-top: 22px; display:none');
+                    }
+
+
+                });
+                $("#enlace2").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaEnlace2").removeAttr('style', 'margin-top: 22px; display:none');
+                        $("#evidenciaDocumento2").attr('style', 'margin-top: 22px; display:none');
+                    }
+
+
+                });
+
+                $("#documento3").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaDocumento3").removeAttr('style', 'margin-top: 22px; display:none');
+                        $("#evidenciaEnlace3").attr('style', 'margin-top: 22px; display:none');
+                    }
+
+
+                });
+                $("#enlace3").click(function() {
+
+                    if ($(this).is(':checked')) {
+                        $("#evidenciaEnlace3").removeAttr('style', 'margin-top: 22px; display:none');
+
+
+                        $("#evidenciaDocumento3").attr('style', 'margin-top: 22px; display:none');
+
+
+                        //var evidencia = $("#evidenciaEnlace3").val();
+                        //if (evidencia) {
+                        //    $('#btnSave').on('click',
+                        //        function() {
+                        //            alert('Ha cargado una evidencia');
+                        //            //$(this).parents("form:first").submit();
+                        //        });
+                        //} else {
+
+                        //    $('#btnSave').on('click',
+                        //        function() {
+                        //            debugger;
+                        //            alert('Debe de completar el campo Punto Fuerte o cancelar la operación');
+                        //        });
+
+                        //}
+
+
+                    }
+
+
+                });
+
+
+            });
+
+        //$(document).ready(function() {
+
+        //    var documento = $("#documento");
+        //    console.log("input ", documento);
+        //});
+
+        //function createModal(url) {
+        //    //console.log('estoy aqui');
+        //    var documento = $("#documento");
+        //    //console.log("input ", documento);
+        //    $('#modelContent').load(url);
+        //    $('#myModal').modal('show');
+        //}
+
+        //function listaEvidenciasModal(url) {
+        //    //console.log('estoy aqui');
+        //    var documento = $("#documento");
+        //    //console.log("input ", documento);
+        //    $('#modelEvidencias').load(url);
+        //    $('#listaEvidencias').modal('show');
+        //}
+
+    </script>
+}
+

@@ -1,0 +1,663 @@
+﻿
+@{
+    var premioID = 1; //luego cambiar a variable
+    var pID = ViewBag.premioID;
+
+    var premio = ViewBag.premio;
+}
+
+@section styles
+{
+    <link rel="stylesheet" href="~/Content/assets/css/homepages/index-event.css">
+
+}
+
+<div class="main">
+    <div class="page-header larger parallax custom mb0" style="background-image:url(assets/images/page-header-bg.jpg)">
+        <div class="container">
+            <h1>PREMIO A LA CALIDAD DE LA PROVINCIA SANTIAGO</h1>
+            <ol class="breadcrumb">
+                <li><a href="">Inicio</a></li>
+                <li><a href="">Premio</a></li>
+                <li class="active">PREMIO A LA CALIDAD DE LA PROVINCIA SANTIAGO</li>
+            </ol>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <div class="bg-white border pt65 pb50 mb70">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>Información:</h2>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingOne2">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">
+                                        <b>DATOS GENERALES</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseOne2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne2">
+                                <div class="panel-body">
+                                    <p style="text-align: justify">
+                                        El premio a la calidad de la gestión del sector público de la provincia de Santiago se enmarca en el objetivo de apoyar,
+                                        desde el Ministerio de Administración Pública, la iniciativa de convertir a Santiago en la provincia con los mejores
+                                        servicios públicos del Caribe y Centroamérica.
+                                    </p>
+
+                                    <p style="text-align: justify">
+                                        En coherencia con el Plan Estratégico de Santiago y otras iniciativas privadas y públicas que buscan el desarrollo
+                                        sostenible de la ciudad y la provincia, para ello se requieren servicios eficientes y eficaces con capacidad para
+                                        responder a las crecientes necesidades ciudadanas.
+                                    </p>
+
+                                    <p style="text-align: justify">
+                                        Esta premiación complementa los esfuerzos realizados por el MAP, de manera ininterrumpida y sistemática durante estos
+                                        últimos 10 Años en los que se ha priorizado el impulsar una gestión de calidad en la administración pública de cara al
+                                        ciudadano. Guardando una perfecta alineación con el Premio Nacional a la Calidad y Reconocimiento a las Prácticas
+                                        Promisorias.
+                                    </p>
+                                    <p style="text-align: justify">
+                                        Otro de sus objetivos es el de reconocer y resaltar el esfuerzo por la mejora continua en la gestión de organismos
+                                        públicos y se orienta a la visión de elevar el servicio de la administración pública dominicana al nivel de los estándares
+                                        de clase mundial.
+                                    </p>
+                                    <p style="text-align: justify">
+                                        Como un punto innovador este premio desea facilitar la gestión de los organismos, para lo que ha desarrollado una herramienta
+                                        en línea a la que se podrá accesar desde cualquier oficina o PC. Esto buscar que las organizaciones eficienticen el uso de
+                                        la tecnología y maximizar capacidades.
+
+                                    </p>
+
+
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingTwo2">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                                        <b>OBJETIVOS DEL PREMIO</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseTwo2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo2">
+                                <div class="panel-body">
+                                    <ul>
+                                        <li><i class="fa fa-check-square-o"></i> Fomentar el uso de modelos de gestión de calidad y excelencia y de procesos de mejora continua en la administración pública de la provincia.</li>
+                                        <hr />
+                                        <li><i class="fa fa-check-square-o"></i> Promover la autoevaluación masiva de los organismos públicos de la provincia, con la utilización de un formulario de autoevaluación basado en el Marco Común de Evaluación CAF (utilizado en su integridad, en el Premio Nacional).</li>
+                                        <hr />
+
+                                        <li><i class="fa fa-check-square-o"></i> Promover un espacio de intercambio de experiencias y aprendizaje interinstitucional sobre temas de calidad y aplicación del modelo de gestión.</li>
+                                        <hr />
+                                        <li><i class="fa fa-check-square-o"></i> Reconocer públicamente los logros obtenidos en la implantación parcial o total de procesos de calidad en las instituciones públicas de la provincia. </li>
+                                        <hr />
+                                        <li><i class="fa fa-check-square-o"></i> Destacar y compartir las prácticas sobresalientes que han sido desarrolladas en cualquier ámbito de los organismos del sector público de la provincia.</li>
+                                    </ul>
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingThree2">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree2" aria-expanded="false" aria-controls="collapseThree2">
+                                        <b>ALCANCE</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseThree2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree2">
+                                <div class="panel-body">
+                                    <p>
+                                        Pueden participar todos los organismos del sector público de la Provincia de Santiago, de los diferentes sectores que componen el Estado, centralizados, descentralizados, organismos autónomos, municipales, distritos municipales, provistos de personalidad jurídica de derecho público, titulares de  competencia y prerrogativas públicas. Incluyendo unidades que cuenten con una dirección y capacidad de organizar su gestión dentro de la institución.  La postulación a esta premiación es totalmente gratuita.
+                                    </p>
+
+
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingFour2">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour2" aria-expanded="false" aria-controls="collapseFour2">
+                                        <b>CONDICIONES PARA POSTULAR</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseFour2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour2">
+                                <div class="panel-body">
+                                    <p>
+                                        Los órganos administrativos habilitados a ejercer en nombre de los entes públicos las competencias que se les atribuyen, y que muestren interés en postular no deben haber sido sancionados por ningún tribunal competente, durante el año de la realización del premio, ni en el anterior, incluyendo procesos en curso. Si la organización ha sido denunciada, y aún no ha concluido el proceso de investigación, puede participar, pero si resultara premiada y la investigación concluye en que la institución debe ser sancionada, el premio será anulado y se hará de conocimiento público.
+                                    </p>
+                                    <p>
+
+                                        En caso de que el postulante se encuentre involucrado en un conflicto social o comunitario evidenciado, el Ministerio tomara la decisión sobre su participación o no en el Premio.
+                                    </p>
+                                    <p>
+
+                                        En caso de resultar ganador un organismo dependiente de un Ministerio u otro organismo del primer nivel, el galardón podrá ser recibido por el Director del Organismo individual o a quien este designara.
+                                    </p>
+
+
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingSix2">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix2" aria-expanded="false" aria-controls="collapseSix2">
+                                        <b>CRITERIOS DE EVALUACIÓN. MODELO DE CALIDAD DE GESTIÓN</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseSix2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix2">
+                                <div class="panel-body">
+                                    <p>
+                                        Para fines del Premio, el MAP está promoviendo el Marco Común de Evaluación (CAF), modelo utilizado en los países de la Unión Europea como instrumento de evaluación de la gestión en las instituciones públicas.
+                                    </p>
+                                    <p>
+
+                                        Las razones fundamentales para la adopción de este Modelo en la gestión pública dominicana, son su adecuación a las características de las organizaciones del sector público y su compatibilidad con los principales modelos organizacionales aplicados en otros países del mundo.
+                                    </p>
+
+
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingSeven2">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven2" aria-expanded="false" aria-controls="collapseSeven2">
+                                        <b>OTRAS CARACTERÍSTICAS FAVORABLES SON:</b>
+                                    </a>
+                                </h4>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseSeven2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven2">
+                                <div class="panel-body">
+                                    <ol>
+                                        <li>1. Introducir a la Administración Pública en la cultura de la excelencia y de los principios del GCT (Gestión de la Calidad Total, TQM en sus siglas en inglés)</li>
+                                        <li>2. Guiarla progresivamente hacia un auténtico ciclo PDCA: Planificar, Desarrollar, Controlar y Actuar. </li>
+                                        <li>3. Facilitar la autoevaluación de una organización pública con el fin de obtener un diagnóstico y definir acciones de mejora. </li>
+                                        <li>4. Hacer de puente entre los diferentes modelos que se usan en la gestión de la calidad, tanto del sector público como en el privado. </li>
+                                        <li>5. Facilitar el benchlearning (aprendizaje tomando como referencia a los mejores) entre las organizaciones del sector público. </li>
+                                    </ol>
+
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div><!-- End .panel -->
+                    </div><!-- End .panel-group -->
+                    <hr />
+
+                    @*<div class="container">
+                            <h2 class="title dark mb25">Calendario </h2>
+
+                            <div role="tabpanel">
+                                <!-- Nav pills -->
+                                <ul class="nav nav-pills nav-pills-gray" role="tablist">
+                                    <li role="presentation" class="active"><a href="#special-id-1" aria-controls="special-id-1" role="tab" data-toggle="tab" aria-expanded="true">Inicio de premio</a></li>
+
+                                    <li role="presentation" class=""><a href="#special-id-2" aria-controls="special-id-2" role="tab" data-toggle="tab" aria-expanded="false">Entrega de documentación</a></li>
+
+                                    <li role="presentation" class=""><a href="#special-id-3" aria-controls="special-id-3" role="tab" data-toggle="tab" aria-expanded="false">Fecha Premiación</a></li>
+                                </ul>
+
+                                <!-- Tab Panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="special-id-1">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="event-part">
+                                                    <h4><a href="#">Inscripciones de Postulantes Abiertas</a></h4>
+                                                    <div class="event-time">Lunes 25 Junio 2020 - 08:00 am</div><!-- end .event-titme -->
+
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Inicio de las postulaciones</div><!-- End .event-location -->
+                                                            <div class="event-speaker"><a href="#"></a></div><!-- End .event-speaker -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        <a href="#" class="btn btn-custom btn-sm btn-rounded">Inscribir Institución Postulante</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                                <div class="event-part">
+                                                    <h4><a href="#">Inscripciones de evaluadores Internos/exteros Abiertas</a></h4>
+                                                    <div class="event-time">Lunes 25 Junio 2020 - 08:00 am</div><!-- end .event-titme -->
+
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Formación de equipos de evaluadores</div><!-- End .event-location -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        <a href="#" class="btn btn-custom btn-sm btn-rounded">Inscribirme como evaluador</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                            </div><!-- End .col-sm-4 -->
+
+                                        </div><!-- End .row -->
+                                    </div><!-- End .tab-pane -->
+                                    <div role="tabpanel" class="tab-pane" id="special-id-2">
+                                        <div class="row">
+
+                                            <div class="col-sm-4">
+                                                <div class="event-part">
+                                                    <h4><a href="#">Memoria</a></h4>
+                                                    <div class="event-time">Lunes 25 Enero 2021 - 08:00 am - 05:00 pm</div><!-- end .event-titme -->
+
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Fecha límite para subir al sistema:</div><!-- End .event-location -->
+                                                            <div class="event-speaker"><a href="#">Memorias</a></div><!-- End .event-speaker -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        @*<a href="#" class="btn btn-custom btn-sm btn-rounded">Ir a la guía</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                                <div class="event-part">
+                                                        <h4><a href="#">Completar Guía</a></h4>
+                                                        <div class="event-time">Lunes 27 Enero 2021 - 08:00 am - 05:00 pm</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location"></div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">Jason Room</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+
+                                                    <div class="event-part">
+                                                        <h4><a href="#">Hello Express</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room B</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">John Doe</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+                                            </div><!-- End .col-sm-4 -->
+
+                                        </div><!-- End .row -->
+                                    </div><!-- End .tab-pane -->
+                                    <div role="tabpanel" class="tab-pane" id="special-id-3">
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="event-part">
+                                                    <h4><a href="#">Rueda de Prensa</a></h4>
+                                                    <div class="event-time">Lunes 25 Marzo 2021 - 10:00 am</div><!-- end .event-titme -->
+
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Conferencia de premiación</div><!-- End .event-location -->
+                                                            <div class="event-speaker"><a href="#">Sujeta a cambio</a></div><!-- End .event-speaker -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        @*<a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                                @*<div class="event-part">
+                                                        <h4><a href="#">Foto </a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room D</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">Jason Room</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+
+                                                    <div class="event-part">
+                                                        <h4><a href="#">Getting MEAN</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room E</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">John Doe</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+                                            </div><!-- End .col-sm-4 -->
+
+                                            <div class="col-sm-4">
+                                                <div class="event-part">
+                                                    <h4><a href="#">Ceremonia de premiación</a></h4>
+                                                    <div class="event-time">Lunes 25 de Marzo - 02:00 am - 4:00 pm</div><!-- end .event-titme -->
+
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Ceremonia</div><!-- End .event-location -->
+                                                            <div class="event-speaker"><a href="#">Salón Princiap</a></div><!-- End .event-speaker -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        @*<a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                                @*<div class="event-part">
+                                                        <h4><a href="#">MongoDB Advanced</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room D</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">Jason Room</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+
+                                                    <div class="event-part">
+                                                        <h4><a href="#">Hello Express</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room B</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">John Doe</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+                                            </div><!-- End .col-sm-4 -->
+
+                                            <div class="col-sm-4">
+                                                <div class="event-part">
+
+                                                    <h4><a href="#">Cierre de la premiación</a></h4>
+                                                    <div class="event-time">Lunes 25 de Marzo - 8:00 pm</div><!-- end .event-titme -->
+                                                    <div class="event-meta clearfix">
+                                                        <div class="event-meta-left">
+                                                            <div class="event-location">Jet-Set</div><!-- End .event-location -->
+                                                            <div class="event-speaker"><a href="#">Juan Luis Gerra - 4.40</a></div><!-- End .event-speaker -->
+                                                        </div><!-- End .event-meta-left -->
+                                                        @*<a href="#" class="btn btn-custom btn-sm btn-rounded">ANotar Fec</a>
+                                                    </div><!-- End .event-meta -->
+                                                </div><!-- End .event-part -->
+                                                @*<div class="event-part">
+                                                        <h4><a href="#">MEAN Practice</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room F</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">Michelle Samson</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+
+                                                    <div class="event-part">
+                                                        <h4><a href="#">MongoDB Advanced</a></h4>
+                                                        <div class="event-time">08:00 am - 11:00 am</div><!-- end .event-titme -->
+
+                                                        <div class="event-meta clearfix">
+                                                            <div class="event-meta-left">
+                                                                <div class="event-location">Conferance room A</div><!-- End .event-location -->
+                                                                <div class="event-speaker"><a href="#">Rachel Doe</a></div><!-- End .event-speaker -->
+                                                            </div><!-- End .event-meta-left -->
+                                                            <a href="#" class="btn btn-custom btn-sm btn-rounded">Buy a ticket</a>
+                                                        </div><!-- End .event-meta -->
+                                                    </div><!-- End .event-part -->
+                                            </div><!-- End .col-sm-4 -->
+                                        </div><!-- End .row -->
+                                    </div><!-- End .tab-pane -->
+                                </div><!-- End .tab-content -->
+                            </div><!-- end role[tabpanel] -->
+                        </div>*@
+                    <hr />
+                </div><!-- End .col-md-6 -->
+
+                <div class="clearfix mb25 visible-xs visible-sm"></div><!-- margin -->
+
+                <div class="col-md-4">
+                    <div class="about-slider owl-carousel">
+
+                        <img src="~/Content/assets/images/MAP/Estatuillas/Estatuillas/PremioProvincial.JPG" alt="Image title">
+                        @*<img src="~/Content/assets/images/aboutslider/item2.jpg" alt="Image title">
+                            <img src="~/Content/assets/images/aboutslider/item3.jpg" alt="Image title">
+                            <img src="~/Content/assets/images/aboutslider/item4.jpg" alt="Image title">*@
+                    </div><!-- End. about-slider -->
+                </div><!-- End .col-md-6 -->
+            </div><!-- End .row -->
+            <div class="row">
+                <div class="col-sm-6">
+                    <a href="" data-toggle="modal" data-target="#registrarse-modal" class="btn btn-success">REGISTRARSE</a>
+                </div>
+            </div>
+        </div><!-- End .container -->
+    </div><!-- End .bg-gray -->
+    @*<div class="container">
+            <div class="col-md-6">
+                <h2>Documentos</h2>
+
+                <div role="tabpanel" class="vertical-tab left">
+
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#description3" aria-controls="description3" role="tab" data-toggle="tab">Base</a></li>
+
+                        <li role="presentation"><a href="#profile3" aria-controls="profile3" role="tab" data-toggle="tab">Presentación</a></li>
+
+                        <li role="presentation"><a href="#messages3" aria-controls="messages3" role="tab" data-toggle="tab">Para las Instituciones Postulantes</a></li>
+
+                        <li role="presentation"><a href="#options3" aria-controls="options3" role="tab" data-toggle="tab">Documentos para Evaluadores</a></li>
+                        <li role="presentation"><a href="#jurado3" aria-controls="jurado3" role="tab" data-toggle="tab">Documentos para el Jurado</a></li>
+                    </ul>
+
+                    <!-- Tab Panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="description3">
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+                            <p>Base</p>
+                        </div><!-- End .tab-pane -->
+                        <div role="tabpanel" class="tab-pane" id="profile3">
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+
+                        </div><!-- End .tab-pane -->
+                        <div role="tabpanel" class="tab-pane" id="messages3">
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+
+                        </div><!-- End .tab-pane -->
+                        <div role="tabpanel" class="tab-pane" id="options3">
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+                        </div><!-- End .tab-pane -->
+                        <div role="tabpanel" class="tab-pane" id="jurado3">
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+                            <a href="#"><img src="~/Content/assets/images/MAP/iconos png/pdfs-512.png" alt="Alternate Text" style="width: 25%" /></a>
+
+
+                        </div><!-- End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- end role[tabpanel] -->
+            </div>
+        </div>*@
+
+    <div class="mb60"></div><!-- margin -->
+    @*<div class="container">
+            <h3>Cómo Postular?</h3>
+            <iframe width="400" height="220" src="https://www.youtube.com/embed/5m_xxDKX6eM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>*@
+    @*<div class="container">
+            <div class="team-carousel-wrapper">
+                <h2 class="title custom mb25" style="color: grey">Información Relacionada:</h2>
+                <div class="row">
+                    <div class="col-sm-6 col-md-3">
+                        <div class="text-block">
+                            <figure>
+                                <img src="~/Content/assets/images/blocks/item1.jpg" alt="Image">
+                            </figure>
+                            <h2>Proceso de selección de ganadores</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto debitis nemo ipsa iure aliquid! Impedit et rem in distin ctio tenetur electus aut deleniti.</p>
+                            <a href="@Url.Action("/PremioNacional/Proceso_seleccion")" class="readmore">Leer más <i class="fa fa-angle-double-right"></i></a>
+                        </div><!-- End .text-block -->
+                    </div><!-- End .col-md-3 -->
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="text-block">
+                            <figure>
+                                <img src="~/Content/assets/images/blocks/item2.jpg" alt="Image">
+                            </figure>
+                            <h2>Bases y condiciones </h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto debitis nemo ipsa iure aliquid! Impedit et rem in distin ctio tenetur electus aut deleniti.</p>
+                            <a href="@Url.Action("/PremioNacional/Bases")" class="readmore dark">Leer más <i class="fa fa-angle-double-right"></i></a>
+                        </div><!-- End .text-block -->
+                    </div><!-- End .col-md-3 -->
+
+                    <div class="visible-sm clearfix"></div>
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="text-block">
+                            <figure>
+                                <img src="~/Content/assets/images/blocks/item3.jpg" alt="Image">
+                            </figure>
+                            <h2>Pasos para inscribirse</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto debitis nemo ipsa iure aliquid! Impedit et rem in distin ctio tenetur electus aut deleniti.</p>
+                            <a href="@Url.Action("/PremioNacional/Pasos-Inscripcion")" class="readmore custom">Leer más <i class="fa fa-angle-double-right"></i></a>
+                        </div><!-- End .text-block -->
+                    </div><!-- End .col-md-3 -->
+
+                    <div class="col-sm-6 col-md-3">
+                        <div class="text-block">
+                            <figure>
+                                <img src="~/Content/assets/images/blocks/item4.jpg" alt="Image">
+                            </figure>
+                            <h2>Calendario</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto debitis nemo ipsa iure aliquid! Impedit et rem in distin ctio tenetur electus aut deleniti.</p>
+                            <a href="@Url.Action("/PremioNacional/Calendario")" class="readmore custom2">Leer más <i class="fa fa-angle-double-right"></i></a>
+                        </div><!-- End .text-block -->
+                    </div><!-- End .col-md-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .team-carousel-wrapper -->
+        </div><!-- End .container -->*@
+
+    <div class="mb60"></div><!-- margin -->
+    @*<div class="bg-custom border pt40 pb30">
+            <div class="container">
+                <h2 class="title text-white mb25">Instituciones que han participado</h2>
+                <div class="clients-carousel owl-carousel">
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                    <a href="#" class="client" title="Partner name">
+                        <img src="~/Content/assets/images/clients/client1.png" alt="Partner Logo">
+                    </a>
+                </div><!-- End .clients-carousel -->
+            </div><!-- End .container -->
+        </div><!-- End .bg-custom -->*@
+</div><!-- End .main -->
+<div class="modal fade" id="registrarse-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <form id="#" method="get" action="#">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title" id="myModalLabel4">Elija el perfil que desea crear</h3>
+                </div><!-- End .modal-header -->
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-sm-3">
+                            <a href="@Url.Action("Register", "Account", new{perfil = "postulante", premioID = premio})">
+                                <div class="service service-box">
+                                    <i class="fa fa-user icon-bg"></i>
+                                    <h3 class="service-title">Postulante</h3>
+                                    <p>Representante de la unidad</p>
+                                </div><!-- End .service -->
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
+                            <a href="@Url.Action("Register", "Account", new{perfil = "evaluador", premioID = premio})">
+                                <div class="service service-box">
+                                    <i class="fa fa-pencil icon-bg"></i>
+                                    <h3 class="service-title">Evaluador</h3>
+                                    <p>Colaborador en la evaluaci&oacute;n de participantes</p>
+                                </div><!-- End .service -->
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
+                            <a href="@Url.Action("Register", "Account", new{perfil = "jurado", premioID = premio})">
+                                <div class="service service-box">
+                                    <i class="fa fa-black-tie icon-bg"></i>
+                                    <h3 class="service-title">Jurado</h3>
+                                    <p>Miembro de la Comisi&oacute;n Evaluadora, qui&eacute;n determina el ganador del premio</p>
+                                </div><!-- End .service -->
+                            </a>
+                        </div>
+                        <div class="col-sm-3">
+                            <a href="@Url.Action("Register", "Account", new{perfil = "secretaria", premioID = premio})">
+                                <div class="service service-box">
+                                    <i class="fa fa-file-text icon-bg"></i>
+                                    <h3 class="service-title">Secretaria del jurado</h3>
+                                    <p>Asiste y da soporte a los miembros del jurado</p>
+                                </div><!-- End .service -->
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+
+                    </div>
+
+                </div><!-- End .modal-body -->
+
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </form>
+</div><!-- End .modal -->
+
+@section scripts{
+
+
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+
+    <script>
+        if (premio === null) {
+            Swal.fire({
+                type: "error",
+                title: "Premio no activo",
+                html: "Este premio no tiene una postulación activa actualmente, intentelo luego"
+            });
+        }
+
+
+        function verificarPremio(premioID, pID) {
+
+            $('#registrarse-modal').modal('show');
+
+            //console.log()
+            //if (premioID === pID) {
+            //    Swal.fire({
+            //        type: "error",
+            //        title: "Elija Otra Premiación",
+            //        html: "Ya tiene un rol asignado a este premio"
+            //    });
+            //} else {
+            //    $('#registrarse-modal').modal('show');
+            //}
+        }
+    </script>
+}

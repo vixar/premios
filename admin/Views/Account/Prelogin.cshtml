@@ -1,0 +1,337 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model LoginViewModel
+@{
+    ViewBag.Title = "Inicio de sesión";
+    Layout = null;
+    var mensaje = ViewBag.mensaje;
+    var roles = ViewBag.roles;
+
+    var listaRoles = new List<SelectListItem>();
+
+    var userManager = new UserManager<ProyectoCalidad.Domain.Entities.ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindByEmail(Model.Email);
+
+    if (roles != null)
+    {
+        foreach (var role in roles)
+        {
+            listaRoles.Add(new SelectListItem
+            {
+                Text = role,
+                Value = role
+            });
+        }
+    }
+
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+    <meta name="author" content="Coderthemes">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <!-- App title -->
+    <title>Sistema de Gestión de Premios</title>
+
+    <!-- App css -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/core.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/components.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/pages.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/menu.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/responsive.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/shine.css" rel="stylesheet" />
+    <link href="~/css/Animate.css" rel="stylesheet" />
+    <!-- HTML5 Shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="~/Scripts/js/modernizr.min.js"></script>
+
+</head>
+
+
+<body style="background-image: linear-gradient( rgba(10, 77, 144,1), rgba(24, 138, 226, 0.38))">
+
+    <br />
+
+
+    <div class="row m-t-50">
+        <div class="col-sm-12 text-center">
+            <p class="text-muted">Es necesario tener una cuenta para acceder <a href="#" class="text-primary m-l-5"><br /><b>Solicitar acceso</b></a></p>
+        </div>
+    </div>
+
+
+    <!-- HOME -->
+    <section>
+        <div class="container-alt">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <div class="wrapper-page animated fadeIn slower">
+
+                        <div class="m-t-40 account-pages">
+                            <div class="text-center account-logo-box icon" style="border-bottom-color: #38bf1b;border-bottom-style: solid;">
+                                <h2 class="text-uppercase">
+                                    <a class="text-white">
+                                        <h2 class="text-white" style="font-family: 'Oswald', sans-serif;">Sistema de Gestión de Premios</h2>
+                                    </a>
+                                </h2>
+                                <!--<h4 class="text-uppercase font-bold m-b-0">Sign In</h4>-->
+                            </div>
+                            <div class="account-content">
+                                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "Index" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(x => x.Email)
+
+                                    <div class="form-group ">
+                                        <div class="col-xs-12">
+                                            <div class="text-center">
+                                                @if (user != null)
+                                                {
+
+                                                    if (user.Imagen != null)
+                                                    {
+                                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + user.Imagen)" alt="" class="thumb-lg img-circle">
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <img src="@Url.Content("~/Usuarios/Imagenes/Default.jpg")" alt="" class="thumb-lg img-circle">
+
+                                                    }
+                                                }
+                                            </div>
+                                            <h2 class="text-center">@user.Nombre @user.Apellido</h2>
+                                            <h5 class="text-center">@Model.Email</h5>
+                                            <p class="text-center">Favor de colocar su contraseña y seleccionar su rol.</p>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            @Html.DropDownList("roleSeleccionado", listaRoles, new { @class = "form-control text-center" })
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-">
+
+                                        </div>
+
+                                        <div class="col-5">
+
+                                        </div>
+
+                                        <div class="col-2">
+                                            <span class="fa fa-fw fa-eye field-icon toggle-password pull-right right" onclick="myFunction()" id="eye"></span>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-xs-6 right">
+                                        <span class="fa fa-fw fa-eye field-icon toggle-password pull-right right" onclick="myFunction()" id="eye"></span>
+                                    </div>*@
+                                    <div class="form-group">
+                                        @*<input type="checkbox" onclick="myFunction()">*@
+
+                                        <div class="col-xs-12">
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control text-center", @placeholder = "Contraseña", id = "toggle-password" })
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <br />
+
+                                    <br />
+                                    @*<div class="form-group ">
+                <div class="col-xs-12">
+                    <div class="checkbox checkbox-success">
+                        <input id="checkbox-signup" type="checkbox" checked>
+                        <label for="checkbox-signup">
+                            Recordarme
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group text-center m-t-30">
+                <div class="col-sm-12">
+                    <a href="page-recoverpw.html" class="text-muted"><i class="fa fa-lock m-r-5"></i> No recuerdo la cotraseña</a>
+                </div>
+            </div>*@
+
+                                    <div class="form-group account-btn text-center m-t-10">
+                                        <div class="col-xs-12">
+                                            <a href="javascript:history.back()" class="btn w-md btn-bordered btn-default waves-effect waves-light" type="button">Regresar</a>
+                                            <button class="btn w-md btn-bordered btn-success waves-effect waves-light" type="submit">Iniciar Sesión</button>
+                                        </div>
+                                    </div>
+
+                                }
+
+                                <div class="clearfix"></div>
+
+                            </div>
+                        </div>
+                        <!-- end card-box-->
+
+                    </div>
+                    <!-- end wrapper -->
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- END HOME -->
+
+    <script>
+        var resizefunc = [];
+    </script>
+
+    <!-- jQuery  -->
+    <script src="/Scripts/js/jquery.min.js"></script>
+    <script src="/Scripts/js/bootstrap.min.js"></script>
+    <script src="/Scripts/js/detect.js"></script>
+    <script src="/Scripts/js/fastclick.js"></script>
+    <script src="/Scripts/js/jquery.blockUI.js"></script>
+    <script src="/Scripts/js/waves.js"></script>
+    <script src="/Scripts/js/jquery.slimscroll.js"></script>
+    <script src="/Scripts/js/jquery.scrollTo.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <!-- App js -->
+    <script src="/Scripts/js/jquery.core.js"></script>
+    <script src="/Scripts/js/jquery.app.js"></script>
+
+    <script>
+    var sinPrivilegios = '@ViewBag.sinPrivilegios';
+    var errorPass = '@ViewBag.errorPass';
+
+    $(document).ready(function () {
+
+            if ('@mensaje.tipo'.length > 0) {
+                    Swal.fire({
+                        type: '@mensaje.tipo',
+                        title: '@mensaje.mensaje',
+                        html: '@mensaje.texto'
+                        //footer: '<a href>Why do I have this issue?</a>'
+                    });
+            }
+
+
+        if (sinPrivilegios) {
+            Swal.fire({
+                type: 'warning',
+                title: '<b>Error de Acceso </b>',
+                html: '<h5 style="color:grey">No tiene privilegios para acceder al sistema</h3>'
+
+                //footer: '<a href>Why do I have this issue?</a>'
+            });
+        }
+
+        if (errorPass) {
+            Swal.fire({
+                type: 'error',
+                title: '<b>Incorrecto</b>',
+                html: '<span style="color:grey; font-size:15px">Revise el correo electr&oacutenico o la contraseña</span>'
+
+                //footer: '<a href>Why do I have this issue?</a>'
+            });
+        }
+    });
+
+        //$(".toggle-password").click(function () {
+
+        //    $(this).toggleClass("fa-eye fa-eye-slash");
+        //    var input = $("#toggle-password");
+        //    if (input.attr("type") === "password") {
+        //        input.attr("type", "text");
+        //    } else {
+        //        input.attr("type", "password");
+        //    }
+        //});
+
+        function myFunction() {
+            var x = document.getElementById("toggle-password");
+            var eye = document.getElementById("eye");
+            if (x.type === "password") {
+                x.type = "text";
+                eye.style.textDecoration = "line-through";
+            } else {
+                x.type = "password";
+                eye.style.textDecoration = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+@*<div class="row">
+        <div class="col-md-8">
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = "Index" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Use su cuenta para iniciar sesión</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.Label("Correo Electrónico", new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Contraseña", new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.Label("Recordarme", new { style = "font-family: 'Hind Madurai', sans-serif;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Iniciar" class="btn btn-primary" />
+                            <a href="@Url.Action("Register")" class="btn btn-default"> Registar nueva cuenta</a>
+                        </div>
+                    </div>
+                    @* Enable this once you have account confirmation enabled for password reset functionality
+                        <p>
+                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                        </p>
+                }
+            </section>
+        </div>
+        @*<div class="col-md-4">
+                <section id="socialLoginForm">
+                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                </section>
+            </div>
+    </div>*@

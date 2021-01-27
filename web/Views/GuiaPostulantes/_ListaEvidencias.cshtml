@@ -1,0 +1,73 @@
+﻿
+@model IEnumerable<ProyectoCalidad.Domain.Entities.Evidencia>
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    Layout = null;
+
+    var ejemploid = ViewBag.EjemploID;
+}
+<script type="text/javascript">
+    $(function () {
+        $('#btsave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+
+    });
+</script>
+<!-- Contact form trigger -->
+<!-- Modal Contact Form-->
+@using (Html.BeginForm("AsignarEvidencia", "GuiaPostulantes", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cerrar</span></button>
+        <h3 class="modal-title" id="myModalLabel4">Lista de Evidencias Suministradas</h3>
+    </div><!-- End .modal-header -->
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="card card-primary card-border">
+                
+                @*INICIO: Encabezado del formulario*@
+                <div class="card-heading">
+                    <h2 class="card-title">Ejemplo</h2>
+                    <div class="space"></div>
+                </div>
+
+                <div class="card-box">
+                    <div class="col-md-12">
+                    </div>
+
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Nombre Evidencia</th>
+                            <th>Tido Documento</th>
+                            <th>Acciones</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var evidencia in Model)
+                        {
+                            <tr>
+                                <td>@evidencia.NombreArchivo</td>
+                                <td>@evidencia.Descripcion</td>
+                                <td>
+                                    <a class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes", new {evidenciaID = evidencia.EvidenciaID, guiaPostulanteID = evidencia.GuiaPostulanteID, ejemploID = ejemploid})')">
+                                        Asignar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                        </tbody>
+                    </table>
+
+                </div><!-- End .modal-body -->
+            </div>
+            </div>
+        </div>
+
+}

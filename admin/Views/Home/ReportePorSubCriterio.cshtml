@@ -1,0 +1,53 @@
+﻿@using ProyectoCalidad.Domain.Entities
+@model  IEnumerable<ProyectoCalidad.Domain.Entities.Premio>
+
+@{
+    EvaluadorPremio evaluador = null;
+
+    if (ViewBag.evaluador != null)
+    {
+        evaluador = ViewBag.evaluador;
+    }
+
+    ApplicationUser user = ViewBag.user;
+
+    if (Model != null)
+    {
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li class="has_menu">
+
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas <span class="menu-arrow"></span></a>
+                    @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+                    {
+
+                        <ul class="list-unstyled">
+                            <li><a href="@Url.Action("PuntuacionPreliminar", "Reportes", new {PremioID = item.PremioID})">Puntuación Perliminar</a></li>
+                            @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                        </ul>
+                    }
+                    @if (evaluador != null)
+                    {
+                        if (evaluador.IsManager)
+                        {
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("PuntuacionPreliminar", "Reportes", new {PremioID = item.PremioID})">Puntuación Perliminar</a></li>
+                                @*<li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new {ID = item.PremioID})">Sin Asignaci&oacute;n</a></li>
+                                    <li><a href="@Url.Action("Index", "Evaluador", new {ID = item.PremioID})">Evaluador</a></li>*@
+                            </ul>
+                        }
+                    }
+
+                </li>
+
+
+            }
+        </ul>
+
+    }
+
+}
+
+

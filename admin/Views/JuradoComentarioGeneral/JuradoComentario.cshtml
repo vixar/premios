@@ -1,0 +1,111 @@
+﻿@model ProyectoCalidad.Domain.Entities.JuradoComentarioGeneral
+@{
+    ViewBag.Title = "EditarJuradoComentario";
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Comentarios Generales</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+                <li>
+                    <a href="#">Jurado</a>
+                </li>
+                <li class="active">
+                    Comentario
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+<a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20 hidden-print"
+   data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+@using (Html.BeginForm("GuardarJuradoComentario", "JuradoComentarioGeneral", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="card-box">
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Nombre :</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.InstitucionPostulante.InstitucionNombre, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="example-email">Sector :</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.SectorIntitucino, new { @class = "form-control", disabled = "disabled" })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Cantidad de Empleados :</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.CantidadEmpleados, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Ubicación Geográfica :</label>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.UbicacionGrafica, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Principales Aspectos :</label>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.PrincipalesAspectos, new { @class = "form-control", disabled = "disabled", @rows = "5" })
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="col-md-6">
+               
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Puntos Fuertes :</label>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.PuntosFuertes, new { @class = "form-control", disabled = "disabled", @rows = "5" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Areas de Mejora :</label>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.AreaMejora, new { @class = "form-control", disabled = "disabled", @rows = "5" })
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+               <div class="col-md-6">
+               </div>
+
+                <div class="col-md-6">
+                     <div class="form-group">
+                         <label class="col-sm-3 control-label">Galardón Sugerido :</label>
+                         <div class="col-sm-9">
+                            @Html.TextBoxFor(model => model.GalardonSugerido, new { @class = "form-control", disabled = "disabled" })
+                         </div>
+                     </div>
+                </div>
+
+        </div>
+
+    </div>
+
+}

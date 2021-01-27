@@ -1,0 +1,20 @@
+﻿@model ProyectoCalidad.Domain.Entities.EvaluadorPremio
+
+@{
+    if (Model != null)
+    {
+        if (Model.IsManager)
+        {
+
+            <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" data-toggle="dropdown" aria-expanded="false">Coordinador Evaluador Externo</p>
+
+
+        }
+        else
+        {
+            <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" data-toggle="dropdown" aria-expanded="false">Evaluador Externo</p>
+
+        }
+    }
+}
+

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.TipoPremio>
+
+@if (Model != null)
+{
+
+
+
+            <li class="dropdown">
+                <a href="@Url.Action("PremioNacional", "Premios", new {siglas = Model.FirstOrDefault(x => x.Descripcion.Contains("Nacional")).Siglas})">@Model.FirstOrDefault(x => x.Descripcion.Contains("Nacional")).Descripcion</a>
+
+            </li>
+        
+
+            <li class="dropdown">
+                <a href="@Url.Action("PremioProvincial", "Premios", new {siglas = Model.FirstOrDefault(x => x.Descripcion.Contains("Provin")).Siglas})">@Model.FirstOrDefault(x => x.Descripcion.Contains("Provi")).Descripcion</a>
+
+            </li>
+        
+
+            <li class="dropdown">
+                <a href="@Url.Action("PremioInstitucional", "Premios", new {siglas = Model.FirstOrDefault(x => x.Descripcion.Contains("Insti")).Siglas})">@Model.FirstOrDefault(x => x.Descripcion.Contains("Insti")).Descripcion</a>
+
+            </li>
+        
+
+    
+
+}

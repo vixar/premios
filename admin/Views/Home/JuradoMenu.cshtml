@@ -1,0 +1,127 @@
+﻿@model ProyectoCalidad.WebUI.Models.EvaluadoresMenuModel
+
+@{
+    if (Model != null)
+    {
+        foreach (var item in Model.Premios)
+        {
+            <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span> @item.TipoPremio.Siglas </span> <span class="menu-arrow"></span></a>
+            <ul class="list-unstyled">
+                @switch (item.TipoPremio.Siglas)
+                {
+                    case "PNC":
+                        foreach (var version in Model.pnc)
+                        {
+                            var ver = version.GetType().GetProperty("Version").GetValue(version, null);
+                            var pre = version.GetType().GetProperty("PremioID").GetValue(version, null);
+
+                            @*<li><a href="@Url.Action("Index", "InstitucionPostulante", new {premioID = version.PremioID})">Versión @Html.Raw(version.Version == null ? "2019" : version.Version.ToString())</a></li>*@
+                            <a href="javascript:void(0);">Versión @Html.Raw(ver == null ? "2019" : ver.ToString()) <span class="menu-arrow"></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = pre })">Asignados</a></li>
+
+                                <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = pre})">No Asignados</a></li>
+                            </ul>
+
+                        }
+                        break;
+                    case "PPC":
+                        foreach (var version in Model.ppc)
+                        {
+                            var ver = version.GetType().GetProperty("Version").GetValue(version, null);
+                            var pre = version.GetType().GetProperty("PremioID").GetValue(version, null);
+                            @*<li><a href="@Url.Action("Index", "InstitucionPostulante", new {premioID = version.PremioID})">Versión @Html.Raw(version.Version == null ? "2019" : version.Version.ToString())</a></li>*@
+                            <a href="javascript:void(0);">Versión @Html.Raw(ver == null ? "2019" : ver.ToString()) <span class="menu-arrow"></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = pre })">Asignados</a></li>
+
+                                <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = pre})">No Asignados</a></li>
+                            </ul>
+
+                        }
+                        break;
+                    case "PIMP":
+                        foreach (var version in Model.pimp)
+                        {
+                            var ver = version.GetType().GetProperty("Version").GetValue(version, null);
+                            var pre = version.GetType().GetProperty("PremioID").GetValue(version, null);
+                            @*<li><a href="@Url.Action("Index", "InstitucionPostulante", new {premioID = version.PremioID})">Versión @Html.Raw(version.Version == null ? "2019" : version.Version.ToString())</a></li>*@
+                            <a href="javascript:void(0);">Versión @Html.Raw(ver == null ? "2019" : ver.ToString()) <span class="menu-arrow"></span></a>
+                            <ul class="list-unstyled">
+                                <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = pre })">Asignados</a></li>
+
+                                <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = pre})">No Asignados</a></li>
+                            </ul>
+
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            </ul>
+
+
+            @*<ul class="list-unstyled">
+                    <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = item.PremioID })">Asignados</a></li>
+
+                    <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = item.PremioID})">No Asignados</a></li>
+
+                </ul>
+
+                <li>
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span>PNC</span> <span class="menu-arrow"></span></a>
+
+                    <ul class="list-unstyled">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span> Asignados </span> <span class="menu-arrow"></span></a>
+
+                        <ul class="list-unstyled">
+                            <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = 4 })">Versión 2020</a></li>
+
+                            <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = 1 })">Versión 2019</a></li>
+
+                        </ul>
+                        <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = 1})">No Asignados</a></li>
+                    </ul>
+
+
+                </li>
+
+                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span> PPC </span> <span class="menu-arrow"></span></a>
+
+                <ul class="list-unstyled">
+                    <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = 2 })">Asignados</a></li>
+
+                    <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = 2})">No Asignados</a></li>
+
+                </ul>
+
+                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span>PIMP </span> <span class="menu-arrow"></span></a>
+
+                <ul class="list-unstyled">
+                    <li><a href="@Url.Action("Index", "JuradoInstitucion", new { premioID = 3  })">Asignados</a></li>
+
+                    <li><a href="@Url.Action("SinAsignacion", "Jurado", new {premioID = 3})">No Asignados</a></li>
+
+                </ul>*@
+
+
+
+        }
+    }
+
+}
+
+@*<a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy-outline"></i><span> PIMP </span> <span class="menu-arrow"></span></a>
+    <ul class="list-unstyled">
+        <li><a href="@Url.Action("Index", "Evaluador", new { ID = 3})">Evaluador</a></li>
+        <li><a href="@Url.Action("Aspirantes", "Evaluador", new { PremioID = 3})">Aspirantes</a></li>
+        <li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new { PremioID = 3})">Sin Asignaci&oacute;n</a></li>
+
+    </ul>
+    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy-variant"></i><span> PPC </span> <span class="menu-arrow"></span></a>
+    <ul class="list-unstyled">
+        <li><a href="@Url.Action("Index", "Evaluador", new { ID = 2})">Evaluador</a></li>
+        <li><a href="@Url.Action("Aspirantes", "Evaluador", new { PremioID = 2})">Aspirantes</a></li>
+        <li><a href="@Url.Action("EvaluadoresSinAginacion", "Evaluador", new { PremioID = 2})">Sin Asignaci&oacute;n</a></li>
+
+    </ul>*@

@@ -1,0 +1,332 @@
+﻿@using System.ServiceModel.Activities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.Domain.Migrations
+@model IEnumerable<ProyectoCalidad.Domain.Entities.EvaluadorPremio>
+
+@{
+    ViewBag.Title = "Lista de Evaluadores";
+    var tipoPremioID = ViewBag.premioid;
+}
+
+
+@section Style{
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">@ViewBag.Title</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Evaluador")">Evaluadores </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="javascript:window.history.back();" class="btn btn-danger btn-bordered waves-effect waves-light m-l-10 m-b-20" data-animation="fadein" data-plugin="custommodal"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+    </div><!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box table-responsive">
+            @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                <p class="text-muted font-13 m-b-30">
+                    The Buttons extension for DataTables provides a common set of options, API methods and
+                    styling to display buttons on a page that will interact with a DataTable. The core
+                    library provides the based framework upon which plug-ins can built.
+                </p>*@
+
+            <table id="datatable-buttons" class="table table-striped  table-colored table-info">
+                <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Evaluador</th>
+                        <th>Equipo</th>
+                        <th>Estado</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @{
+                        var num = 0;
+
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        num++;
+
+                        var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+
+                        var usuario = userManager.FindById(item.UsuarioID);
+
+                        var nombreCompleto = usuario.NombreCompleto(usuario.Nombre, usuario.Apellido);
+
+                        var imagen = Path.GetFileName(usuario.Imagen);
+
+                        <tr>
+                            <td class="user-box">
+                                @if (imagen != "Default.jpg")
+                                {
+                                    <a href="@Url.Action("Perfil", "Account", new{id = item.UsuarioID, premioID = tipoPremioID})" class="waves-effect waves-light user-link" aria-expanded="true">
+                                        <img src="@Url.Content("/sgp_admin/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img">
+
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Perfil", "Account", new{id = item.UsuarioID, premioID = tipoPremioID})" class="waves-effect waves-light user-link" aria-expanded="true">
+                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img thumbnail">
+
+                                    </a>
+                                }
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => nombreCompleto)
+                            </td>
+                            @{
+                                IList<Equipos> Lista = ViewBag.equipos;
+                                var equipos = Lista.FirstOrDefault(e => e.EquipoID == item.EquipoID);
+
+                            }
+                            @if (equipos == null)
+                            {
+                                <td>
+                                    -
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @equipos.Nombre - @equipos.Descripcion
+                                </td>
+                            }
+
+                            @if (item.IsActive)
+                            {
+                                <td>
+                                    Activo
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    Inactivo
+                                </td>
+                            }
+
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => usuario.Role)
+
+                                </td>*@
+                            @if (item.Usuario.Role == "EVALUADOR-EXTERNO")
+                            {
+
+                                if (item.IsManager)
+                                {
+                                    <td>
+                                        COORDINADOR EVALUADOR EXTERNO
+                                    </td>
+                                }
+                                else if (item.IsNew)
+                                {
+                                    <td>
+                                        EVALUADOR EN PRÁCTICA
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        EVALUADOR EXTERNO
+                                    </td>
+                                }
+                            }
+                            else
+                            {
+                                <td>
+                                    SIN ROL ASIGNADO
+                                </td>
+                            }
+                            <td>
+
+                                @*@if (item.IsActive)
+                                    {
+                                        <input type="checkbox" class="isActive" id="switch_@num" data-switch="success" checked="" data-size="small" onclick="fn(@item.EvaluadorPremioID, switch_@num)">
+                                        <label style="margin: 5px 0 0 0;" for="switch_@num" data-on-label="" data-off-label="" data-size="small"></label>
+                                        @*<a href="@Url.Action("CambiarEstado", "Evaluador", new {id = item.EvaluadorPremioID})" class="btn btn-warning btn-rounded waves-effect m-t-10 waves-light">Desactivar</a>
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="isActive" id="switch_@num" data-switch="success" onclick="fn(@item.EvaluadorPremioID, switch_@num)">
+                                        <label style="margin: 5px 0 0 0;" for="switch_@num" data-on-label="" data-off-label="" data-size="small"></label>
+                                        @*<a href="@Url.Action("CambiarEstado", "Evaluador", new {id = item.EvaluadorPremioID})" class="btn btn-success btn-rounded waves-effect m-t-10 waves-light">Activar</a>
+                                    }*@
+
+                                @*<a href="#" class="table-action-btn h3"><i class="mdi mdi-account"></i></a>*@
+
+                                @if (item.IsActive)
+                                {
+                                    <a href="@Url.Action("EditarEvaluador", "Evaluador", new {eID = item.EvaluadorPremioID})" class="btn btn-primary"><i class="mdi mdi-transit-transfer"></i> cambiar equipo</a>
+                                }
+                                else
+                                {
+                                    <a href="" class=""><i class="mdi mdi-google-circles-group disabled"></i> Cambiar Equipo</a>
+
+                                }
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- end row -->
+@section scripts{
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+
+    <script>
+
+        //Activar/Desactivar Evaluador
+
+        function fn(id, i) {
+            console.log("varibale input: ", i.id);
+            var $this = this.checked;
+            $('#' + i.id).change(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Evaluador/InactivarEvaluador?id=" + id,
+                    success: function (data) {
+                        if (data === "True") {
+                            $("#" + i.id).each(function () {
+                                this.checked = true;
+                                location.reload();
+                            });
+                        } else {
+                            $("#" + i.id).each(function () {
+                                this.checked = false;
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            });
+
+
+        }
+
+
+
+
+        //datatable
+        $(document).ready(function () {
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+
+    </script>
+}

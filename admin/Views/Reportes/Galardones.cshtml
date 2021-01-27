@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.HistoriaPremio>
+
+@{
+    ViewBag.Title = "Galardones obtenidos ";
+}
+
+<hr />
+<h2><span class="glyphicon glyphicon-user"></span>&nbsp;Galardones obtenidos: </h2>
+<hr />
+
+
+<br />
+<table>
+    <tr>
+        <th>
+            Año
+        </th>
+        <th>
+            Premio
+        </th>
+        <th>
+            InstitucionReconocida
+        </th>
+        <th>
+            CategoriaReconocimiento
+        </th>
+
+       
+
+
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ano)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Premio.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InstitucionReconocida.InstitucionNombre)
+            </td>         
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoriaReconocimiento.Descripcion)
+            </td>
+
+
+
+        </tr>
+    }
+
+</table>
+<br />
+<br />

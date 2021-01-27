@@ -1,0 +1,554 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using Ninject
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities;
+@{
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    var filename = "";
+
+    var sinequipo = false;
+
+    if (ViewBag.sinequipo != null)
+    {
+        sinequipo = ViewBag.sinequipo;
+    }
+
+
+}
+
+<style>
+    .rolColor {
+        color: #00ab66;
+    }
+</style>
+
+
+@if (Request.IsAuthenticated)
+{
+    <div id="sidebar-menu">
+        <div class="user-details">
+            <div class="overlay"></div>
+            <div class="user-info">
+                <div>
+
+                </div>
+            </div>
+            <div class="text-center">
+                @if (user != null)
+                {
+                    filename = System.IO.Path.GetFileName(user.Imagen);
+
+                    if (user.Imagen != null)
+                    {
+                        <img src="@Url.Content("/sgp_admin/Usuarios/Imagenes/" + user.Imagen)" alt="" class="thumb-lg img-circle">
+                    }
+                    else
+                    {
+
+                        <img src="@Url.Content("~/Usuarios/Imagenes/Default.jpg")" alt="" class="thumb-lg img-circle">
+
+                    }
+                }
+
+            </div>
+            <div class="user-info">
+                <div>
+                    @if (user != null)
+                    {
+                        <a href="#setting-dropdown" class="dropdown-toggle text-center" data-toggle="dropdown" aria-expanded="false">Hola! @user.Nombre @user.Apellido<span class="mdi mdi-menu-down"></span></a>
+
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login", "Account")" class="userSideMenu text-center" aria-expanded="True">Iniciar Sesión</a>
+
+                    }
+                </div>
+            </div>
+        </div>
+        <!--LABEL DEL ROL-->
+        @if (user != null)
+        {
+            <div class="" id="setting-dropdown">
+                @switch (user.Role)
+                {
+                    case "ADMIN":
+                        <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Administrador</p>
+                        break;
+                    case "COORDINADOR-COMITE-INTERNO":
+                        <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Coordinador Premio</p>
+                        break;
+                    case "POSTULANTE":
+                        <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Postulante</p>
+                        break;
+                    case "SECRETARIA-JURADO":
+                        <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Secreatria del Jurado</p>
+                        break;
+                    case "JURADO":
+                        if (user.IsJurado)
+                        {
+                            <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Presidente del Jurado</p>
+                        }
+                        else
+                        {
+                            <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Miembro del Jurado</p>
+                        }
+                        break;
+                    case "EVALUADOR-EXTERNO":
+                        @Html.Action("rolEvaluador", "Evaluador", new { id = user.Id })
+                        break;
+                    default:
+                        <p href="#setting-dropdown" class="dropdown-toggle text-center rolColor text-uppercase" aria-expanded="false">Rol No asignado</p>
+
+                        break;
+
+
+                }
+
+                <ul class="dropdown-menu">
+
+
+                    <li><a href="@Url.Action("Perfil", "Account", new {id = user.Id})"><i class="ti-user m-r-5"></i> Perfíl</a></li>
+                    @*<li><a href="" data-toggle="modal" data-target="#cambiarRol-modal" ><i class="mdi mdi-account-convert m-r-5"></i>Cambiar Rol</a></li>*@
+                    @*<li><a href="javascript:void(0)"><i class="mdi mdi-lock m-r-5"></i>Bloquear Pantalla</a></li>*@
+
+                    <li><a href="@Url.Action("LogOffSideBar", "Account")"><i class="mdi mdi-logout m-r-5"></i> Cerrar sesión</a></li>
+
+
+                </ul>
+            </div>
+        }
+
+        <ul>
+            <li class="menu-title">Navegaci&oacute;n</li>
+
+            @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+            {
+
+                <li class="has_sub">
+                    <a href="@Url.Action("Index", "Home")" class="waves-effect"><i class="mdi mdi-chart-pie"></i>  <span>Indicadores </span> </a>
+
+                </li>
+            }
+
+            <li class="has_sub">
+                @if (!sinequipo && !user.IsJurado )
+                {
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-hospital-building"></i><span> Postulantes </span> <span class="menu-arrow"></span></a>
+
+                }
+            <ul class="list-unstyled">
+
+                @*<li><a href="@Url.Action("Index", "PostulanteDocumentos")">Documentos</a></li>*@
+                @if (user.Role == "JURADO" || user.Role == "SECRETARIA-JURADO")
+                {
+                    @Html.Action("PremiosPostulantesPorJurado", "Home")
+
+                }
+
+                @if (user.Role.Contains("EVALUADOR-INTERNO") || user.Role == "EVALUADOR-EXTERNO" || user.Role == "COORDINADOR-EVALUADOR-EXTERNO")
+                {
+                    if (!sinequipo)
+                    {
+                        @*<li><a href="@Url.Action("Index", "InstitucionPostulante", new {userID = user.Id})">Instituciones Asignadas</a></li>*@
+                        @Html.Action("PremiosPostulantesPorEvaluadores", "Home")
+
+                    }
+
+                    @*@Html.Action("GetMenuByEquipo", "Home");*@
+
+                    @*<a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-tie"></i><span> Postulantes </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="@Url.Action("Index", "InstitucionPostulante", new {userID = user.Id})">Instituciones Asignadas</a></li>
+                    </ul>*@
+
+                }
+                @* MENU DE EVALUADORES  *@
+                @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+                {
+
+
+                    @*@Html.Action("PremiosPostulantes", "Home")*@
+                <li>
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span>PNC</span> <span class="menu-arrow"></span></a>
+                    @Html.Action("VersionesMenuPnc", "InstitucionPostulante")
+
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span></span>PPC<span class="menu-arrow"></span></a>
+                    @Html.Action("VersionesMenuPpc", "InstitucionPostulante")
+
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy"></i><span></span>PIMP<span class="menu-arrow"></span></a>
+                    @Html.Action("VersionesMenuPimp", "InstitucionPostulante")
+
+                </li>
+
+
+                }
+            </ul>
+            </li>
+
+            @if (user.IsJurado || user.Role == "SECRETARIA-JURADO")
+            {
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account-multiple"></i><span> Asignar Jurado </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+
+                        @Html.Action("JuradoMenu", "Home")
+
+                        @*<li>@Html.ActionLink("Evidencias", "Index", "PostulanteDocumentos")</li>*@
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    @if (!sinequipo || user.Role == "SECRETARIA-JURADO")
+                    {
+
+                        @Html.Action("PostulanteMenu", "Home")
+                    }
+
+                    <ul class="list-unstyled">
+
+
+                        @*<li><a href="@Url.Action("Index", "PostulanteDocumentos")">Documentos</a></li>*@
+                        @if (user.Role == "JURADO" || user.Role == "SECRETARIA-JURADO")
+                        {
+                            @Html.Action("PremiosPostulantesPorJurado", "Home")
+
+                        }
+
+                        @if (user.Role.Contains("EVALUADOR-INTERNO") || user.Role == "EVALUADOR-EXTERNO" || user.Role == "COORDINADOR-EVALUADOR-EXTERNO")
+                        {
+                            if (!sinequipo)
+                            {
+                                @*<li><a href="@Url.Action("Index", "InstitucionPostulante", new {userID = user.Id})">Instituciones Asignadas</a></li>*@
+                                @Html.Action("PremiosPostulantesPorEvaluadores", "Home")
+
+                            }
+
+                            @*@Html.Action("GetMenuByEquipo", "Home");*@
+
+                            @*<a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-tie"></i><span> Postulantes </span> <span class="menu-arrow"></span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="@Url.Action("Index", "InstitucionPostulante", new {userID = user.Id})">Instituciones Asignadas</a></li>
+                                </ul>*@
+
+                        }
+                        @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+                        {
+                            @Html.Action("PremiosPostulantes", "Home")
+
+                        }
+                    </ul>
+                </li>
+
+            }
+
+            @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+            {
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-home-variant"></i><span> Organismos </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        <li><a href="@Url.Action("Index", "RegistroOrganismo", new {InstitucionPublicaID = user.InstitucionPublicaID})">Inscripción de Organismos</a></li>
+
+                        <li><a href="@Url.Action("Index", "Organismo", new {InstitucionPublicaID = user.InstitucionPublicaID})">Organismos Inscritos</a></li>
+
+                    </ul>
+                </li>
+
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-trophy-award"></i> <span> Premios </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        <li>@Html.ActionLink("Listado de Premios", "Index", "Premios")</li>
+
+                        @*<li>@Html.ActionLink("Agenda", "Index", "Agenda")</li>*@
+
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account-multiple"></i><span> Jurado </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        @Html.Action("JuradoMenu", "Home")
+
+                        @*<li>@Html.ActionLink("Evidencias", "Index", "PostulanteDocumentos")</li>*@
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account-search"></i><span> Evaluadores </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        @Html.Action("EvaluadoresMenu", "Home")
+
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account-group"></i> <span> Equipos </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        @if (user.Role == "COORDINADOR-COMITE-INTERNO" || user.Role == "ADMIN")
+                        {
+                            <li>@Html.ActionLink("Lista de Equipos", "Index", "Equipo")</li>
+
+                            @Html.Action("EquiposMenu", "Home")
+
+                        }
+
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-book-multiple-variant"></i><span>Gu&iacute;a CAF </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li>@Html.ActionLink("Guías", "Index", "Guia")</li>
+                        @*<li>@Html.ActionLink("Guia Detalle", "Index", "GuiaDetalle")</li>*@
+                    </ul>
+                </li>
+
+                @*<li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi  mdi-album"></i> <span>Componentes Guias </span> <span class="menu-arrow"></span></a>
+                        <ul class="list-unstyled">
+
+                            <li>@Html.ActionLink("Criterios", "Index", "Criterios")</li>
+                            @*<li>@Html.ActionLink("Sub Criterios", "Index", "SubCriterios")</li>
+                            <li>@Html.ActionLink("Ejemplos", "Index", "Ejemplos")</li>
+                        </ul>
+                    </li>*@
+
+
+
+
+                @*<li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account"></i><span>Chat</span> <span class="menu-arrow"></span></a>
+                        <ul class="list-unstyled">
+
+                            <li><a class="btn btn-primary btn-block" href="@Url.Action("spPrueba", "Home")">SendEmail</a></li>
+
+
+                        </ul>
+                    </li>*@
+
+            }
+            @if (!sinequipo || user.Role == "SECRETARIA-JURADO")
+            {
+                <li class="has_sub">
+
+                    @Html.Action("ReportePorPremio", "Home") <!--add variable por premio-->
+                    @*@Html.Action("ReportePorSubCriterio", "Home") <!--add variable por premio-->*@
+
+
+                </li>
+                @*<li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-phone-in-talk"></i><span>Salas de Chat</span> <span class="menu-arrow"></span></a>
+
+                        @Html.Action("SalasDeChat", "Chat")
+
+                    </li>*@
+            }
+
+            @if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+            {
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-account"></i><span>Seguridad</span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+
+                        <li>@Html.ActionLink("Usuarios Activos", "Index", "Account")</li>
+                        <li>@Html.ActionLink("Usuarios Inactivos", "Inactivos", "Account")</li>
+                        @*<li>@Html.ActionLink("Roles", "Index", "Role")</li>*@
+
+                    </ul>
+                </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-settings"></i> <span>Configuracion </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li>@Html.ActionLink("Tipo de Premio", "Index", "TipoPremio")</li>
+                        <li>@Html.ActionLink("Tipo Documento", "Index", "TipoDocumento")</li>
+                        <li>@Html.ActionLink("Estado Actividad", "Index", "EstadoActividad")</li>
+                    </ul>
+                </li>
+            }
+
+
+
+
+            @*<li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-email"></i><span> Email </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="email-inbox.html"> Inbox</a></li>
+                        <li><a href="email-read.html"> Read Mail</a></li>
+                        <li><a href="email-compose.html"> Compose Mail</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-heart-outline"></i><span> Icons </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="icons-glyphicons.html">Glyphicons</a></li>
+                        <li><a href="icons-colored.html">Colored Icons</a></li>
+                        <li><a href="icons-materialdesign.html">Material Design</a></li>
+                        <li><a href="icons-ionicons.html">Ion Icons</a></li>
+                        <li><a href="icons-fontawesome.html">Font awesome</a></li>
+                        <li><a href="icons-themifyicon.html">Themify Icons</a></li>
+                        <li><a href="icons-typicons.html">Typicons</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-diamond"></i><span class="badge badge-danger pull-right">New</span> <span> Forms </span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="form-elements.html">Form Elements</a></li>
+                        <li><a href="form-advanced.html">Form Advanced</a></li>
+                        <li><a href="form-validation.html">Form Validation</a></li>
+                        <li><a href="form-pickers.html">Form Pickers</a></li>
+                        <li><a href="form-wizard.html">Form Wizard</a></li>
+                        <li><a href="form-mask.html">Form Masks</a></li>
+                        <li><a href="form-summernote.html">Summernote</a></li>
+                        <li><a href="form-wysiwig.html">Wysiwig Editors</a></li>
+                        <li><a href="form-uploads.html">Multiple File Upload</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-format-list-bulleted"></i> <span> Tables </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="tables-basic.html">Basic Tables</a></li>
+                        <li><a href="tables-layouts.html">Tables Layouts</a></li>
+                        <li><a href="tables-datatable.html">Data Table</a></li>
+                        <li><a href="tables-responsive.html">Responsive Table</a></li>
+                        <li><a href="tables-tablesaw.html">Tablesaw Table</a></li>
+                        <li><a href="tables-editable.html">Editable Table</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">Extra</li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-chart-arc"></i><span> Charts </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="chart-flot.html">Flot Chart</a></li>
+                        <li><a href="chart-morris.html">Morris Chart</a></li>
+                        <li><a href="chart-google.html">Google Chart</a></li>
+                        <li><a href="chart-chartist.html">Chartist Charts</a></li>
+                        <li><a href="chart-chartjs.html">Chartjs Chart</a></li>
+                        <li><a href="chart-c3.html">C3 Chart</a></li>
+                        <li><a href="chart-sparkline.html">Sparkline Chart</a></li>
+                        <li><a href="chart-knob.html">Jquery Knob</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-map"></i> <span> Maps </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="maps-google.html">Google Maps</a></li>
+                        <li><a href="maps-vector.html">Vector Maps</a></li>
+                        <li><a href="maps-mapael.html">Mapael Maps</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-google-pages"></i><span> Pages </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="page-starter.html">Starter Page</a></li>
+                        <li><a href="page-login.html">Login</a></li>
+                        <li><a href="page-register.html">Register</a></li>
+                        <li><a href="page-logout.html">Logout</a></li>
+                        <li><a href="page-recoverpw.html">Recover Password</a></li>
+                        <li><a href="page-lock-screen.html">Lock Screen</a></li>
+                        <li><a href="page-confirm-mail.html">Confirm Mail</a></li>
+                        <li><a href="page-404.html">Error 404</a></li>
+                        <li><a href="page-404-alt.html">Error 404-alt</a></li>
+                        <li><a href="page-500.html">Error 500</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-gift"></i><span> Extras </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="extras-profile.html">Profile</a></li>
+                        <li><a href="extras-sitemap.html">Sitemap</a></li>
+                        <li><a href="extras-about.html">About Us</a></li>
+                        <li><a href="extras-contact.html">Contact</a></li>
+                        <li><a href="extras-members.html">Members</a></li>
+                        <li><a href="extras-timeline.html">Timeline</a></li>
+                        <li><a href="extras-invoice.html">Invoice</a></li>
+                        <li><a href="extras-search-result.html">Search Result</a></li>
+                        <li><a href="extras-emailtemplate.html">Email Template</a></li>
+                        <li><a href="extras-maintenance.html">Maintenance</a></li>
+                        <li><a href="extras-coming-soon.html">Coming Soon</a></li>
+                        <li><a href="extras-faq.html">FAQ</a></li>
+                        <li><a href="extras-gallery.html">Gallery</a></li>
+                        <li><a href="extras-pricing.html">Pricing</a></li>
+                    </ul>
+                </li>
+
+                <li class="menu-title">More</li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-comment-text-outline"></i><span> Blog </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="blogs-dashboard.html">Dashboard</a></li>
+                        <li><a href="blogs-blog-list.html">Blog List</a></li>
+                        <li><a href="blogs-blog-column.html">Blog Column</a></li>
+                        <li><a href="blogs-blog-post.html">Blog Post</a></li>
+                        <li><a href="blogs-blog-add.html">Add Blog</a></li>
+                    </ul>
+                </li>
+
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-home-map-marker"></i><span> Real Estate </span> <span class="menu-arrow"></span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="real-estate-dashboard.html">Dashboard</a></li>
+                        <li><a href="real-estate-list.html">Property List</a></li>
+                        <li><a href="real-estate-column.html">Property Column</a></li>
+                        <li><a href="real-estate-detail.html">Property Detail</a></li>
+                        <li><a href="real-estate-agents.html">Agents</a></li>
+                        <li><a href="real-estate-profile.html">Agent Details</a></li>
+                        <li><a href="real-estate-add.html">Add Property</a></li>
+                    </ul>
+                </li>*@
+
+        </ul>
+
+
+    </div>
+}
+
+<div id="cambiarRol-modal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none; padding-right: 15px;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Panel Primary</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+@section sideMenu
+        {
+
+    <script type="text/javascript">
+        $.ajax({
+            type: 'POST',
+            url: '/Account/LogOff'
+
+        })
+    </script>
+
+}

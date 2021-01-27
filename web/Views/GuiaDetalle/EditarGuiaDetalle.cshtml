@@ -1,0 +1,168 @@
+﻿@model  ProyectoCalidad.Domain.Entities.GuiaDetalle
+
+@{
+    ViewBag.Title = "Editar Guia Detalle";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Guia Detalle</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Guia Detalle <strong>@Model.GuiaDetalleID</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarGuiaDetalle", "GuiaDetalle", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.GuiaDetalleID)
+
+
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Guia</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("GuiaID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Criterio</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("CriterioID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Sub Criterio</label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(m => m.SubCriterioID, new SelectList(""), "-- Selecciona el Sub Criterio --", new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Ejemplo</label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(m => m.EjemploID, new SelectList(""), "-- Selecciona el Ejemplo --", new { @class = "form-control" })
+                    
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(m => m.Estado, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Registrar datos</button>
+                    @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Guia Detalle", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#CriterioID").change(function () {
+                var criterioid = $(this).val();
+                debugger
+                $.ajax({
+                    type: "post",
+                    url: "/GuiaDetalle/GetSubCriterio?criterioid=" + criterioid,
+                    contenttype: "html",
+                    success: function (response) {
+                        $("#SubCriterioID").empty();
+                        $("#SubCriterioID").append(response);
+                    }
+                })
+
+            });
+
+            $("#EjemploID").change(function () {
+                var subcriterioid = $(this).val();
+                //debugger
+                $.ajax({
+                    type: "post",
+                    url: "/GuiaDetalle/GetEjemplos?subcriterioid=" + subcriterioid,
+                    contenttype: "html",
+                    success: function (response) {
+                        $("#EjemploID").empty();
+                        $("#EjmeploID").append(response);
+                    }
+                })
+
+            });
+
+
+            //$("#CriterioID").change(function()
+            //{
+            //    var SelecedVal = $(this).val();
+            //    $("#SubCriterioID").html('');
+            //    $("#SubCriterioID").append($("<option></option>").attr("value", '')
+            //        .text('Selecciona el Sub Criterio'));
+            //    if (SelecedVal != '')
+            //    {
+
+            //        $.get('/GuiaDetalle/GetSubCriterios/',
+            //        {
+            //            "CriterioId": SelecedVal
+            //        }).success(function(data)
+            //        {
+            //            $.each(data, function(index, item)
+            //            {
+            //                $("#SubcriterioID").append($("<option></option>").attr("value", item.SubCriterioId)
+            //                    .text(item.Descripcion));
+            //            });
+
+            //        })
+            //    }
+            //});
+
+            //$("#SubCriterioID").change(function () {
+            //    var SelecedVal = $(this).val();
+            //    $("#EjemploID").html('');
+            //    $("#EjemploID").append($("<option></option>").attr("value", '')
+            //        .text('Selecciona el Ejemplo'));
+            //    if (SelecedVal != '') {
+
+            //        $.get('/GuiaDetalle/GetEjemplos/',
+            //            {
+            //                "SubCriterioId": SelecedVal
+            //            }).success(function (data) {
+            //                $.each(data, function (index, item) {
+            //                    $("#EjemploID").append($("<option></option>").attr("value", item.EjemploId)
+            //                        .text(item.Descripcion));
+            //                });
+
+            //            })
+            //    }
+            //});
+
+        })
+    </script>
+}

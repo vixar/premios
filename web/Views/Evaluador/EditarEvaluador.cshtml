@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+
+@model ProyectoCalidad.Domain.Entities.EvaluadorPremio
+
+@{
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var usuario = userManager.FindById(User.Identity.GetUserId());
+
+}
+
+<div class="main">
+    <div class="page-header larger parallax custom" style="background-image:url(assets/images/page-header-bg.jpg)">
+        <div class="container">
+            <h1>@ViewBag.Title</h1>
+            <ol class="breadcrumb">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#">Evaluador</a></li>
+                <li class="active">Registro</li>
+            </ol>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <div class="container">
+        <h2 class="mb30">Datos del Usuario evaluador</h2>
+        @using (Html.BeginForm("EditarEvaluador", "Evaluador", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.UsuarioID)
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <label class="form-control"> @usuario.Nombre</label>
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <label class="form-control"> @usuario.Apellido</label>
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+            </div><!-- End .row -->
+
+            <h2 class="mb30">Datos del premio a evaluar</h2>
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Elija el premio</label>
+                        @Html.DropDownList("PremioID", null, "", new { @class = "form-control" })
+                    </div><!-- End .from-group -->
+                </div><!-- End .col-sm-6 -->
+
+            </div><!-- End .row -->
+
+            <div class="mb10"></div><!-- space -->
+
+            <div class="form-group mb0">
+                <div class="checkbox">
+                    <label class="custom-checkbox-wrapper">
+                        <span class="custom-checkbox-container">
+                            <input type="checkbox" value="true">
+                            <span class="custom-checkbox-icon"></span>
+                        </span>
+                        <span>He leido y acepto la <a href="#">Política de uso</a>.</span>
+                    </label>
+                </div><!-- End .checkbox -->
+            </div><!-- End .form-group -->
+
+            <div class="form-group mb5">
+                <input type="submit" class="btn btn-custom min-width" value="Registrar">
+            </div><!-- End .from-group -->
+
+        }
+    </div><!-- End .container -->
+
+    <div class="mb80"></div><!-- margin -->
+</div><!-- End .main -->

@@ -1,0 +1,182 @@
+﻿@model  ProyectoCalidad.WebUI.Models.PremioModel
+
+@{
+    ViewBag.Title = "Premio";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Premio</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="/">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="/Premios/Index">Premios</a>
+                    </li>
+                    <li class="active">
+                        Premio
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- Wizard with Validation -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box">
+                @*<h4 class="m-t-0 header-title"><b>Creaci&oacute;n de Premio</b></h4>*@
+                <h3 class="m-t-0 m-b-30">Descripci&oacute;n de Premio</h3>
+
+                @*<p class="text-muted m-b-30 font-13">
+                        Use the button classes on an <code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>&lt;input&gt;</code> element.
+                    </p>*@
+                @using (Html.BeginForm("EditarPremio", "Premios", FormMethod.Post, new { @enctype = "multipart/form-data", @id = "wizard-validation-form" }))
+                {
+                    <div class="row">
+                        @Html.HiddenFor(x => x.Premio.PremioID)
+                        @Html.HiddenFor(x => x.Premio.Estado)
+
+                        @*@Html.ValidationSummary(true)*@
+
+                        <section>
+                            <div class="form-group clearfix">
+                                <label class="col-lg-2">Tipo Premio</label>
+                                <div class="col-lg-10">
+                                    @foreach (var item in (SelectList)ViewBag.TipoPremioID)
+                                    {
+                                        <div class="radio radio-info radio-inline">
+                                            @Html.RadioButtonFor(model => model.Premio.TipoPremioID, item.Value, false)
+                                            <label class="control-label">@item.Text</label>
+                                        </div>
+                                    }
+                                </div>
+
+                            </div>
+
+                            <div class="form-group clearfix">
+                                <label class="col-lg-2 control-label " for="Descripcion">Descripci&oacute;n</label>
+                                <div class="col-lg-10">
+                                    @Html.TextBoxFor(model => model.Premio.Descripcion, null, new { @class = "required form-control", @placeholder = "Descripcion.", maxlength = 254 })
+                                    @Html.ValidationMessageFor(x => x.Premio.Descripcion, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-lg-2">Tipo Premio</label>
+                                <div class="col-lg-10">
+                                    <div class="button-list">
+                                        @if (Model.PremioGuiaList.Any() && Model.PremioGuiaList != null)
+                                        {
+                                            foreach (var item in Model.Guias)
+                                            {
+                                                var pg = Model.PremioGuiaList.FirstOrDefault(x => x.GuiaID == item.GuiaID && x.Estado);
+
+                                                if (pg != null)
+                                                {
+                                                    <div class="btn-switch btn-switch-primary">
+
+                                                        <input type="checkbox" id="input-btn-switch-primary-@item.GuiaID" value="@item.GuiaID" name="guiaIds" checked="" >
+                                                        <label for="input-btn-switch-primary-@item.GuiaID" class="btn btn-rounded btn-primary waves-effect waves-light">
+                                                            <em class="fas fa-check"></em>
+                                                            <strong> @item.Descripcion</strong>
+                                                        </label>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="btn-switch btn-switch-primary">
+
+                                                        <input type="checkbox" id="input-btn-switch-primary-@item.GuiaID" value="@item.GuiaID" name="guiaIds" >
+                                                        <label for="input-btn-switch-primary-@item.GuiaID" class="btn btn-rounded btn-primary waves-effect waves-light">
+                                                            <em class="fas fa-check"></em>
+                                                            <strong> @item.Descripcion</strong>
+                                                        </label>
+                                                    </div>
+                                                }
+
+
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var item in Model.Guias)
+                                            {
+                                                <div class="btn-switch btn-switch-primary">
+
+                                                    <input type="checkbox" id="input-btn-switch-primary-@item.GuiaID" value="@item.GuiaID" name="guiaIds">
+                                                    <label for="input-btn-switch-primary-@item.GuiaID" class="btn btn-rounded btn-primary waves-effect waves-light">
+                                                        <em class="fas fa-check"></em>
+                                                        <strong> @item.Descripcion</strong>
+                                                    </label>
+                                                </div>
+
+                                            }
+                                        }
+
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            @*<div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="comentariojurado">Comentario del Jurado</label>
+                                    <div class="col-lg-10">
+                                        @Html.TextAreaFor(model => model.ComentarioJurado, 4, 55, new { @class = "form-control", @placeholder = "Comentario Jurado.", maxlength = 254 })
+                                        @Html.ValidationMessageFor(x => x.ComentarioJurado, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix">
+                                    <label class="col-lg-2 control-label" for="comentariocoordinacion">Comentario de la Coordinacion</label>
+                                    <div class="col-lg-10">
+                                        @Html.TextAreaFor(model => model.ComentarioCoordinacion, 4, 55, new { @class = "form-control", @placeholder = "Comentario Coordinacion.", maxlength = 254 })
+                                        @Html.ValidationMessageFor(x => x.ComentarioCoordinacion, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>*@
+                            @*<div class="form-group clearfix">
+                                    <label class="col-lg-12 control-label ">(*) Mandatory</label>
+                                </div>*@
+                        </section>
+
+            
+
+                        @*<section>
+                                <div class="form-group clearfix">
+                                    <div class="col-lg-12">
+                                        @Html.CheckBoxFor(m => m.Estado , new { @class = "required" })
+                                        <label for="acceptTerms-2">Estoy de acuerdo con los terminos y bases de este premio.</label>
+                                    </div>
+                                </div>
+
+                                @Html.HiddenFor(m => m.Estado)
+
+                            </section>*@
+                    </div>
+
+                    <div class="button-list">
+
+                        <a href="@Url.Action("Index")" class="btn waves-effect width-md waves-light">Regresar</a>
+
+
+                        <button type="submit" class="btn btn-primary waves-effect width-md waves-light">Guardar</button>
+
+                    </div>
+                }
+
+            </div><!-- card-box -->
+        </div> <!-- End col -->
+    </div><!-- End row -->
+</div> <!-- container -->
+
+

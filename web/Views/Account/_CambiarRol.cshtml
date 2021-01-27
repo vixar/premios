@@ -1,0 +1,41 @@
+﻿
+@model WebPublico.WebUI.Models.CambiarRolViewModel
+@{
+    List<string> roles = new List<string>(ViewBag.Roles.Result);
+
+    //Selectlist
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    foreach (var role in roles)
+    {
+        listItems.Add(new SelectListItem
+        {
+            Text = role,
+            Value = role
+        });
+
+    }
+}
+
+
+
+    @using (Html.BeginForm("CambiarRolPost", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.UserId)
+        <div class="row">
+            <div class="col-md-12" style="padding-bottom: 15px">
+                @Html.DropDownListFor(model => model.RoleToAssign, listItems, "-- Seleccione el Rol --", new{@class="form-control"})
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary btn-block"> Cambiar </button>
+            </div>
+
+        </div>
+    }
+
+

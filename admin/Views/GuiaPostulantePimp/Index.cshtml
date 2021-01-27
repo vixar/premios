@@ -1,0 +1,786 @@
+﻿@using System.Collections
+@using System.Web.UI.WebControls
+@using Microsoft.Ajax.Utilities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.Domain.Migrations
+@using ProyectoCalidad.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model ProyectoCalidad.WebUI.Models.GuiaPostulantePimpModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Mantenimiento de Criterios";
+
+    var userManager = new UserManager<ApplicationUser>
+        (new UserStore<ApplicationUser>
+            (new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    int id = 0;
+    //var evaluadores = ViewBag.evaluadoresequipo;
+    //GuiaPostulantePuntuacion puntuaciones = ViewBag.puntuacion;
+    var totales = ViewBag.resultado;
+    List<sp_CalcularPuntuacionSubCriterios> SPpuntuacionSubCriterio = null;
+    List<sp_CalculoPuntuacion> spCalculoPuntuacion = null;
+
+    if (ViewBag.SPpuntuacionSubCriterio != null)
+    {
+        SPpuntuacionSubCriterio = ViewBag.SPpuntuacionSubCriterio;
+
+    }
+
+    if (ViewBag.SPpuntuacionCriterio != null)
+    {
+        spCalculoPuntuacion = ViewBag.SPpuntuacionCriterio;
+    }
+
+    var premio = new Premio();
+
+    var criterioSeleccionado = ViewBag.CriterioSeleccionado;
+
+    EvaluadorPremio evaluador = ViewBag.evaluador;
+
+    if (ViewBag.premio != null)
+    {
+        premio = ViewBag.premio;
+    }
+
+    List
+        <EvaluadorPremio>
+        evaluadores = ViewBag.evaluadoresequipo;
+    List<GuiaPostulantePuntuacion>
+        puntuacionesPorEvaluadores = ViewBag.puntuacionesPorEvaluadores;
+
+    List<GuiaPostulantePuntuacion> puntuacion = null;
+    if (ViewBag.puntuacion != null)
+    {
+        puntuacion = ViewBag.puntuacion;
+    }
+
+    Mensajes mensaje = new Mensajes();
+    if (ViewBag.mensaje != null)
+    {
+        mensaje = ViewBag.mensaje;
+    }
+
+
+}
+
+@section Style
+            {
+    <!-- Plugin Css-->
+    <link rel="stylesheet" href="~/plugins/magnific-popup/css/magnific-popup.css" />
+
+    <!-- Nestable css -->
+    <link href="~/plugins/nestable/jquery.nestable.css" rel="stylesheet" />
+    <style>
+
+        .containerF {
+            bottom: 0;
+            position: fixed;
+            margin: 1em;
+            right: 0px;
+        }
+
+        .buttonsF {
+            box-shadow: 0px 5px 11px -2px rgba(0, 0, 0, 0.18), 0px 4px 12px -7px rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            display: block;
+            width: 56px;
+            height: 56px;
+            margin: 20px auto 0;
+            position: relative;
+            -webkit-transition: all .1s ease-out;
+            transition: all .1s ease-out;
+        }
+
+            .buttonsF:active,
+            .buttonsF:focus,
+            .buttonsF:hover {
+                box-shadow: 0 0 4px rgba(0,0,0,.14), 0 4px 8px rgba(0,0,0,.28);
+            }
+
+            .buttonsF:not(:last-child) {
+                width: 40px;
+                height: 40px;
+                margin: 20px auto 0;
+                opacity: 0;
+                -webkit-transform: translateY(50px);
+                -ms-transform: translateY(50px);
+                transform: translateY(50px);
+            }
+
+        .containerF:hover
+        .buttonsF:not(:last-child) {
+            opacity: 1;
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none;
+            margin: 15px auto 0;
+            /*background-image: url('../../Images/512.png');*/
+        }
+
+        /* Unessential styling for sliding up buttons at differnt speeds */
+
+        .buttonsF:nth-last-child(1) {
+            -webkit-transition-delay: 25ms;
+            transition-delay: 25ms;
+            background-color: white;
+            background-size: cover;
+            background-image: url('https://mdbootstrap.com/img/svg/hamburger8.svg?color=E3005C');
+            background-repeat: no-repeat;
+            /*background-size: contain;*/
+        }
+
+
+        .buttonsF:not(:last-child):nth-last-child(2) {
+            -webkit-transition-delay: 50ms;
+            transition-delay: 20ms;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-image: url('https://cdn.onlinewebfonts.com/svg/img_340225.png');
+            background-size: cover;
+        }
+
+        .buttonsF:not(:last-child):nth-last-child(3) {
+            -webkit-transition-delay: 75ms;
+            transition-delay: 40ms;
+            background-image: url('../../Images/512.png');
+            background-color: white;
+            background-repeat: no-repeat;
+            /*background-image: url('https://cbwconline.com/IMG/Twitter-Flat.png');*/
+            background-size: cover;
+        }
+
+        .buttonsF:not(:last-child):nth-last-child(4) {
+            -webkit-transition-delay: 100ms;
+            transition-delay: 60ms;
+            background-image: url('../../Images/142.png');
+            /*background-image: url('https://cbwconline.com/IMG/Google%20Plus.svg');*/
+            background-size: contain;
+            background-color: white;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        /* Show tooltip content on hover */
+
+        [tooltip]:before {
+            bottom: 25%;
+            font-family: arial;
+            font-weight: 600;
+            border-radius: 2px;
+            background: #585858;
+            color: #fff;
+            content: attr(tooltip);
+            font-size: 12px;
+            visibility: hidden;
+            opacity: 0;
+            padding: 5px 7px;
+            margin-right: 12px;
+            position: absolute;
+            right: 100%;
+            white-space: nowrap;
+        }
+
+        [tooltip]:hover:before,
+        [tooltip]:hover:after {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+}
+<h1>@ViewBag.NombreIp</h1>
+
+<h2>&nbsp;<span class="glyphicon glyphicon-tasks"></span>Evaluación</h2>
+<hr />
+
+
+<div class="">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+                <h2 class="header-title m-t-0 m-b-30" style="font-family: 'Oswald', sans-serif;">CRITERIOS</h2>
+                @* TABS DE LA GUIA *@
+                <ul class="nav nav-tabs navtab-bg" id="criteriosTab" style="font-size: 12px;">
+                    @{
+                        var active = "";
+                        var expanded = "false";
+                        var criterios = Model.GuiaPostulantes.Select(x => x.CriterioID).Distinct().ToList();
+                        for (int i = 0; i < criterios.Count(); i++)
+                        {
+                            var c = Model.GuiaPostulantes.FirstOrDefault(x => x.CriterioID == criterios[i]);
+                            if (i == 0) { active = "active"; expanded = "true"; } else { active = ""; expanded = "false"; }
+
+
+                            <li class="@active">
+                                <a href="#criterio-@c.CriterioID" data-toggle="tab" aria-expanded="@expanded">
+                                    <span class="visible-xs"><i class="fa fa-home"></i></span>
+                                    <span class="hidden-xs" style="font-weight: bolder">Criterio -@c.CriterioCodigo</span>
+                                </a>
+                            </li>
+
+                        }
+                    }
+                </ul>
+                <div class="tab-content">
+
+                    @{
+                        var num = 1;
+                        for (int i = 0; i < criterios.Count(); i++)
+                        {
+                            if (i == 0) { active = "active"; } else { active = ""; }
+
+                            var c = Model.GuiaPostulantes.FirstOrDefault(x => x.CriterioID == criterios[i]);
+                            var sub = Model.GuiaPostulantes.Where(x => x.CriterioID == c.CriterioID).DistinctBy(x => new { x.SubCriterioID, x.SubCriterioDescripcion, x.SubCriterioCodigo }).OrderBy(x => x.SubCriterioCodigo).ToList();
+
+                            <div class="tab-pane @active" id="criterio-@c.CriterioID">
+                                <div class="" style="background-color:#ffffff">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4 class="m-t-0 header-title" style="font-family: 'Oswald', sans-serif;"><b>@c.CriterioCodigo - @c.CriterioNombre</b></h4>
+                                            <p class="text-muted m-b-30" style="font-size: 15px">
+                                                @c.CriterioDescripcion
+
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <!--TABLA DE PUNTUECIONES DEL EVALUADOR-->
+
+                                    </div>
+                                    <!--end criterio-->
+                                    @{
+                                        <div class="row">
+                                            <table class="table table-hover m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Código</th>
+                                                        <th>Subcriterio</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    @foreach (var item in sub.OrderBy(x => x.SubCriterioCodigo))
+                                                    {
+                                                        <tr>
+                                                            <th scope="row">@item.SubCriterioCodigo</th>
+                                                            <td>@item.SubCriterioDescripcion</td>
+                                                            <td>
+                                                                <a class="btn btn-primary m-b-15" href="@Url.Action("IniciarEvaluacion", new {subCriterioID = item.SubCriterioID, InstitucionPostulanteID = item.InstitucionPostulanteID, criterioSeleccionado = c.CriterioID})"><i class="mdi mdi-clipboard-text"></i> REVISAR / EVALUAR EVIDENCIAS </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+
+                                                </tbody>
+
+                                            </table>
+                                            @*@{ var indice = 0;}
+                                                @foreach (var s in sub.OrderBy(x => x.SubCriterioCodigo))
+                                                {
+                                                    <div class="col-sm-12 col-md-4 col-lg-3">
+                                                        <h2 class="m-t-0 header-title">
+
+                                                            <b>@s.SubCriterioCodigo - @s.SubCriterioDescripcion </b>
+                                                            <br />
+                                                            <br />
+                                                            @if (user.Role == "JURADO")
+                                                            {
+                                                                <a class="btn btn-primary m-b-15" href="@Url.Action("IniciarEvaluacion", new {subCriterioID = s.SubCriterioID, InstitucionPostulanteID = s.InstitucionPostulanteID, criterioSeleccionado = c.CriterioID})"><i class="mdi mdi-clipboard-text"></i> REVISAR / EVALUAR EVIDENCIAS </a>
+
+                                                            }
+
+
+                                                        </h2>
+                                                    </div>
+                                                    indice++;
+
+                                                    if (indice % 4 == 0)
+                                                    {
+                                                    @:</div> <div class="row">
+                                                    }
+
+                                                }*@
+                                        </div>
+
+                                    }
+
+                                    <!--end loop subcriterios-->
+                                </div>
+
+                                <br />
+                                <br />
+
+                                @if (Model.ComentariosJuradoModel != null)
+                                {
+                                    var comentario = Model.ComentariosJuradoModel.FirstOrDefault(x => x.CriterioID == c.CriterioID);
+                                    int numero = 1;
+                                    if (comentario != null)
+                                    {
+                                        
+                                        <a class="btn btn-primary m-b-15" href="@Url.Action("ComentarCriterio", new {criterioID = comentario.CriterioID, institucionPostulanteID = comentario.InstitucionPostulanteID, criterioSeleccionado = criterioSeleccionado})"><i class="mdi mdi-plus"></i> Agregar Comentarios </a>
+
+                                    }
+
+                                }
+
+                            </div>
+
+
+                        }
+
+                    }
+                </div>
+
+            </div>
+        </div> <!-- end col -->
+    </div>
+
+    <!--end col-->
+    @*}*@
+</div>
+
+
+
+
+    @section modals
+            {
+
+        <div class="modal fade" id="myModal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" id="modelContent">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div id="custom-modal" class="modal-demo">
+            <button type="button" class="close" onclick="Custombox.close();">
+                <span>&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="custom-modal-title">Add New Agent</h4>
+            <div class="custom-modal-text text-left">
+
+
+                <form>
+
+
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="position">Contact number</label>
+                        <input type="text" class="form-control" id="position" placeholder="Enter number">
+                    </div>
+
+
+                    <button type="submit" class="btn btn-default waves-effect waves-light">Save</button>
+                    <button type="button" class="btn btn-danger waves-effect waves-light m-l-10">Cancel</button>
+                </form>
+
+
+
+
+            </div>
+        </div>
+
+    }
+
+    @section scripts
+            {
+        <!--Wysiwig js-->
+        <script src="~/plugins/tinymce/tinymce.min.js"></script>
+        <!-- Modal-Effect -->
+        <script src="~/plugins/custombox/js/custombox.min.js"></script>
+        <script src="~/plugins/custombox/js/legacy.min.js"></script>
+
+
+        <!-- Examples -->
+        <script src="~/plugins/magnific-popup/js/jquery.magnific-popup.min.js"></script>
+        <script src="~/plugins/jquery-datatables-editable/jquery.dataTables.js"></script>
+        <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+        <script src="~/plugins/tiny-editable/mindmup-editabletable.js"></script>
+        <script src="~/plugins/tiny-editable/numeric-input-example.js"></script>
+        <script src="~/Plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+        <script src="~/plugins/sweetalert2.all.min.js"></script>
+        <script src="~/Scripts/pages/jquery.datatables.editable.init.js"></script>
+
+        
+
+
+        <script>
+            
+    $(document).ready(function () {
+        if ($("#elm1").length > 0) {
+            tinymce.init({
+                selector: "#elm1",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+       
+       
+
+        if ($("#elm2").length > 0) {
+            tinymce.init({
+                selector: "#elm2",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+        
+        if ($("#elm3").length > 0) {
+            tinymce.init({
+                selector: "#elm3",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+
+        if("@mensaje.tipo".length > 0) {
+            Swal.fire({
+                title: "@mensaje.mensaje",
+                html: "@mensaje.texto",
+                type: "@mensaje.tipo"
+            });
+        }
+                    var criterio = 'criterio-' + '@criterioSeleccionado';
+
+                    activaTab(criterio);
+
+                    function activaTab(tab) {
+                        $('.nav-tabs a[href="#' + tab + '"]').tab('show');
+                    };
+
+                    @* function wys(evaluadorID, ejemploID, guiaPostulanteID, institucionPostulanteID) {
+
+                        //debugger;
+                        var tAreaValue0;
+                        var tAreaValue1;
+                        var tAreaValue2;
+                        var id2 = institucionPostulanteID;
+                        var id = id2;
+
+                        var url = "@Url.Action("GuardarComentariosEvaluadoresJsono", "GuiaPostulantes")";
+
+                        var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+
+                        for (i = 0; i < tinymce.editors.length; i++) {
+                            var content = tinymce.editors[i].getContent();
+                            if (i === 0) {
+                                tAreaValue0 = content;
+                            }
+                            if (i === 1) {
+                                tAreaValue1 = content;
+
+                            }
+                            if (i === 2) {
+                                tAreaValue2 = content;
+
+                            }
+                            //var txtAreaID = tinyMCE.editors[i].id;
+                        }
+
+                        var model = {
+                            EvaluadorID: evaluadorID,
+                            EjemploID: ejemploID,
+                            GuiaPostulanteID: guiaPostulanteID,
+                            Fortalezas: tAreaValue0,
+                            InformRetorno: tAreaValue1,
+                            PuntoDeVista: tAreaValue2
+                        }
+
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            //contentType: "application/json",
+                            data: model,
+                            success: function (response) {
+                                if (response) {
+                                    Swal.fire({
+                                        title: "Comentarios actualizados",
+                                        html: "Los campos fueron actualizados correctamente",
+                                        type: "success"
+                                    });
+
+                                }
+                                setTimeout(function () {
+                                    location.reload();
+
+                                },
+                                    2000);
+                            }
+                        });
+
+
+                    }
+
+                    //$(":file").filestyle({ buttonText: "Seleccionar Memoria" });
+
+
+                    //var el = $("#elm1").val();
+                    //console.log(el);
+                    if ($("#elm1").length > 0) {
+                        tinymce.init({
+                            selector: "#elm1",
+                            theme: "modern",
+                            height: 100,
+                            width: 500,
+                            plugins: [
+                                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                                "save table contextmenu directionality emoticons template paste textcolor"
+                            ],
+                            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                            style_formats: [
+                                { title: 'Bold text', inline: 'b' },
+                                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                                { title: 'Table styles' },
+                                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                            ]
+                        });
+                    }
+
+                    if ($("#elm2").length > 0) {
+                        tinymce.init({
+                            selector: "#elm2",
+                            theme: "modern",
+                            height: 100,
+                            width: 500,
+                            plugins: [
+                                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                                "save table contextmenu directionality emoticons template paste textcolor"
+                            ],
+                            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                            style_formats: [
+                                { title: 'Bold text', inline: 'b' },
+                                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                                { title: 'Table styles' },
+                                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                            ]
+                        });
+                    }
+
+                    if ($("#elm3").length > 0) {
+                        tinymce.init({
+                            selector: "#elm3",
+                            theme: "modern",
+                            height: 100,
+                            width: 500,
+                            plugins: [
+                                "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                                "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                                "save table contextmenu directionality emoticons template paste textcolor"
+                            ],
+                            toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                            style_formats: [
+                                { title: 'Bold text', inline: 'b' },
+                                { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                                { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                                { title: 'Example 1', inline: 'span', classes: 'example1' },
+                                { title: 'Example 2', inline: 'span', classes: 'example2' },
+                                { title: 'Table styles' },
+                                { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                            ]
+                        });
+                    }*@
+
+
+
+            });
+            $('#mainTable').editableTableWidget().numericInputExample().find('td:first').focus();
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () { scrollFunction() };
+
+            function scrollFunction() {
+                if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                    document.getElementById("myBtn").style.display = "block";
+                } else {
+                    document.getElementById("myBtn").style.display = "none";
+                }
+            }
+
+            function expandir() {
+                $(".expanded").show(600);
+            }
+            function colapsar() {
+                $(".expanded").hide(600);
+            }
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+
+           
+
+            //Envia a guardar la información y se mantiene en el mismo ejemplo
+            function wys(juradoID, criterioID, institucionPostulanteID) {
+
+                //debugger;
+                let tAreaValue0;
+                let tAreaValue1;
+                let tAreaValue2;
+                let id2 = institucionPostulanteID;
+                let id = id2;
+
+                var url = "@Url.Action("GuardarComentariosJuradoJson", "GuiaPostulantePimp")";
+
+                var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+
+                for (i=0; i < tinymce.editors.length; i++){
+                    var content = tinymce.editors[i].getContent();
+                    if (i === 0) {
+                        tAreaValue0 = content;
+                    }
+                    if (i === 1) {
+                        tAreaValue1 = content;
+                    }
+                    if (i === 2) {
+                        tAreaValue2 = content;
+                    }
+                    //var txtAreaID = tinyMCE.editors[i].id;
+                }
+
+                var model = {
+                    JuradoID : juradoID,
+                    InstitucionPostulanteID: institucionPostulanteID,
+                    CriterioID: criterioID,
+                    PuntosFuertes: tAreaValue0,
+                    AreaMejora: tAreaValue1,
+                }
+
+                DisplayProgressMessage();
+
+                console.log(model);
+
+                debugger;
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    //contentType: "application/json",
+                    data:  model,
+                    success: function (response) {
+                        DisplayNoneProgressMessage();
+                        if (response === "True") {
+                            Swal.fire({
+                                title: "Comentarios actualizados",
+                                html: "Los campos fueron actualizados correctamente",
+                                type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+
+                            setTimeout(function() {
+
+                                    location.reload();
+
+                                },
+                                2000);
+                        } else {
+                            Swal.fire({
+                                title: "Comentarios no actualozados",
+                                html: "Hubo un error al intentar guardar la información",
+                                type: "error",
+                                timer: 5000,
+                                showConfirmButton: true
+                            });
+                        }
+                        @*setTimeout(function () {
+
+                            var url = "@Url.Action("Index", "GuiaPostulantes")";
+
+                            var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+                            window.location.href = url;
+
+                        },
+                        2000);*@
+                    }
+                });
+
+
+            }
+
+
+
+
+            function createModal(url) {
+                console.log('estoy aqui');
+                $('#modelContent').load(url);
+                $('#myModal').modal('show');
+            }
+        </script>
+    }

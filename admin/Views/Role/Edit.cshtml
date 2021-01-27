@@ -1,0 +1,64 @@
+﻿@model ProyectoCalidad.WebUI.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "Editar Usuario";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <h4>Cambie los datos que desea modificar</h4>
+
+        <hr/>
+        
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Nombre, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default"/>
+            </div>
+        </div>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Content/plugins/sweetalert2.all.min.js"></script>
+
+
+    <script>
+        var msg = '@ViewBag.success';
+        debugger
+        if (msg == true) {
+            Swal({
+                title: "Hubo un error",
+                text: "debe de seleccionar una dirección para enlazar los permisos!",
+                html: '<p class="text-muted">vuelve luego para verificar el estado de la solicitud creada</p>',
+                type: "error",
+                confirmButtonText: 'De Acuerdo'
+            });
+        }
+    </script>
+}
+

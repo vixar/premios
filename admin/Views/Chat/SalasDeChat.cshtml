@@ -1,0 +1,24 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.Equipos>
+    <ul class="list-unstyled">
+        @{
+            if (Model != null)
+            {
+                foreach (var item in Model)
+                {
+
+
+                    <li><a href="@Url.Action("Index", "Chat", new { Id = item.EquipoID})">@item.Nombre @item.Descripcion</a></li>
+
+
+                }
+            }
+            @*else
+            {
+                <li>Usuario sin equipo</li>
+
+            }*@
+
+
+        }
+    </ul>
+

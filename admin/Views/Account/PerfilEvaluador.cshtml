@@ -1,0 +1,195 @@
+﻿@model ProyectoCalidad.Domain.Entities.ApplicationUser
+
+@{
+    var mensaje = ViewBag.mensaje;
+}
+
+<!-- Loader -->
+@*<div id="preloader">
+        <div id="status">
+            <div class="spinner">
+                <div class="spinner-wrapper">
+                    <div class="rotator">
+                        <div class="inner-spin"></div>
+                        <div class="inner-spin"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Perfil de Evaluador</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="#">Inicio</a>
+                </li>
+                <li>
+                    <a href="#">Usuario </a>
+                </li>
+                <li class="active">
+                    Perfíl
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-4">
+        <div class="text-center card-box">
+            <div class="member-card">
+                <div class="thumb-xl member-thumb m-b-10 center-block">
+                    @{
+                        var imagen = Path.GetFileName(Model.Imagen);
+
+
+                        if (imagen != "Default.jpg")
+                        {
+
+                            <img src="@Url.Content("~/Usuarios/Imagenes/" + Model.NumeroDocumentoIdentidad + "/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                            <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                        }
+                        else
+                        {
+
+                            <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                            <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                        }
+                    }
+
+                </div>
+
+                <div class="">
+                    <h4 class="m-b-5">@Model.Nombre @Model.Apellido</h4>
+                    <p class="text-muted">@Model.Email</p>
+                </div>
+
+                <a href="@Url.Action("VerCV", "Account", new{userID = @Model.Id})" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Ver CV</a>
+                <a href="@Url.Action("VerCompromisoEtico", "Account", new{userID = @Model.Id})" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Ver CV</a>
+                @*<button type="button" onclick="invitar('@Model.Id')" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Invitar</button>*@
+                <a href="javascript:history.back()" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Regresar a la lista</a>
+                @*<a href="@Url.Action("Aspirantes", "Evaluador", new{ premioID = })" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Regresar a la lista</a>*@
+
+                <p class="text-muted font-13 m-t-20">
+                </p>
+
+                <hr />
+
+                <div class="text-left">
+                    @*<p class="text-muted font-13"><strong>Full Name :</strong> <span class="m-l-15">Johnathan Deo</span></p>*@
+
+                    <p class="text-muted font-13"><strong>Teléfono :</strong><span class="m-l-15">@Model.Telefono</span></p>
+
+                    @*<p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15">coderthemes@gmail.com</span></p>*@
+
+                    <p class="text-muted font-13"><strong>Role :</strong> <span class="m-l-15">@Model.Role</span></p>
+                    @if (Model.IsActive)
+                    {
+                        <p class="text-muted font-13"><strong>Estado :</strong> <span class="m-l-15">Activo</span></p>
+                    }
+                    else
+                    {
+                        <p class="text-muted font-13"><strong>Estado :</strong> <span class="m-l-15">Inactivo</span></p>
+                    }
+                </div>
+
+                <ul class="social-links list-inline m-t-30">
+                    <li>
+                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li>
+                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li>
+                        <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div> <!-- end card-box -->
+
+    </div> <!-- end col -->
+
+    <div class="col-md-6 col-lg-6">
+        <div class="card-box">
+
+            <div class="row">
+                <div class="col-md-8 col-sm-6">
+                    <h4>Equipos</h4>
+
+                    <!--Iteración de los equipos-->
+
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <div class=" p-t-10">
+                            <h5 class="text-custom m-b-5">Nombre Equipo @(i+1)</h5>
+                            <p class="m-b-0">Institucion asignada</p>
+                            <p><b>Premio - Version</b></p>
+
+                        </div>
+
+                        <hr />
+                    }
+
+                    
+                </div> <!-- end col -->
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- end col -->
+
+</div>
+<!-- End row -->
+
+@section scripts
+{
+    <script>
+        var resizefunc = [];
+    </script>
+
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            //MENSAJES
+            if ('@mensaje.tipo'.length > 0) {
+
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+
+            }
+            //-->END
+        });
+        function invitar(userID) {
+            $.ajax({
+                type: "post",
+                url: "/Account/EnviarInvitacion?userID=" + userID,
+
+                success: function (data) {
+                    console.log("data dentro del success:", data);
+                    //Swal.fire({
+                    //    position: 'top-end',
+                    //    type: 'success',
+                    //    title: 'Invitiación Enviada!',
+                    //    showConfirmButton: false,
+                    //    timer: 1300
+                    //})
+                }
+            });
+        }
+    </script>
+
+    <script src="~/plugins/jquery-knob/jquery.knob.js"></script>
+}

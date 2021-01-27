@@ -1,0 +1,545 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model  ProyectoCalidad.Domain.Entities.InstitucionPostulante
+
+@{
+    ViewBag.Title = "Perfil";
+    var organismo = ViewBag.organismo;
+    var mensaje = ViewBag.mensaje;
+    var memoria = ViewBag.memoria;
+
+    var userManager = new UserManager<ApplicationUser>
+    (new UserStore<ApplicationUser>
+        (new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+}
+
+@section style {
+    <!-- Summernote css -->
+    <link href="~/plugins/summernote/summernote.css" rel="stylesheet" />
+}
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+<div class="">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Perfíl de Institución</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="@Url.Action("Index", "InstitucionPostulante" , new { PremioID=Model.PremioID})">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="">Instituci&oacute;n</a>
+                    </li>
+                    <li class="active">
+                        Perfíl
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <div class="">
+        <!-- end row -->
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-4">
+                            <div class="text-center card-box">
+                                <div class="member-card">
+
+                                    <div class="">
+                                        <h4 class="m-b-5">@organismo.Nombre</h4>
+                                        <p class="text-muted"></p>
+                                    </div>
+
+                                    <h4 class="text-muted m-t-20">
+                                        <small>Responsable:</small><br />
+                                        @organismo.FuncionarioNombre @organismo.FuncionarioApellido
+                                    </h4>
+
+                                    <hr />
+
+                                    <div class="text-left">
+                                        <p class="text-muted font-13"><strong>Dirección :</strong> <span class="m-l-15">@organismo.DireccionFisica</span></p>
+                                        @*<p class="text-muted font-13"><strong>Provincia :</strong> <span class="m-l-15">@organismo.Provicnas.Nombre</span></p>
+                                            <p class="text-muted font-13"><strong>Municipio :</strong> <span class="m-l-15">@organismo.Municipios.MunicpioNombre</span></p>*@
+
+                                        <p class="text-muted font-13"><strong>Teléfono 1:</strong><span class="m-l-15">@organismo.TelefonoOrganismo1</span></p>
+
+                                        <p class="text-muted font-13"><strong>Teléfono 2:</strong><span class="m-l-15">@organismo.TelefonoOrganismo2</span></p>
+
+                                        <p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15">@organismo.Email</span></p>
+
+                                        <p class="text-muted font-13"><strong>Estado :</strong> <span class="m-l-15">@Model.Estado</span></p>
+
+                                    </div>
+
+                                    <ul class="social-links list-inline m-t-30">
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                                        </li>
+                                    </ul>
+                                    @{
+                                        if (Model.Estado == "PENDIENTE-VALIDACION" || Model.Estado == "RECHAZADA")
+                                        {
+                                            <a href="@Url.Action("AprobarPostulante", "InstitucionPostulante" , new { InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID, estado="ACEPTADA" })" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Aceptar</a>
+
+                                            <button class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light" data-toggle="modal" data-target="#rechazado-modal">Rechazar</button>
+
+                                            @*<a href="@Url.Action(" RechazarPostulante", "InstitucionPostulante" , new { InstitucionPostulanteID=Model.InstitucionPostulanteID, estado="RECHZADA" })" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Rechazar</a>*@
+
+                                        }
+                                        else
+                                        {
+                                            if (Model.Estado == "INACTIVO")
+                                            {
+                                                <a href="@Url.Action("CambiarEstado", "InstitucionPostulante" , new { InstitucionPostulanteID=@Model.InstitucionPostulanteID, premioID = Model.PremioID, estado="ACEPTADA" })" class="btn btn-warning btn-sm w-sm waves-effect m-t-10 waves-light">Activar</a>
+
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("CambiarEstado", "InstitucionPostulante" , new { InstitucionPostulanteID=@Model.InstitucionPostulanteID, premioID = Model.PremioID, estado="INACTIVO" })" class="btn btn-warning btn-sm w-sm waves-effect m-t-10 waves-light">Inactivar</a>
+
+                                            }
+                                        }
+
+                                        var comprpmiso = Path.GetFileName(Model.RutaCartaCompromiso);
+                                        if (!string.IsNullOrEmpty(comprpmiso))
+                                        {
+                                            <a class="btn btn-default btn-block w-sm waves-effect m-t-10 waves-light" target="_blank" href="@Url.Action("VerCompromisoPostulacion", new {InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID})">Ver Compromiso</a>
+
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted">No tiene compromiso de postulación!</p>
+
+                                        }
+                                        <br />
+                                        <br />
+
+                                        var informe = Path.GetFileName(Model.ComentarioJurado);
+                                        if (!string.IsNullOrEmpty(informe))
+                                        {
+                                            if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO" && Model.Premio.TipoPremio.Siglas == "PNC")
+                                            {
+
+                                                <div class="btn-group">
+
+                                                    <button type="button" class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Informe Retorno <span class="caret"></span></button>
+
+                                                    <ul class="dropdown-menu" role="menu">
+
+                                                        <li>
+                                                            <a target="_blank" href="@Url.Action("DescargarInformeRetorno", new {InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID})"> <i class="mdi mdi-download"></i> Descargar Informe Retorno</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href data-toggle="modal" data-target="#informeFinal-modal"><i class="mdi mdi-upload"></i> Cargar Informe</a>
+                                                        </li>
+                                                        @{
+                                                            var informeFinal = Path.GetFileName(Model.ComentarioCoordinador);
+
+                                                            if (!string.IsNullOrEmpty(informeFinal))
+                                                            {
+                                                                if (user.Role == "ADMIN" || user.Role == "COORDINADOR-COMITE-INTERNO")
+                                                                {
+                                                                    <li>
+                                                                        <a target="_blank" href="@Url.Action("VerInformeRetornoFinal", new {InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID})"> <i class="mdi mdi-eye"></i> Ver Informe final</a>
+                                                                    </li>
+                                                                }
+
+                                                            }
+                                                        }
+
+                                                    </ul>
+
+                                                </div>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted">No hay informe de retorno</p>
+
+                                        }
+
+                                    }
+
+                                    <hr />
+
+                                    <div class="card-box">
+                                        <!--Validad que exista un documento que sea la memoria-->
+                                        @*<button class="btn btn-danger btn-block w-sm waves-effect m-t-10 waves-light" data-toggle="modal" data-target="#memoria-rechazada-modal">Rechazar</button>*@
+
+
+                                        @if (memoria != null)
+                                        {
+                                            var path = Server.MapPath("~/Memorias/" + memoria.RutaMemoria);
+                                            if (File.Exists(path))
+                                            {
+                                                <div>
+                                                    <a class="btn btn-primary btn-block" target="_blank" href="@Url.Action("VerMemoria", "GuiaPostulantes" , new {InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID})"> Ver memoria</a>
+
+                                                </div>
+                                                if (Model.Estado == "PENDIENTE-VALIDACION-MEMORIA")
+                                                {
+                                                    <a href="@Url.Action("AceptarMemoria", "InstitucionPostulante" , new {InstitucionPostulanteID=Model.InstitucionPostulanteID, premioID = Model.PremioID, estado="ACEPTADA" })" class="btn btn-success btn-block w-sm waves-effect m-t-10 waves-light">Aceptar</a>
+
+                                                    <button class="btn btn-danger btn-block w-sm waves-effect m-t-10 waves-light" data-toggle="modal" data-target="#memoria-rechazada-modal">Rechazar</button>
+
+
+                                                }
+
+                                            }
+
+                                            else
+                                            {
+                                                <span>No se a cargado la memoria </span>
+                                            }
+                                        }
+
+                                        else {
+
+                                        <span>No se a cargado la memoria </span>
+                                        }
+
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div> <!-- end card-box -->
+
+                        </div> <!-- end col -->
+
+                        <div class="col-md-8 col-lg-9">
+                            <h4>Avance de la Guía</h4>
+
+                            <div class="row m-t-20">
+
+                                @{
+                                    var num = 1;
+                                }
+                                @foreach (var item in ViewBag.progress)
+                                {
+                                    <div class="col-md-2 col-sm-6 text-center">
+                                        <div class="p-t-10">
+                                            <input data-plugin="knob" data-width="80" data-height="80" data-linecap=round
+                                                   data-fgColor="#2abfcc" value="@Math.Ceiling(item.porcentaje)" data-skin="tron" data-angleOffset="180"
+                                                   data-readOnly=true data-thickness=".1" />
+                                            <h6 class="text-muted m-t-10">@item.Criterio</h6>
+                                        </div>
+
+
+                                    </div><!-- end col-->
+                                }
+
+
+
+                            </div> <!-- end row -->
+
+                            <hr />
+
+                            <h4 class="m-t-30">Equipo de Evaluadores Internos</h4>
+
+                            <div class="row">
+
+                                @if (ViewBag.usuariosPostulantes != null)
+                                {
+                                    foreach (var item in (List<InsPostPerfil_Evaluadores>)ViewBag.usuariosPostulantes)
+                                    {
+                                        <div class="col-md-4 col-sm-6" style="text-align: center;">
+                                            <div class=" ">
+                                                <a href="#" class="image-popup" title="Screenshot-1">
+
+                                                    @{
+                                                        var imagen = Path.GetFileName(item.Imagen);
+                                                    }
+
+                                                    <a href="@Url.Action("Perfil", "Account" , new{userID=item.UserID, premioID = Model.PremioID})"><img src="@Url.Content("/sgp_admin/Usuarios/Imagenes/"+ imagen)" class="thumb-lg img-circle" alt="work-thumbnail"></a>
+                                                </a>
+                                                <div class="">
+                                                    <h4> <a href="@Url.Action("Perfil", "Account" , new{userID=item.UserID, premioID = Model.PremioID })"> @item.FullName</a></h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+
+
+
+                            </div>
+                        </div>
+                        <!-- end col -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End row -->
+
+
+
+    </div> <!-- container -->
+    <!-- end property-detail-wrapper -->
+
+</div> <!-- container -->
+
+<div id="informeFinal-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Remisión del Informe de Retorno</h3>
+                </div>
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("GuardarInformeRetornoFinal", "InstitucionPostulante", FormMethod.Post, new
+                    {
+                        role = "form",
+                        enctype = "multipart/form-data",
+                        id = "formularioRegistro",
+                        premioID = Model.PremioID
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        //@Html.Hidden("premioID", premio);
+                        @Html.Hidden("InstitucionPostulanteID", Model.InstitucionPostulanteID)
+                        <div class="row">
+                            <input type="file" name="InformeRetorno" value="" />
+                        </div>
+                        @*<div class="col-sm-12" id="evidenciaDocumento1" style="margin-top: 22px;">
+                            <div class="input-container">
+
+                                <input class="form-control FilUploader custom-file-input" type="file" id="eDocumento1" class="filestyle" data-buttonText="Find file" name="InformeRetorno" value="" required="">
+
+                                <button type="button" class="browse-btn-1" style="width: 140px;">
+                                    Seleccionar Documento
+                                </button>
+
+                                <span class="file-info1">...</span>
+
+                            </div>
+                            @*<input class="form-control" type="hidden" class="filestyle" data-buttonText="Find file" name="tipoDocumento" value="3">*@
+
+                        @*
+                            </div>*@
+                        <hr />
+
+                        <div class="form-group mb5">
+                            <input type="submit" id="submit" class="btn btn-custom min-width" value="Guardar">
+                        </div><!-- End .from-group -->
+                    }
+
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="rechazado-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Motivo</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("RechazarPostulante", "InstitucionPostulante", FormMethod.Post, new { premioID = Model.PremioID }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.InstitucionPostulanteID)
+                        <div class="form-group">
+                            <label class="control-label">Debe de escribir un motivo</label>
+                            <textarea class="form-control" name="motivo" placeholder="Escriba una razón para enviar el correo electrónico" required oninvalid="this.setCustomValidity('Este campo es obligatorio')"></textarea>
+
+                        </div>
+                        <hr />
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-primary waves-effec">Enviar Notificación</button>
+                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="memoria-rechazada-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-heading">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="panel-title">Motivo</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("RechazarMemoria", "InstitucionPostulante", FormMethod.Post, new { premioID = Model.PremioID }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.InstitucionPostulanteID)
+                        <div class="form-group">
+                            <label class="control-label">Debe de escribir un motivo</label>
+
+                            <textarea class="form-control summernote" name="motivo" placeholder="Escriba una razón para enviar el correo electrónico" required oninvalid="this.setCustomValidity('Este campo es obligatorio')"></textarea>
+
+                        </div>
+
+
+                        @*<div class="form-group">
+                                <div class="summernote" name="motivo" placeholder="Escriba una razón para enviar el correo electrónico" required oninvalid="this.setCustomValidity('Este campo es obligatorio')>
+                                    <h6>Hello Summernote</h6>
+                                    <ul>
+                                        <li>
+                                            Select a text to reveal the toolbar.
+                                        </li>
+                                        <li>
+                                            Edit rich document on-the-fly, so elastic!
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        End of air-mode area
+                                    </p>
+
+                                </div>
+                            </div>*@
+                        <hr />
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-primary waves-effec">Enviar Notificación</button>
+                            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section scripts
+        {
+    <script src="~/plugins/jquery-knob/jquery.knob.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <!--Summernote js-->
+    <script src="~/plugins/summernote/summernote.min.js"></script>
+
+    <script>
+
+        jQuery(document).ready(function () {
+
+            $('.summernote').summernote({
+                height: 350,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: false                 // set focus to editable area after initializing summernote
+            });
+
+            $('.inline-editor').summernote({
+                airMode: true
+            });
+
+        });
+    </script>
+    <script>
+
+            $(document).ready(function () {
+
+                if ('@mensaje.tipo'.length > 0) {
+                    Swal.fire({
+                        type: '@mensaje.tipo',
+                        title: '@mensaje.mensaje',
+                        html: '@mensaje.texto'
+                    });
+                }
+                //mensajes Sweet Alert desde InstitucionPostulanteController.cs
+
+                // El estado fue actualizado
+                if ('@TempData["mensaje"]' === 'cambioEstado') {
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Cambio de Estado',
+                        html: '@TempData["texto"]'
+                    });
+
+                    @TempData.Remove("mensaje");
+                }
+
+                // El Correo fue enviado
+                if ('@TempData["mensaje"]' === 'emailEvniado') {
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Correo Enviado!',
+                        html: '@TempData["texto"]'
+                    });
+
+                    @TempData.Remove("mensaje");
+                }
+
+                // El Correo fue enviado
+                if ('@TempData["mensaje"]' === 'emailNoEvniado') {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Hubo un error',
+                        html: '@TempData["texto"]'
+                    });
+
+                    @TempData.Remove("mensaje");
+                }
+
+                //No Existe
+                if ('@TempData["mensaje"]' === 'NoExiste') {
+                    debugger;
+                    Swal.fire({
+                        type: 'question',
+                        title: 'Sin Resultado',
+                        html: '@TempData["texto"]'
+                    });
+
+                    @TempData.Remove("mensaje");
+                }
+
+                //Error inesperado
+                if ('@TempData["mensaje"]' === 'error') {
+                    debugger;
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Proceso sin completar',
+                        html: '@TempData["texto"]'
+                    });
+
+                    @TempData.Remove("mensaje");
+                }
+
+            });
+
+    </script>
+}

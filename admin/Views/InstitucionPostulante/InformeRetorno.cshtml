@@ -1,0 +1,214 @@
+﻿@using ProyectoCalidad.Domain.Entities
+@model List<List<ProyectoCalidad.WebUI.Models.ComentariosEvaluadoresViewModel>>
+
+@{
+    ViewBag.Title = "InformeRetorno";
+
+    <style>
+        .activo {
+            display: none;
+        }
+    </style>
+
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Informe de Retorno</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="#">Inicio</a>
+                </li>
+                <li>
+                    <a href="#">Guía Postulante</a>
+                </li>
+                <li class="active">
+                    Informe Postulante
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="mdi mdi-add"></i>regresar a la lista</a>
+    </div><!-- end col -->
+</div>
+
+<div class="row">
+    <div class="col-sm-4">
+        <button type="button" onclick="activar(1)" id="fortaleza" class="btn btn-default btn-block btn-bordered waves-effect waves-light m-b-10 active"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="mdi mdi-add"></i>Puntos Fuertes y Áreas de Mejora</button>
+
+        <button type="button" onclick="activar(2)" id="mejora" class="btn btn-default btn-block btn-bordered waves-effect waves-light m-b-20"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="mdi mdi-add"></i>Puntos para la visita</button>
+    </div>
+    <div class="col-sm-8">
+        <div class="card-box">
+            <h4 class="m-t-0"><b>@ViewBag.institucion.InstitucionNombre</b></h4>
+
+            <hr />
+            
+            <div id="cFortaleza" style="margin: 10px; border: solid #f9c851 1px; padding: 10px;">
+                @foreach (var items in Model)
+                {
+
+                    foreach (var item in items)
+                    {
+                        List<Ejemplo> ejemplos = ViewBag.ejemplos;
+
+                        var ejemplo = ejemplos.FirstOrDefault(x => x.EjemploID == item.EjemploID);
+
+                        List<EvaluadorPremio> evaluadores = ViewBag.evaluadores;
+
+                        var evaluador = evaluadores.FirstOrDefault(x => x.EvaluadorPremioID == item.EvaluadorID);
+
+                        <div class="media m-b-30 ">
+                            <div class="media-body">
+                                @*<span class="media-meta pull-right">07:23 AM</span>*@
+                                <h5  style="color:gray">Criterio: @ejemplo.SubCriterio.Criterio.Nombre</h5>
+                                <h5  style="color:gray">Sub criterio: @ejemplo.SubCriterio.Descripcion</h5>
+                                <h4 class="m-0" style="color:gray">Ejemplo: @ejemplo.Descripcion</h4>
+                            </div>
+                        </div>
+                        <!-- media -->
+                        <h4 class="text-primary">Putos Fuertes</h4>
+                        <span style="font-size: 15px; color:#5d5d5d">
+
+                            @Html.Raw(item.Fortalezas)
+                        </span>
+                        <h4 class="text-primary">Áreas de Mejora</h4>
+                        <span style="font-size: 15px; color:#5d5d5d">
+                            @Html.Raw(item.InformRetorno)
+
+                        </span>
+
+                        @*<h5 class="text-primary">Punto de vista</h5>
+                        <span style="font-size: 15px; color:#5d5d5d">
+
+                            @Html.Raw(item.PuntoDeVista)
+                        </span>*@
+                        <div class="media m-b-30 ">
+                            <div class="media-body">
+                                @*<span class="media-meta pull-right">07:23 AM</span>*@
+                                <h4 class="bg-warning m-0 pull-right">Evaluador: @evaluador.Usuario.Nombre @evaluador.Usuario.Apellido</h4>
+                            </div>
+                        </div>
+                        <!-- media -->
+
+                        <hr />
+                    }
+
+                }
+            </div>
+
+
+            
+            <div div id="cMejora" class="activo" style="margin: 10px; border: solid #f9c851 1px; padding: 10px;">
+                @foreach (var items in Model)
+                {
+
+                    foreach (var item in items)
+                    {
+                        List<Ejemplo> ejemplos = ViewBag.ejemplos;
+
+                        var ejemplo = ejemplos.FirstOrDefault(x => x.EjemploID == item.EjemploID);
+
+                        List<EvaluadorPremio> evaluadores = ViewBag.evaluadores;
+
+                        var evaluador = evaluadores.FirstOrDefault(x => x.EvaluadorPremioID == item.EvaluadorID);
+
+                        <div class="media m-b-30 ">
+                            <div class="media-body">
+                                @*<span class="media-meta pull-right">07:23 AM</span>*@
+                                <h5 style="color:gray">Criterio: @ejemplo.SubCriterio.Criterio.Nombre</h5>
+                                <h5 style="color:gray">Sub criterio: @ejemplo.SubCriterio.Descripcion</h5>
+                                <h4 class="m-0" style="color:gray">Ejemplo: @ejemplo.Descripcion</h4>
+                            </div>
+                        </div>
+                        <!-- media -->
+                        @*<h5 class="text-primary">Fortalezas</h5>
+                        <span style="font-size: 15px; color:#5d5d5d">
+
+                            @Html.Raw(item.Fortalezas)
+                        </span>*@
+                        @*<h5 class="text-primary">Áreas de Mejora</h5>
+                        <span style="font-size: 15px; color:#5d5d5d">
+                            @Html.Raw(item.InformRetorno)
+
+                        </span>*@
+
+                        <h4 class="text-primary">Punto para la vista</h4>
+                        <span style="font-size: 15px; color:#5d5d5d">
+
+                            @Html.Raw(item.PuntoDeVista)
+                        </span>
+                        <div class="media m-b-30 ">
+                            <div class="media-body">
+                                @*<span class="media-meta pull-right">07:23 AM</span>*@
+                                <h4 class="bg-warning m-0 pull-right">Evaluador: @evaluador.Usuario.Nombre @evaluador.Usuario.Apellido</h4>
+                            </div>
+                        </div>
+                        <!-- media -->
+
+                        <hr />
+                    }
+
+                }
+            </div>
+
+
+            @*
+                <h4> <i class="fa fa-paperclip m-r-10 m-b-10"></i> Attachments <span>(3)</span> </h4>
+
+                <div class="row">
+                    <div class="col-sm-2 col-xs-4">
+                        <a href="#"> <img src="assets/images/small/img-1.jpg" alt="attachment" class="img-thumbnail img-responsive"> </a>
+                    </div>
+                    <div class="col-sm-2 col-xs-4">
+                        <a href="#"> <img src="assets/images/small/img-2.jpg" alt="attachment" class="img-thumbnail img-responsive"> </a>
+                    </div>
+                    <div class="col-sm-2 col-xs-4">
+                        <a href="#"> <img src="assets/images/small/img-3.jpg" alt="attachment" class="img-thumbnail img-responsive"> </a>
+                    </div>
+                </div>*@
+        </div>
+        <!-- card-box -->
+    </div> <!-- end col -->
+    @*<div class="col-sm-2">
+
+    </div>*@
+</div> <!-- end row -->
+
+@section scripts
+{
+    <script>
+    function activar(e) {
+        if (e === 1) {
+
+            $("#fortaleza").addClass("active");
+            $("#cFortaleza").removeClass("activo");
+
+            //---------
+
+            $("#mejora").removeClass("active");
+            $("#cMejora").addClass("activo");
+        }
+        if (e === 2) {
+
+            $("#fortaleza").removeClass("active");
+            $("#cFortaleza").addClass("activo");
+
+            //---------
+
+            $("#mejora").addClass("active");
+            $("#cMejora").removeClass("activo");
+        }
+        
+    }
+    </script>
+}

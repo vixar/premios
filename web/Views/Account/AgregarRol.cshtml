@@ -1,0 +1,334 @@
+﻿@using Microsoft.AspNet.Identity
+@model WebPublico.WebUI.Models.AgregarRolViewModel
+@{
+    ViewBag.Title = "Register";
+
+    var mensaje = ViewBag.mensaje;
+    var premio = ViewBag.premio;
+
+
+    //var roles = ViewBag.roles.Count;
+
+    if (Model.Premio.TipoPremio.Siglas == "PIMP")
+    {
+        ViewBag.titulo = "Unidad";
+    }
+    else
+    {
+        ViewBag.titulo = "Institución";
+    }
+
+}
+
+@section styles{
+    <link href="~/Content/assets/css/select2.min.css" rel='stylesheet' type='text/css'>
+}
+
+<div class="main">
+    <div class="page-header larger parallax custom" style="background-image:url(assets/images/page-header-bg.jpg)">
+        <div class="container">
+            <h1>Inscripción</h1>
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+                <li><a href="javascript:history.back()">Cuenta</a></li>
+                <li class="active">Inscripción</li>
+            </ol>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <div class="container">
+        @using (Html.BeginForm("AgregarRol", "Account", new { premioID = premio }, FormMethod.Post, new
+        {
+            role = "form",
+            enctype = "multipart/form-data",
+            id = "formularioRegistro"
+        }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(m => m.UsuarioID)
+            @Html.HiddenFor(x => x.RoleSeleccionado)
+            @Html.HiddenFor(x => x.Premio.PremioID)
+            @Html.HiddenFor(x => x.Premio.TipoPremioID)
+            @Html.HiddenFor(x => x.NombreCompleto)
+            @Html.HiddenFor(x => x.Email)
+
+            <h1 class="title mb30" style="font-family: 'Oswald';"> <strong>Premio Seleccionado:</strong> @Model.Premio.Descripcion (@Model.Premio.TipoPremio.Siglas)</h1>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="contact-box mb30">
+                        <h3 class="title mb30" style="font-family: 'Oswald';">@Model.NombreCompleto</h3>
+                        <ul>
+                            <li><strong>Rol Activo:</strong> @Model.RoleActual </li>
+                            <li><strong>Email:</strong> <a>@Model.Email</a></li>
+                            @if (@Model.PremioActual != null)
+                            {
+                                <li><strong>Premio Actual:</strong> <a>@Model.PremioActual.Descripcion</a></li>
+
+                            }
+                            else
+                            {
+                                <li><strong>Premio Actual:</strong> <a>---</a></li>
+
+                            }
+
+                        </ul>
+                    </div><!-- End .contact-box -->
+                </div><!-- End .col-sm-4 -->
+
+                <div class="col-sm-4">
+                    <div class="contact-box mb30">
+                        <div class="form-group">
+                            <label>
+                                Rol Seleccionado
+                            </label>
+                            @Html.TextBoxFor(x => x.RoleSeleccionado, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div><!-- End .contact-box -->
+                </div><!-- End .col-sm-4 -->
+                @if (Model.RoleSeleccionado.ToLower().Contains("postul"))
+                {
+                    <div class="col-sm-4">
+                        <div class="contact-box mb30">
+                            <div class="form-group">
+                                <label>
+                                    @ViewBag.titulo Postulante
+                                </label>
+                                @if (Model.Premio.TipoPremio.Siglas == "PIMP")
+                                {
+                                    @Html.DropDownList("OrganismoID", null, "Unidad a la que pertenece", new { @id = "selUser", @class = "form-control", @placeholder = "Seleccione un organismos" })
+
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("OrganismoID", null, "Institución a la que pertenece", new { @id = "selUser", @class = "form-control", @placeholder = "Seleccione un organismos" })
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group mb0">
+                    <div class="checkbox">
+                        <label class="custom-checkbox-wrapper">
+                            <span class="custom-checkbox-container">
+                                <input type="checkbox" value="true" name="PoliticaPrivacidad">
+                                <span class="custom-checkbox-icon"></span>
+                            </span>
+                            <span>He leído y estoy de acuerdo con la <a target="_blank" href="https://map.gob.do/politicas-de-privacidad/">Política de Privacidad</a>.</span>
+                            @Html.ValidationMessageFor(model => model.PoliticaPrivacidad, "", new { @class = "text-danger" })
+                        </label>
+                    </div><!-- End .checkbox -->
+                </div><!-- End .form-group -->
+
+                <div class="col-sm-4 form-group mb25">
+                    <div class="checkbox">
+                        <label class="custom-checkbox-wrapper">
+                            <span class="custom-checkbox-container">
+                                <input type="checkbox" value="true" name="PoliticaUso">
+                                <span class="custom-checkbox-icon"></span>
+                            </span>
+                            <span>He leído y estoy de acuerdo con los <a target="_blank" href="https://map.gob.do/terminos-de-uso/">Términos de Uso</a></span>
+                            @Html.ValidationMessageFor(model => model.PoliticaUso, "", new { @class = "text-danger" })
+                        </label>
+                    </div><!-- End .checkbox -->
+                </div><!-- End .form-group -->
+                @if (Model.RoleSeleccionado == "POSTULANTE")
+                {
+                    <div class="col-sm-4 form-group mb25" id="coordinador">
+                        <div class="checkbox">
+                            <label class="custom-checkbox-wrapper" style="background-color: #84d835; padding: 10px;">
+                                <span class="custom-checkbox-container">
+                                    <input type="checkbox" value="true" name="IsCoordinador">
+                                    <span class="custom-checkbox-icon"></span>
+                                </span>
+                                <span>Soy el Coordinador del equipo de evaluadores internos </span>
+                            </label>
+                        </div><!-- End .checkbox -->
+                    </div><!-- End .form-group -->
+                }
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" class="btn btn-custom" value="Guardar" />
+                <a href="javascript:history.back()" class="btn btn-default" data-dismiss="modal">Regresar</a>
+            </div><!-- End .modal-footer -->
+        }
+
+    </div><!-- End .container -->
+
+</div>
+<!-- Modal -->
+
+@section scripts
+{
+    <script src="~/Content/assets/js/select2.min.js"></script>
+
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // Initialize select2
+            $("#selUser").select2();
+
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+            }
+
+
+        });
+        $('#selUser').on('change',
+            function () {
+
+                var valor = $('#selUser').val();
+                console.log(valor);
+                $.ajax({
+                    type: "GET",
+                    url: "/sgp/Account/InstitucionTieneCoordinador?OrganismoID=" + valor + "&premioID=" + @Model.Premio.PremioID,
+                    contentType: "html",
+                    success: function (response) {
+
+                         console.log(response);
+                        if (!response.PremioIsActive) {
+                            Swal.fire({
+                                title: 'Premio no activo!',
+                                text: "Lo sentimos, la premiación que intenta utilizar no está activa",
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'De acuerdo'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        }
+
+                        @*if (@premio === 3) {
+
+                        } else {
+
+                        }*@
+
+                        if (response.cantidad === 3) {
+
+                            if (@Model.Premio.TipoPremio.Siglas == "PIMP") {
+                                Swal.fire({
+                                    title: 'Equipo Completo!',
+                                    text: "Lo sentimos, esta unidad tiene su equipo completo",
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De acuerdo'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Equipo Completo!',
+                                    text: "Lo sentimos, esta institución tiene su equipo completo",
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De acuerdo'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+
+                        } else {
+
+                            debugger;
+
+                            $("#submit").prop("disabled", false);
+
+
+                            if (response.HasCoordinado) {
+
+                                $("#coordinador").attr("style", "display:none");
+
+                            } else {
+                                $("#coordinador").removeAttr("style", "display:none");
+                            }
+                        }
+
+                        @*$("#submit").prop("disabled", false);
+
+
+                        if (response.HasCoordinado) {
+
+                            $("#coordinador").attr("style", "display:none");
+
+                        } else {
+                            $("#coordinador").removeAttr("style", "display:none");
+                        }*@
+
+                        @*if (response.cantidad === 3) {
+
+                            if (@Model.Premio.PremioID === 3) {
+                                Swal.fire({
+                                    title: 'Equipo Completo!',
+                                    text: "Lo sentimos, esta unidad tiene su equipo completo",
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De acuerdo'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Equipo Completo!',
+                                    text: "Lo sentimos, esta institución tiene su equipo completo",
+                                    type: 'warning',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De acuerdo'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+
+                        } else {
+
+                            $("#submit").prop("disabled", false);
+
+
+                            if (response.HasCoordinado) {
+
+                                $("#coordinador").attr("style", "display:none");
+
+                            } else {
+                                $("#coordinador").removeAttr("style", "display:none");
+                            }
+                        }*@
+
+
+
+
+                    }
+                });
+            });
+    </script>
+}

@@ -1,0 +1,160 @@
+﻿@model ProyectoCalidad.Domain.Entities.Guia
+@{
+    Layout = "~/Views/Shared/_PrintLayout.cshtml"; 
+}
+<div class="container">
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="card-box">
+                    <h1 class="m-t-0 header-title">@Model.Titulo</h1>
+                    <div class="page-title-box pull-right">
+                        <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+
+        <div class="card-box">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="card-box">
+                        <h1 class="m-t-0 header-title">@Model.Descripcion</h1>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+            @*<div class="row">
+                <div class="col-xs-12">
+                    <div class="card-box">
+                        <h1 class="m-t-0 header-title">Presentaci&oacute;n</h1><br /><br />
+                        @Html.Raw(Model.Presentacion)
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>*@
+            <!-- end row -->
+
+            @*<div class="row">
+                <div class="col-xs-12">
+                    <div class="card-box">
+                        <h1 class="m-t-0 header-title">Instrucciones</h1><br /><br />
+                        @Html.Raw(Model.Instrucciones)
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>*@
+            <!-- end row -->
+        </div>
+        <!-- end card-box -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="card-box">
+                    <h2 class="m-t-0 header-title">CRITERIOS FACILITADORES</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+    </div>
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                @foreach (var c in Model.Criterios.Where(c => c.Estado == true))
+                {
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h3 class="m-t-0 header-title"><b>@c.CriterioNombreCompleto</b></h3>
+                                <p class="text-muted m-b-30 font-13">
+                                    @c.Descripcion
+                                </p>
+
+                            </div>
+                        </div>
+                        <!--end criterio-->
+
+                        @foreach (var s in c.SubCriterios)
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4 class="m-t-0 header-title"><b>@s.SubCriterioDescripcionCompleta</b></h4>
+                                </div>
+
+                            </div>
+                            <!--end subcriterio-->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="demo-box">
+                                        <table class="table table-bordered m-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-xs-1">#</th>
+                                                    <th class="col-sm-6">Ejemplos</th>
+                                                    <th class="col-sm-2">Puntos Fuertes <br />(Detallar Evidencias)</th>
+                                                    <th class="col-sm-2">&Aacute;reas de Mejora</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var e in s.Ejemplos)
+                                                {
+                                                    <tr>
+                                                        <td class="col-xs-1" scope="row">@e.Codigo </td>
+                                                        <td class="col-sm-6">@e.Descripcion</td>
+                                                        <td class="col-sm-2">&nbsp;</td>
+                                                        <td class="col-sm-2">&nbsp;</td>
+                                                    </tr>
+
+                                                }
+                                                <!--end loop ejemplos-->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--- end row ejemplos -->
+                        }
+                        <!--end loop subcriterios-->
+                    </div>
+                    <!--end card box-->
+                }
+                <!--end loop criterios-->
+
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="card-box">
+                        <h1 class="header-title">Nota:</h1><br /><br />
+                        @Html.Raw(Model.Nota)
+                        <div class="page-title-box pull-right">
+                            <a href="javascript:window.print()" class="btn btn-inverse waves-effect waves-light"><i class="fa fa-print"></i></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+            <div class="hidden-print">
+
+            </div>
+
+        </div>
+        <!--end col-->
+        @*}*@
+    </div>
+<!-- end row -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

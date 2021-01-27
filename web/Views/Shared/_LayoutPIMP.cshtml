@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGP</title>
+
+    @RenderSection("styles", false)
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700%7COpen+Sans:300,300i,400,400i,600,600i,700,800" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/Content/assets/css/plugins.min.css">
+    <link rel="stylesheet" href="~/Content/assets/css/settings.css">
+    <link rel="stylesheet" href="~/Content/assets/css/layers.css">
+    <link rel="stylesheet" href="~/Content/assets/css/navigation.css">
+    <link rel="stylesheet" href="~/Content/assets/css/style.css">
+    <link href="~/Content/assets/css/plugins/animate.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="~/Content/assets/images/MAP/favicon.ico">
+    @RenderSection("Style", false)
+    <!-- Font Icon -->
+    <!-- Main css -->
+    <script src="~/Content/assets/js/modernizr.js"></script>
+
+
+    @*@Styles.Render("~/Content/css")*@
+    @*@Scripts.Render("~/bundles/modernizr")*@
+
+
+</head>
+<body>
+
+    <div class="wrapper">
+        <header class="header sticky-header">
+            @{Html.RenderPartial("_header",true);}
+        </header>
+
+
+        <div class="main">
+            @RenderBody()
+            <hr />
+        </div>
+        <div class="footer" style="    font-size: 1.3em;">
+            @{Html.RenderPartial("_footer");}
+
+        </div>
+
+        @RenderSection("modals", required: false)
+    </div>
+    <a id="scroll-top" href="#top" title="Scroll top"><i class="fa fa-angle-up"></i></a>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-filestyle/2.1.0/bootstrap-filestyle.min.js"></script>
+
+
+
+    <!-- End -->
+    <script src="~/Content/assets/js/plugins.min.js"></script>
+    <script src="~/Content/assets/js/main.js"></script>
+    <!-- REVOLUTION JS FILES -->
+    <script type="text/javascript" src="~/Content/assets/js/jquery.themepunch.tools.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/js/jquery.themepunch.revolution.min.js"></script>
+
+    @*<script src="/Content/assets/js/plugins.min.js"></script>
+        <script src="/Content/assets/js/main.js"></script>
+        <!-- REVOLUTION JS FILES -->
+        <script type="text/javascript" src="/Content/assets/js/jquery.themepunch.tools.min.js"></script>
+        <script type="text/javascript" src="/Content/assets/js/jquery.themepunch.revolution.min.js"></script>*@
+
+    <script>
+        $('#topheader .navbar-nav a').on('click', function () {
+            $('#topheader .navbar-nav').find('li.active').removeClass('active');
+            $(this).parent('li').addClass('active');
+        });
+
+    </script>
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

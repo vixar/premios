@@ -1,0 +1,54 @@
+﻿@using ProyectoCalidad.WebUI.Models
+@{
+    Mensajes m = (Mensajes)TempData["message"];
+}
+<div class="">
+    <!-- Start content -->
+    <div class="">
+        <div class="">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+
+                    <div class="">
+                        <img src="~/images/animat-search-color.gif" alt="" height="120">
+                        <h1 class="text-uppercase text-danger" style="font-family:'Oswald', sans-serif; ">Lo sentimos!</h1>
+                        <p class="text-muted" style="font-size: 16px">Hubo un error procesando la información.</p>
+                        
+                        <table class="table table-bordered">
+                            <thead class="bg-warning">
+                            <tr>
+                                <th>
+                                    Error
+                                </th>
+                                <th>
+                                    Mensaje
+                                </th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="word-wrap: break-word; word-break:break-all; width: 50%">
+                                    @m.mensaje
+                                </td>
+                                <td style="word-wrap: break-word; word-break:break-all;">
+                                    @m.texto
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <a class="btn btn-success waves-effect waves-light m-t-20" href="javascript:history.back()"> Regresar a donde estaba</a>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div> <!-- container -->
+
+    </div> <!-- content -->
+
+
+</div>
+

@@ -1,0 +1,388 @@
+﻿
+@model IEnumerable<ProyectoCalidad.Domain.Entities.ReporteActaDeliberacion>
+
+
+
+
+
+
+
+
+
+@section Style{
+    <link href="~/css/Button-Informe.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Reporte de Actas</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        Reporte
+                    </li>
+                    <li>
+                        <a href="#">Actas</a>
+                    </li>
+                    <li class="active">
+                        Lista
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <a href="@Url.Action("CrearActaDeliberacion", new{ siglas = ViewBag.siglas})" class="btn btn-primary btn-bordered waves-effect waves-light m-b-20 hidden-print"
+       data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i> Agregar Acta</a>
+    <a href="@Url.Action("DescargarPlantilla", new{ siglas = ViewBag.siglas})" class="btn btn-success btn-bordered waves-effect waves-light m-b-20 hidden-print"
+       data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i> Plantilla para las actas</a>
+    @if (Model != null)
+    {
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card-box table-responsive">
+                    @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                        <p class="text-muted font-13 m-b-30">
+                            The Buttons extension for DataTables provides a common set of options, API methods and
+                            styling to display buttons on a page that will interact with a DataTable. The core
+                            library provides the based framework upon which plug-ins can built.
+                        </p>*@
+                    <h4></h4>
+                    <table id="datatable" class="table table-striped  table-colored table-info">
+                        <thead>
+                            <tr>
+                                @*@if (User.IsInRole("ADMIN") || User.IsInRole("COORDINADOR-COMITE-INTERNO"))
+                                    {
+                                        <th>Perfíl</th>
+                                    }*@
+
+                                <th style="width: 205px">Version</th>
+                                <th>Última modificación</th>
+                                <th>Archivo</th>
+
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @item.Premio.Version
+                                    </td>
+
+                                    <td>
+                                        @item.Modificaicon
+                                    </td>
+
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.DocumentoReferencia))
+                                        {
+                                            <a target="_blank" href="@Url.Action("DescargarActaDeliberacion", new{ id = item.ReporteActaDeliberacionID})"><i class=" mdi mdi-arrow-down-bold-circle" style="font-size: 30px"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <i class="mdi mdi-arrow-down-bold-circle-outline text-muted" style="font-size: 30px"></i>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        <a class="btn btn-primary" href="@Url.Action("EditarActaDeliberaion", new
+                                                                         {
+                                                                             id = item.ReporteActaDeliberacionID,
+                                                                             siglas = item.Premio.TipoPremio.Siglas
+                                                                         })"> Editar </a>
+                                    </td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+    <!-- end row -->
+    @*<div class="row">
+
+
+        @{
+            foreach (var item in Model)
+            {
+                <div class="col-md-6">
+                    <div class="property-card property-horizontal">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="property-image" style="background: url('/images/properties/1.jpg') center center / cover no-repeat;">
+                                    <span class="property-label label label-danger">Activo</span>
+                                </div>
+                            </div>
+                            <!-- /col 4 -->
+                            <div class="col-sm-8">
+                                <div class="property-content">
+                                    <div class="listingInfo">
+                                        <div class="">
+                                            <h4 class="text-success m-t-0">@item.PremioID</h4>
+                                        </div>
+                                        <div class="">
+                                            <h3><a href="#" class="text-dark">@item.InstitucionNombre</a></h3>
+                                            <p class="text-muted"><i class="mdi mdi-map-marker-radius m-r-5"></i>@item.Premio.Descripcion</p>
+
+                                            <p class="font-13 text-muted m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit Aliquam gravida magna et fringilla convallis. Pellentesque habitant morb</p>
+                                        </div>
+                                    </div>
+                                    <div class="property-action">
+                                        @*<a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="280 square feet"><i class="mdi mdi-view-grid"></i><span>280</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="4 Bedroom House"><i class="mdi mdi-hotel"></i><span>4</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="2 Parking space"><i class="mdi mdi-car"></i><span>2</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="24h Electricity"><i class="mdi mdi-battery-charging-80"></i><span> 24H</span></a>*@
+    @* <div class="pull-right">
+                                                <a href="@Url.Action("Perfil", "InstitucionPostulante", new{id = item.InstitucionPostulanteID})" class="btn btn-default"><i class="fa fa-eye"></i><span>ver</span></a>
+                                            </div>
+                                        </div>
+                                        <!-- end. Card actions -->
+                                    </div>
+                                </div>
+                                <!-- /col 8 -->
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+
+                    </div>
+                }
+            }
+
+            <!-- /inner row -->
+        </div>*@
+
+
+
+</div>
+
+
+@section scripts{
+    @*<script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+        <script src="~/Scripts/pages/jquery.tooltipster.js"></script>*@
+    <script src="~/Scripts/js/Button-Informe.js"></script>
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js">
+    </script>
+    <script>
+        function pasarId(id) {
+            $('#informe-modal').on('shown.bs.modal',
+                function (e) {
+
+                    console.log(id);
+
+                });
+
+        }
+
+
+        function consensuar(id, pID) {
+
+            var url = '@Url.Action("Consensuar", "EquipoEvaluador")';
+
+
+            var url = url + "/" + id + "?premioID=" + pID;
+
+
+
+            Swal.fire({
+                title: 'Está seguro?',
+                text: "Una vez apruebe el consenso, la fase preliminar no podrá ser editada, desea completarla?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data) {
+                            if (data === "True") {
+                                Swal.fire(
+                                    'Proceso Completado',
+                                    'La fase preliminar ha sido competada',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Proceso Incompleto',
+                                    'no se pudo completar la operación, por favor vuelva a intentarlo, o ponganse en contacto con la coordinación del premio.',
+                                    'error'
+                                );
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function revertirConsensuar(id, pID) {
+
+            var url = '@Url.Action("RevertirConsensuar", "EquipoEvaluador")';
+
+
+            var url = url + "/" + id + "?premioID=" + pID;
+
+
+
+            Swal.fire({
+                title: 'Está seguro?',
+                text: "Esta opción activará los botones para modificar las puntucaciones, desea continuar?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data) {
+                            if (data === "True") {
+                                Swal.fire(
+                                    'Proceso Revertido',
+                                    'Los coordinadores pueden reevaluar sus puntuaciones',
+                                    'success'
+                                );
+                            } else {
+                                Swal.fire(
+                                    'Proceso Incompleto',
+                                    'no se pudo completar la operación, por favor vuelva a intentarlo, o ponganse en contacto con la coordinación del premio.',
+                                    'error'
+                                );
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+
+            @*if("@mensaje.tipo".length > 0) {
+                Swal.fire({
+                    title: "@mensaje.mensaje",
+                    html: "@mensaje.texto",
+                    type: "@mensaje.tipo"
+                });
+            }*@
+
+            //BOTONES FILES
+            $("#memorias").change(function () {
+                filename = this.files[0].name;
+                console.log(filename);
+
+                $("#filename").html(filename);
+            });
+
+            // Tooltips Initialization
+
+
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+
+    </script>
+}
+
+

@@ -1,0 +1,121 @@
+﻿@model ProyectoCalidad.WebUI.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registro de Usuario";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <h4>Nueva cuenta para acceder al sistema.</h4>
+            <hr />
+            <div class="form-group">
+                <label for="Nombre" class="col-md-3 control-label">Nombre</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", @placeholder = "Nombre de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Nombre, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Apellido" class="col-md-3 control-label">Apellido</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.Apellido, new { @class = "form-control", @placeholder = "Apellido de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Apellido, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cedula" class="col-md-3 control-label">Cédula</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.NumeroDocumentoIdentidad, new { @class = "form-control", @placeholder = "Número de identificación" })
+                    @Html.ValidationMessageFor(x => x.NumeroDocumentoIdentidad, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Masculino</label>
+                <div class="col-md-6">
+                    <div class="radio radio-primary">
+                        @Html.RadioButtonFor(m => m.Genero, "Masculino", new { @class = "form-control" })
+                        @Html.Label(" ", new { style = "font-family: 'Hind Madurai', sans-serif;" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Femenino</label>
+                <div class="col-md-6">
+                    <div class="radio radio-primary">
+                        @Html.RadioButtonFor(m => m.Genero, "Femenino", new { @class = "form-control" })
+                        @Html.Label(" ", new { style = "font-family: 'Hind Madurai', sans-serif;" })
+                    </div>
+                </div>
+            </div>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+                <div class="col-md-6">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-3 control-label" })
+                <div class="col-md-6">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Role</label>
+                <div class="col-md-6">
+
+                    @Html.DropDownList("Role", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            //CARGA DE IMAGEN
+            <div class="form-group">
+                <label class="col-md-3 control-label">Foto</label>
+                <div class="col-md-9">
+                    <div class="col-md-10 form-control">
+                        <input type="file" id="Photo" name="upload" data-buttonText="Escoge un archivo" />
+                    </div>
+                  
+                </div>
+            </div>
+
+            //FIN
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-6">
+
+                    @Html.CheckBox("Estado", true, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+
+
+
+            <hr />
+            <div class="form-group">
+                <div class="col-md-9 pull-right">
+                    <input type="submit" class="btn btn-primary" value="Guardar" />
+                    <a class="btn btn-default" href="@Url.Action("Index", "Home")">Regresar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,618 @@
+﻿
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.WebUI.Models.ComentariosEvaluadoresViewModel
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var id = (int)ViewBag.ipID;
+    var activarSiguiente = ViewBag.siguiente;
+    var activarAnterior = ViewBag.anterior;
+
+    GuiaPostulantes ejemplo = ViewBag.ejemplo;
+
+    List<Evidencia> evidencias = null;
+
+    if (ViewBag.evidencias != null)
+    {
+        evidencias = ViewBag.evidencias;
+    }
+
+    var criterioSeleccionado = ViewBag.criterioSeleccionado;
+
+    var userid = User.Identity.GetUserId();
+    
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+    <style>
+        .submit-progress-bg {
+            background-color: lightgray;
+            opacity: .5;
+        }
+        .submit-progress {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            height: 6em;
+            padding-top: 1.5em;
+            /* The following rules are the
+     ones most likely to change */
+            width: 20em;
+            /* Set 'margin-left' to a negative number
+     that is 1/2 of 'width' */
+            margin-left: -10em;
+            padding-left: 2.1em;
+            background-color: black;
+            color: white;
+            -webkit-border-radius: 0.4em;
+            -moz-border-radius: 0.4em;
+            border-radius: 0.4em;
+            box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+            -webkit-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+            -moz-box-shadow: 0.4em 0.4em rgba(0,0,0,0.6);
+        }
+
+        .submit-progress label {
+            display: flow-root;
+        }
+        
+        .submit-progress i {
+            margin-right: 0.5em;
+            display: inline-block;
+            float: left;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Evaluación: @ViewBag.ipNombre</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Guía Postulante</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Evaluador")">evaluación </a>
+                </li>
+                <li class="active">
+                    Comentarios del Evaluador
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<!-- end row -->
+
+<div class="form-horizontal">
+    <div class="">
+
+        <div class="row">
+            @using (Html.BeginForm("GuardarComentariosEvaluadoresJsono", "GuiaPostulantes", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(x => x.EvaluadorID)
+                @Html.HiddenFor(x => x.EjemploID)
+                @Html.HiddenFor(x => x.GuiaPostulanteID)
+                @Html.Hidden("InstitucionPostulanteID", id)
+
+                <div class="col-sm-12">
+                    <div class="card-box">
+                        <!--DOCUMENTACIÓN DE LA GUÍA-->
+                        <div class="row">
+                            <hr />
+                            <!--COMENTARIOS-->
+                            <h3>Criterio: @ejemplo.CriterioCodigo - SubCriterio: @ejemplo.SubCriterioCodigo</h3>
+                            <h4 style="color: gray">@ejemplo.EmeploCodigo - @ejemplo.EmeploDescripcion</h4>
+
+                            <hr />
+
+                            <div class="col-lg-12">
+
+                                <div class="panel panel-border panel-primary">
+                                    <div class="panel-heading">
+                                        <h1 class="panel-title">Puntos Fuertes</h1>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>@ejemplo.PuntosFuertes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <h4>Evidencias Suministradas</h4>
+
+                                <div class="">
+                                    <table class="table table-bordered">
+                                        <thead class="bg-primary">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Nombre de archivo</th>
+                                                <th style="width: 30px">Tipo Documento</th>
+                                                <th>Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                if(evidencias.Any())
+                                                {
+                                                    foreach (var item in evidencias)
+                                                     {
+                                                         var path = Server.MapPath("~/Evidencias/");
+                                                         if (System.IO.File.Exists(path + item.RutaEvidencia))
+                                                         {
+
+                                                             <tr>
+                                                                 <td>@item.NumeroEvidencia</td>
+                                                                 <td>@item.NombreArchivo</td>
+                                                                 <td>@item.Descripcion</td>
+                                                                 <td>
+                                                                     <a href="@Url.Action("VerEvidencia", new {id = item.EvidenciaID})" class="btn btn-primary" target="_blank"><i class="fa fa-eye"></i></a>
+                                                                 </td>
+                                                             </tr>
+                                                         }
+                                                         else if (item.Descripcion == "Url")
+                                                         {
+                                                             <tr>
+                                                                 <td>@item.NumeroEvidencia</td>
+                                                                 <td>@item.NombreArchivo</td>
+                                                                 <td>@item.Descripcion</td>
+                                                                 <td>
+                                                                     <a href="@item.RutaEvidencia" class="btn btn-primary" target="_blank"><i class="fa fa-eye"></i></a>
+                                                                 </td>
+                                                             </tr>
+                                                         }
+
+
+                                                     }
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td colspan="4" class="text-center text-muted">
+                                                            No hay información para mostrar
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="panel panel-border panel-primary">
+                                    <div class="panel-heading">
+                                        <h1 class="panel-title">Área de Mejora</h1>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>@ejemplo.AreadeMejoras</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+
+                        </div>
+
+
+                       
+                        @if (Model.EvaluadorID != 0)
+                        {
+                            <h3>Comentarios del evaluador</h3>
+
+                            <div class="form-group">
+                                <h4 for="Nombre" class="col-md-12">Puntos Fuertes</h4>
+                                <div class="col-md-12">
+                                    @Html.Raw(@Html.TextAreaFor(x => x.Fortalezas, new { @class = "form-control", id = "elm1", @placeholder = "Cometarios relacionados a las fortalezas. NOTA: para copiar utilice el comando CTRL + C y para pegar utilice el comando CTRL + V" }))
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <h4 for="Nombre" class="col-md-12">Áreas de mejora</h4>
+                                <div class="col-md-12">
+                                    @Html.TextAreaFor(x => x.InformRetorno, new { @class = "form-control", id = "elm2", @placeholder = "Comentarios relacionados al informe de retorno. NOTA: para copiar utilice el comando CTRL + C y para pegar utilice el comando CTRL + V" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h4 for="Nombre" class="col-md-12">Puntos para visita</h4>
+                                <div class="col-md-12">
+                                    @Html.TextAreaFor(x => x.PuntoDeVista, new { @class = "form-control", id = "elm3", @placeholder = "Punto de vista. NOTA: para copiar utilice el comando CTRL + C y para pegar utilice el comando CTRL + V" })
+                                </div>
+
+
+                            </div>
+                        }
+
+                        <hr />
+                        <div class="">
+                            <!--BOTONOES DE NAVEGACIÓN-->
+                            <div class="row" style="margin-top: 50px">
+                                @*<input class="btn btn-primary active" id="btnSave" type="button" value="Guardar" />*@
+                                @*<a class="btn btn-default" href="javascript:history.go(-1)">Regresar</a>*@
+
+
+
+                                <div class="col-sm-2">
+
+                                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "GuiaPostulantes", new {InstitucionPostulanteID = id, criterioSelecionado = criterioSeleccionado})" id="back">Criterios</a>
+
+                                </div>
+
+                                <div class="col-sm-1">
+                                    @if (activarAnterior)
+                                    {
+                                        <a class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("AnteriorEjemplo", "GuiaPostulantes", new {guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = id, criterioSelecionado = criterioSeleccionado})" id="submitBack"><i class="fa fa-arrow-left"></i> </a>
+
+                                    }
+                                    else
+                                    {
+
+                                        <button disabled="disabled" class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("AnteriorEjemplo", "GuiaPostulantes", new {guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = id, criterioSelecionado = criterioSeleccionado})"><i class="fa fa-arrow-left"></i> </button>
+
+                                    }
+                                </div>
+
+
+                                @*<a class="btn btn-default" href="javascript:history.go(-1)">Regresar</a>*@
+                                @if (user.Role != "JURADO")
+                                {
+                                    <div class="col-sm-3">
+                                        <button type="button" onclick="wys(@Model.EvaluadorID, @Model.EjemploID, @Model.GuiaPostulanteID, @id)" class="btn btn-block btn-primary" id="submit">Guardar comentarios</button>
+
+                                    </div>
+                                    if (activarSiguiente)
+                                    {
+                                        <div class="col-sm-3">
+                                   
+                                            <a class="btn btn-default btn-block text-white" style="background-color: #00ab66" onclick="siguienteAndGuardar(@Model.EvaluadorID, @Model.EjemploID, @Model.GuiaPostulanteID, @id, '@criterioSeleccionado')" id="submitNext"> Guardar y Siguiente</a>
+                                        
+                                        </div>
+                                    }
+                                }
+                           
+
+                                <div class="col-sm-1">
+                                    @if (activarSiguiente)
+                                    {
+                                        <a class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("SiguienteEjemplo", "GuiaPostulantes", new {guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = id, criterioSelecionado = criterioSeleccionado})" id="submitNext">  <i class="fa fa-arrow-right"></i></a>
+                                        
+
+                                    }
+                                    else
+                                    {
+                                        <button disabled="disabled" class="btn btn-default btn-block" style="background-color: #ccc" >  <i class="fa fa-arrow-right"></i></button>
+
+                                    }
+                                </div>
+
+                                <div class="col-sm-2">
+
+                                    <a class="btn btn-default btn-block"  href="@Url.Action("Index", "InstitucionPostulante", new {PremioID = Model.PremioID, userID = userid})" id="home">Inicio</a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            }
+        </div>
+
+    </div>
+
+</div>
+
+<div class="submit-progress hidden">
+    <i class="fa fa-2x fa-spinner fa-spin"></i>
+    <label>Espere mientras se guarda la información...</label>
+</div><!--Wysiwig js-->
+@section scripts{
+     <script src="~/plugins/tinymce/tinymce.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js">
+    </script>
+
+<script>
+
+    function DisplayProgressMessage() {
+        $("#back").prop("disabled", true);
+        $("#submitBack").prop("disabled", true).text("Guardando...");
+        $("#submit").prop("disabled", true).text("Guardando...");
+        $("#submitNext").prop("disabled", true).text("Guardando...");
+        $("#home").prop("disabled", true);
+
+        $(".submit-progress").removeClass("hidden");
+
+        $("body").addClass("submit-progress-bg");
+
+        return true;
+    }
+
+    function DisplayNoneProgressMessage() {
+        $("#back").prop("disabled", false);
+        $("#submitBack").prop("disabled", false);
+        $("#submit").prop("disabled", false);
+        $("#submitNext").prop("disabled", false);
+        $("#home").prop("disabled", false);
+
+        $(".submit-progress").addClass("hidden");
+
+        $("body").removeClass("submit-progress-bg");
+
+        return true;
+    }
+
+    //Envia a guardar la información y se mantiene en el mismo ejemplo   
+
+    function wys(evaluadorID, ejemploID, guiaPostulanteID, institucionPostulanteID) {
+
+        //debugger;
+        let tAreaValue0;
+        let tAreaValue1;
+        let tAreaValue2;
+        let id2 = institucionPostulanteID;
+        let id = id2;
+
+        var url = "@Url.Action("GuardarComentariosEvaluadoresJson", "GuiaPostulantes")";
+
+        var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+
+        for (i=0; i < tinymce.editors.length; i++){
+            var content = tinymce.editors[i].getContent();
+            if (i === 0) {
+                tAreaValue0 = content;
+            }
+            if (i === 1) {
+                tAreaValue1 = content;
+
+            }
+            if (i === 2) {
+                tAreaValue2 = content;
+
+            }
+            //var txtAreaID = tinyMCE.editors[i].id;
+        }
+
+        var model = {
+            EvaluadorID : evaluadorID,
+            EjemploID: ejemploID,
+            GuiaPostulanteID: guiaPostulanteID,
+            Fortalezas: tAreaValue0,
+            InformRetorno: tAreaValue1,
+            PuntoDeVista : tAreaValue2
+        }
+        DisplayProgressMessage();
+
+        console.log(model);
+
+        debugger;
+        $.ajax({
+            url: url,
+            type: "POST",
+            //contentType: "application/json",
+            data:  model,
+            success: function (response) {
+                DisplayNoneProgressMessage();
+                if (response === "True") {
+                    Swal.fire({
+                        title: "Comentarios actualizados",
+                        html: "Los campos fueron actualizados correctamente",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+
+                    setTimeout(function() {
+
+                            location.reload();
+
+                        },
+                        2000);
+                } else {
+                    Swal.fire({
+                        title: "Comentarios no actualozados",
+                        html: "Hubo un error al intentar guardar la información",
+                        type: "error",
+                        timer: 5000,
+                        showConfirmButton: true
+                    });
+                }
+                @*setTimeout(function () {
+
+                            var url = "@Url.Action("Index", "GuiaPostulantes")";
+
+                            var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+                            window.location.href = url;
+
+                        },
+                        2000);*@
+            }
+        });
+
+
+    }
+    
+
+    //Envia a guardar la información y pasa al siguiente ejemplo    
+    function siguienteAndGuardar(evaluadorID, ejemploID, guiaPostulanteID, institucionPostulanteID, criterioID) {
+
+        //debugger;
+        var tAreaValue0;
+        var tAreaValue1;
+        var tAreaValue2;
+        //var id2 = institucionPostulanteID;
+        //var id = id2;
+
+        var url = "@Url.Action("GuardarAndSiguienteComentariosEvaluadoresJson", "GuiaPostulantes")";
+
+        var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID   + "&criterioSeleccionado=" + criterioID;
+
+        for (i=0; i < tinymce.editors.length; i++){
+            var content = tinymce.editors[i].getContent();
+            if (i === 0) {
+                tAreaValue0 = content;
+            }
+            if (i === 1) {
+                tAreaValue1 = content;
+
+            }
+            if (i === 2) {
+                tAreaValue2 = content;
+
+            }
+            //var txtAreaID = tinyMCE.editors[i].id;
+        }
+
+        var model = {
+            EvaluadorID : evaluadorID,
+            EjemploID: ejemploID,
+            GuiaPostulanteID: guiaPostulanteID,
+            Fortalezas: tAreaValue0,
+            InformRetorno: tAreaValue1,
+            PuntoDeVista : tAreaValue2
+        }
+
+        DisplayProgressMessage();
+        debugger;
+        $.ajax({
+            url: url,
+            type: "POST",
+            //contentType: "application/json",
+            data:  model,
+            success: function (response) {
+                DisplayNoneProgressMessage();
+                if (response.length > 0) {
+                    Swal.fire({
+                        title: "Comentarios actualizados",
+                        html: "Los campos fueron actualizados correctamente",
+                        type: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    setTimeout(function () {
+
+                        window.location.href = response;
+
+                        debugger;
+
+                        },
+                        2000);
+                }
+                @*setTimeout(function () {
+
+                            let url = "@Url.Action("Index", "GuiaPostulantes")";
+
+                            var url = url + "?InstitucionPostulanteID=" + institucionPostulanteID;
+                            window.location.href = url;
+
+                        },
+                        2000);*@
+            }
+        });
+
+
+    }
+
+
+
+    $(document).ready(function() {
+
+
+
+        //$(":file").filestyle({ buttonText: "Seleccionar Memoria" });
+
+
+        //var el = $("#elm1").val();
+        //console.log(el);
+        if ($("#elm1").length > 0) {
+            tinymce.init({
+                selector: "#elm1",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+
+        if ($("#elm2").length > 0) {
+            tinymce.init({
+                selector: "#elm2",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+
+        if ($("#elm3").length > 0) {
+            tinymce.init({
+                selector: "#elm3",
+                theme: "modern",
+                height: 100,
+                width: "100%",
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                style_formats: [
+                    { title: 'Bold text', inline: 'b' },
+                    { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                    { title: 'Example 1', inline: 'span', classes: 'example1' },
+                    { title: 'Example 2', inline: 'span', classes: 'example2' },
+                    { title: 'Table styles' },
+                    { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                ]
+            });
+        }
+
+
+
+    });
+
+</script>
+
+
+}
+   

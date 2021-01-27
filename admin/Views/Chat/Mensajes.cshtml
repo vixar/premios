@@ -1,0 +1,651 @@
+﻿
+@{
+    ViewBag.Title = "SGP - Chat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Style
+{
+    <style>
+
+        .container {
+            max-width: 1170px;
+            margin: auto;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .inbox_people {
+            background: #f8f8f8 none repeat scroll 0 0;
+            float: left;
+            overflow: hidden;
+            width: 40%;
+            border-right: 1px solid #c4c4c4;
+        }
+
+        .inbox_msg {
+            border: 1px solid #c4c4c4;
+            clear: both;
+            overflow: hidden;
+        }
+
+        .top_spac {
+            margin: 20px 0 0;
+        }
+
+
+        .recent_heading {
+            float: left;
+            width: 40%;
+        }
+
+        .srch_bar {
+            display: inline-block;
+            text-align: right;
+            width: 100%;
+            padding:
+        }
+
+        .headind_srch {
+            padding: 10px 29px 10px 20px;
+            overflow: hidden;
+            border-bottom: 1px solid #c4c4c4;
+        }
+
+        .recent_heading h4 {
+            color: #05728f;
+            font-size: 21px;
+            margin: auto;
+        }
+
+        .srch_bar input {
+            border: 1px solid #cdcdcd;
+            border-width: 0 0 1px 0;
+            width: 80%;
+            padding: 2px 0 4px 6px;
+            background: none;
+        }
+
+        .srch_bar .input-group-addon button {
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            border: medium none;
+            padding: 0;
+            color: #707070;
+            font-size: 18px;
+        }
+
+        .srch_bar .input-group-addon {
+            margin: 0 0 0 -27px;
+        }
+
+        .chat_ib h5 {
+            font-size: 15px;
+            color: #464646;
+            margin: 0 0 8px 0;
+        }
+
+            .chat_ib h5 span {
+                font-size: 13px;
+                float: right;
+            }
+
+        .chat_ib p {
+            font-size: 14px;
+            color: #989898;
+            margin: auto
+        }
+
+        .chat_img {
+            float: left;
+            width: 11%;
+        }
+
+        .chat_ib {
+            float: left;
+            padding: 0 0 0 15px;
+            width: 88%;
+        }
+
+        .chat_people {
+            overflow: hidden;
+            clear: both;
+        }
+
+        .chat_list {
+            border-bottom: 1px solid #c4c4c4;
+            margin: 0;
+            padding: 18px 16px 10px;
+        }
+
+        .inbox_chat {
+            height: 550px;
+            overflow-y: scroll;
+        }
+
+        .active_chat {
+            background: #ebebeb;
+        }
+
+        .incoming_msg_img {
+            display: inline-block;
+            width: 6%;
+        }
+
+        .received_msg {
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%;
+        }
+
+        .received_withd_msg p {
+            background: #ebebeb none repeat scroll 0 0;
+            border-radius: 3px;
+            color: #646464;
+            font-size: 14px;
+            margin: 0;
+            padding: 5px 10px 5px 12px;
+            width: 100%;
+        }
+
+        .time_date {
+            color: #747474;
+            display: block;
+            font-size: 12px;
+            margin: 8px 0 0;
+        }
+
+        .received_withd_msg {
+            width: 57%;
+        }
+
+        .mesgs {
+            float: left;
+            padding: 30px 15px 0 25px;
+            width: 100%;
+        }
+
+        .sent_msg p {
+            background: #05728f none repeat scroll 0 0;
+            border-radius: 3px;
+            font-size: 14px;
+            margin: 0;
+            color: #fff;
+            padding: 5px 10px 5px 12px;
+            width: 100%;
+        }
+
+        .outgoing_msg {
+            overflow: hidden;
+            margin: 26px 0 26px;
+        }
+
+        .sent_msg {
+            float: right;
+            width: 46%;
+        }
+
+        .input_msg_write input {
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            border: medium none;
+            color: #4c4c4c;
+            font-size: 15px;
+            min-height: 48px;
+            width: 100%;
+        }
+
+        .type_msg {
+            border-top: 1px solid #c4c4c4;
+            position: relative;
+        }
+
+        .msg_send_btn {
+            background: #05728f none repeat scroll 0 0;
+            border: medium none;
+            border-radius: 50%;
+            color: #fff;
+            cursor: pointer;
+            font-size: 17px;
+            height: 33px;
+            position: absolute;
+            right: 0;
+            top: 11px;
+            width: 33px;
+        }
+
+        .messaging {
+            padding: 0 0 50px 0;
+        }
+
+        .msg_history {
+            height: 516px;
+            overflow-y: auto;
+        }
+    </style>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+}
+
+<div class="">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Chat</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#">Chat </a>
+                    </li>
+                    <li class="active">
+                        Salas
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="panel panel-color panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Usuarios</h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="box-footer box-comments" id="divusers">
+                    </div>
+                </div>
+            </div>
+            <!-- end panel -->
+            <!--<div id="divEquipos" class="inbox-widget slimscroll-alt" style="min-height: 327px;">
+                <a href="#">
+                    <div class="inbox-item">
+                        <div class="inbox-item-img"><img src="" class="img-circle" alt=""></div>
+                        <p class="inbox-item-author">Equipo PNC 001</p>
+                        <p class="inbox-item-text">Hey! there I'm available...</p>
+                        <p class="inbox-item-date">13:40 PM</p>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="inbox-item">
+                        <div class="inbox-item-img"><img src="" class="img-circle" alt=""></div>
+                        <p class="inbox-item-author">Equipo PNC 002</p>
+                        <p class="inbox-item-text">I've finished it! See you so...</p>
+                        <p class="inbox-item-date">13:34 PM</p>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="inbox-item">
+                        <div class="inbox-item-img"><img src="" class="img-circle" alt=""></div>
+                        <p class="inbox-item-author">Equipo PIMP 001</p>
+                        <p class="inbox-item-text">This theme is awesome!</p>
+                        <p class="inbox-item-date">13:17 PM</p>
+                    </div>
+                </a>
+                <a href="#">
+                    <div class="inbox-item">
+                        <div class="inbox-item-img"><img src="" class="img-circle" alt=""></div>
+                        <p class="inbox-item-author">Equipo PIMP 002</p>
+                        <p class="inbox-item-text">Nice to meet you</p>
+                        <p class="inbox-item-date">12:20 PM</p>
+                    </div>
+                </a>
+
+
+
+            </div>-->
+        </div>
+        <!-- end col -->
+        <span id="time"></span>
+        <input id="roomId" type="hidden" />
+        <input id="hdId" type="hidden" />
+        <input id="PWCount" type="hidden" value="info" />
+        <span id="hdUserName"></span>
+
+        <div class="col-md-8">
+            <div class="panel panel-color panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Mensajes</h3>
+                </div>
+                <div class="panel-body">
+
+                    <div class="messaging">
+                        <div class="inbox_msg">
+                            <div class="mesgs">
+                                <div id="divChatWindow" class="msg_history">
+                                </div>
+
+                                <!--para digitar un nuevo mensaje-->
+                                <div class="type_msg">
+                                    <div class="input_msg_write">
+                                        @*<textarea id="txtMessage" class="form-control"></textarea>*@
+                                        <input id="txtMessage" type="text" class="write_msg" placeholder="Digite el mensaje" />
+                                        <button class="msg_send_btn" type="button" id="btnSendMsg" value="send"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- end panel body -->
+                </div>
+                <!-- end panel -->
+            </div>
+            <!-- end col -->
+
+        </div>
+        <!-- end row -->
+
+
+    </div>
+</div>
+
+
+@section scripts{
+
+
+    <script type="text/javascript">
+
+        $(function() {
+            // Declare a proxy to reference the hub.
+            var chatHub = $.connection.chatHub;
+            registerClientMethods(chatHub);
+            // Start Hub
+            $.connection.hub.start().done(function() {
+                debugger;
+
+                registerEvents(chatHub);
+
+            });
+            //$(document).on('change', '#<%= FileUpload1.ClientID%>', function (e) {
+
+            //    var tmppath = URL.createObjectURL(e.target.files[0]);
+            //    $("#ImgDisp").attr('src', tmppath);
+
+            //});
+
+        });
+
+        function registerEvents(chatHub) {
+
+
+            var name = '@Session["UserName"]';
+            var roomID = '@Session["RoomID"]';
+            var usuarioID = '@Session["ChatUserID"]';
+
+            if (name.length > 0) {
+
+                debugger;
+
+                chatHub.server.connect(name, roomID, usuarioID);
+
+            }
+
+            $('#btnSendMsg').click(function() {
+
+                var msg = $("#txtMessage").val();
+
+                if (msg.length > 0) {
+
+                    var userName = $('#hdUserName').val();
+
+                    var date = GetCurrentDateTime(new Date());
+
+                    //chatHub.server.sendMessageToAll(userName, msg, date);
+                    chatHub.server.sendMessageToGroup(userName, msg, date, roomID, usuarioID);
+                    $("#txtMessage").val('');
+                }
+            });
+
+            $("#txtMessage").keypress(function(e) {
+                if (e.which == 13) {
+                    $('#btnSendMsg').click();
+                }
+            });
+
+        }
+
+        function registerClientMethods(chatHub) {
+
+            console.log("chatHub", chatHub);
+
+            // Calls when user successfully logged in
+            chatHub.client.onConnected = (id, userName, allUsers, messages, times, roomId, equipoId) => {
+                debugger;
+                $('#hdId').val(id);
+                $('#hdUserName').val(userName);
+                $('#spanUser').html(userName);
+                $('#roomId').val(roomId);
+
+                if (roomId == null) {
+                    debugger;
+
+                    // Add All Users
+                    for (i = 5; i < 5; i++) {
+
+                        AddUser(chatHub,
+                            allUsers[i].ConnectionId,
+                            allUsers[i].UserName,
+                            allUsers[i].UserImage,
+                            allUsers[i].LoginTime);
+                    }
+                } else {
+                    debugger;
+
+                    //Add user to same team
+                    for (i = 0; i < 5; i++) {
+
+                        AddUserToGroup(chatHub,
+                            allUsers[i].ConnectionId,
+                            allUsers[i].UserName,
+                            allUsers[i].UserImage,
+                            allUsers[i].LoginTime,
+                            allUsers[i].RoomID,
+                            equipoId);
+                    }
+                }
+
+
+                // Add Existing Messages
+                for (i = 0; i < messages.length; i++) {
+                    AddMessage(messages[i].UserName, messages[i].Message, messages[i].Time, messages[i].UserImage);
+                    //getMessages(messages[i].UserName, messages[i].Message, messages[i].Time, messages[i].UserImage);
+
+                }
+            }
+
+            // On New User Connected
+            chatHub.client.onNewUserConnected = function(id, name, UserImage, loginDate) {
+                AddUser(chatHub, id, name, UserImage, loginDate);
+            }
+
+            chatHub.client.onNewUserConnectedToGroup = function(id, name, UserImage, loginDate, RoomID, equipoId) {
+                AddUserToGroup(chatHub, id, name, UserImage, loginDate, RoomID, equipoId);
+            }
+
+            // On User Disconnected
+            chatHub.client.onUserDisconnected = function(id, userName) {
+
+                $('#Div' + id).remove();
+
+                var ctrId = 'private_' + id;
+                $('#' + ctrId).remove();
+
+
+                var disc = $('<div class="disconnect">"' + userName + '" logged off.</div>');
+
+                $(disc).hide();
+                $('#divusers').prepend(disc);
+                $(disc).fadeIn(200).delay(2000).fadeOut(200);
+
+            }
+
+            chatHub.client.messageReceived = function(userName, message, time, userimg) {
+
+                AddMessage(userName, message, time, userimg);
+            }
+
+            //mensajes por grupo
+            chatHub.client.getMessages = function(userName, message, time, userimg) {
+
+                AddMessage(userName, message, time, userimg);
+
+            }
+
+            //    AddMessage(userName, message, time, userimg);
+
+            //}
+        }
+
+        function GetCurrentDateTime(now) {
+
+            var localdate = dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+
+            return localdate;
+        }
+
+        function AddUserToGroup(chatHub, id, name, UserImage, date, RoomID, equipoId) {
+
+            var userId = $('#hdId').val();
+            var roomId = $('#roomId').val();
+
+            var code = "";
+            // var UserImage = GetUserImage(name);
+
+            var Clist = "";
+            if (userId === id && roomId === equipoId) {
+
+                code = $('<div class="box-comment">' +
+                    '<img class="img-circle img-sm" src="' + UserImage + '" alt="User Image" />' +
+                    ' <div class="comment-text">' +
+                    '<span class="username">' + name + '<span class="text-muted pull-right">' + date + '</span>  </span></div></div>');
+
+
+                Clist = $(
+                    '<li style="background:#494949;">' +
+                    '<a href="#">' +
+                    '<img class="contacts-list-img" src="' + UserImage + '" alt="User Image" />' +
+
+                    ' <div class="contacts-list-info">' +
+                    ' <span class="contacts-list-name" id="' + id + '">' + name + ' <small class="contacts-list-date pull-right">' + date + '</small> </span>' +
+                    ' <span class="contacts-list-msg">How have you been? I was...</span></div></a > </li >');
+
+            }
+            else {
+
+                code = $('<div class="box-comment" id="Div' + id + '">' +
+                    '<img class="img-circle img-sm" src="' + UserImage + '" alt="User Image" />' +
+                    ' <div class="comment-text">' +
+                    '<span class="username">' + '<a id="' + id + '" class="user" >' + name + '<a>' + '<span class="text-muted pull-right">' + date + '</span>  </span></div></div>');
+
+
+                Clist = $(
+                    '<li>' +
+                    '<a href="#">' +
+                    '<img class="contacts-list-img" src="' + UserImage + '" alt="User Image" />' +
+
+                    ' <div class="contacts-list-info">' +
+                    '<span class="contacts-list-name" id="' + id + '">' + name + ' <small class="contacts-list-date pull-right">' + date + '</small> </span>' +
+                    ' <span class="contacts-list-msg">How have you been? I was...</span></div></a > </li >');
+
+            }
+
+            $("#divusers").append(code);
+
+            $("#ContactList").append(Clist);
+
+        }
+
+        function AddUser(chatHub, id, name, UserImage, date) {
+
+            var userId = $('#hdId').val();
+
+            var code = "";
+            // var UserImage = GetUserImage(name);
+
+            var Clist = "";
+            if (userId == id) {
+
+                code = $('<div class="box-comment">' +
+                    '<img class="img-circle img-sm" src="' + UserImage + '" alt="User Image" />' +
+                    ' <div class="comment-text">' +
+                    '<span class="username">' + name + '<span class="text-muted pull-right">' + date + '</span>  </span></div></div>');
+
+
+                Clist = $(
+                    '<li style="background:#494949;">' +
+                    '<a href="#">' +
+                    '<img class="contacts-list-img" src="' + UserImage + '" alt="User Image" />' +
+
+                    ' <div class="contacts-list-info">' +
+                    ' <span class="contacts-list-name" id="' + id + '">' + name + ' <small class="contacts-list-date pull-right">' + date + '</small> </span>' +
+                    ' <span class="contacts-list-msg">How have you been? I was...</span></div></a > </li >');
+
+            }
+            else {
+
+                code = $('<div class="box-comment" id="Div' + id + '">' +
+                    '<img class="img-circle img-sm" src="' + UserImage + '" alt="User Image" />' +
+                    ' <div class="comment-text">' +
+                    '<span class="username">' + '<a id="' + id + '" class="user" >' + name + '<a>' + '<span class="text-muted pull-right">' + date + '</span>  </span></div></div>');
+
+
+                Clist = $(
+                    '<li>' +
+                    '<a href="#">' +
+                    '<img class="contacts-list-img" src="' + UserImage + '" alt="User Image" />' +
+
+                    ' <div class="contacts-list-info">' +
+                    '<span class="contacts-list-name" id="' + id + '">' + name + ' <small class="contacts-list-date pull-right">' + date + '</small> </span>' +
+                    ' <span class="contacts-list-msg">How have you been? I was...</span></div></a > </li >');
+
+            }
+
+            $("#divusers").append(code);
+
+            $("#ContactList").append(Clist);
+
+        }
+
+        function AddMessage(userName, message, time, userimg) {
+
+            var CurrUser = $('#hdUserName').val();
+            var Side = 'right';
+            var TimeSide = 'left';
+            var msgType = 'incoming_msg';
+            var sentreceived = 'received';
+
+            var divChat = '<div class="' + msgType + '">' +
+                '<div class="' + msgType + '_img"> <img src="https://ptetutorials.com/images/user-profile.png"/> </div>' +
+                '<div class="' + sentreceived + '_msg">' + '<div class="' + sentreceived + '_withd_msg">' + '<p>' + message + '</p>' + '<span class="time_date"> ' + time + ' </span>' + '</div> </div>';
+
+            if (CurrUser == userName) {
+                Side = 'left';
+                TimeSide = 'right';
+                msgType = 'outgoing_msg';
+                sentreceived = 'sent';
+
+                divChat = '<div class="' + msgType + '">' +
+                    '<div class="' + sentreceived + '_msg">' +
+                    '<p>' + message + '</p>' + '<span class="time_date"> ' + time + ' </span>' + '</div> </div>';
+            }
+
+
+            $('#divChatWindow').append(divChat);
+
+            var height = $('#divChatWindow')[0].scrollHeight;
+            $('#divChatWindow').scrollTop(height);
+
+        }
+
+    </script>
+
+}

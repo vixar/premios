@@ -1,0 +1,23 @@
+﻿@using ProyectoCalidad.Domain.Entities
+@model  IEnumerable<ProyectoCalidad.Domain.Entities.Premio>
+
+@{
+
+    ApplicationUser user = ViewBag.user;
+
+    if (Model != null)
+    {
+
+        foreach (var item in Model)
+        {
+            <li>
+                <a href="@Url.Action("Index", "InstitucionPostulante", new {PremioID = item.PremioID})"><i class="mdi mdi-trophy"></i> @item.TipoPremio.Siglas</a>
+            </li>
+
+
+        }
+
+    }
+
+}
+

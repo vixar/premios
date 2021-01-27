@@ -1,0 +1,63 @@
+﻿@model  ProyectoCalidad.Domain.Entities.TipoDocumento
+
+@{
+    ViewBag.Title = "Editar Tipo Documento";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Tipo Documento</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Tipo Documento <strong>@Model.Descripcion</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarTipoDocumento", "TipoDocumento", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.TipoDocumentoID)
+
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                <label for="Descripcion" class="col-md-3 control-label">Descripci&oacute;n</label>
+                <div class="col-md-9">
+                    @*@Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción del Tipo Documento." })*@
+                    @Html.TextAreaFor(model => model.Descripcion, 4, 55, new { @class = "form-control", @placeholder = "Descripción del Tipo Documento.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Descripcion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @Html.CheckBoxFor(m => m.Estado, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Registrar datos</button>
+                    @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Tipo Documento", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

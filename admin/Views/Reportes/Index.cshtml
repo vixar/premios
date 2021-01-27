@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Reportes Index";
+  
+}
+
+<h2><span class="glyphicon glyphicon-cog"></span>&nbsp;Administraci&oacute;n de Reportes</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        @* Panel Reportes - Columna izquierda *@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-list"></span>&nbsp;Reportes</h3>
+            </div>
+            <div class="panel-body">
+                @*<p><img src="~/Images/icons/Indicador.png" alt="" class="left" /> @Html.ActionLink("Indicadores", "Index", "Indicador")</p>
+        <p><img src="~/Images/icons/Ciudad.png" alt="" class="left" /> @Html.ActionLink("Departamentos", "Index", "Departamento")</p>*@
+                <p>@Html.ActionLink("Instituciones y unidades que han postulado por premiación ", "FiltrarConsultaInstitucion", "Reportes")</p>
+                <p>@Html.ActionLink("Postulaciones por año ", "FiltrarPostulaciones", "Reportes")</p>
+                <p>@Html.ActionLink("Galardones obtenidos", "FiltrarGalardones", "Reportes")</p>
+                <p>@Html.ActionLink("Evaluadores participantes por año", "FiltrarEvaluadores", "Reportes")</p>
+                <p>@Html.ActionLink("Jurados participantes por año", "FiltrarJurados", "Reportes")</p>
+                <p>@Html.ActionLink("Evidencias cargadas", "FiltrarEvidencias", "Reportes")</p>
+            </div>
+        </div>
+      
+    </div>
+
+</div>

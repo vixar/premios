@@ -1,0 +1,504 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using Microsoft.AspNet.Identity.Owin
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+
+@{
+
+    //ruta al admin
+    var rutaAdmin = System.Configuration.ConfigurationManager.AppSettings["AdminRoute"];
+    var premio = TempData["tipoPremio"]; // para decidir que menú mostrar
+
+
+}
+
+@section styles
+{
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+    <link href="~/Content/assets/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/assets/css/tooltip/tipso.css" rel="stylesheet" />
+}
+
+<div class="header-top">
+    <div class="container">
+        <div class="top-text pull-left hidden-sm hidden-xs" style="font-size: 45px;">
+            Sistema de Gestión de Premios
+        </div>
+        @*<div class="dropdown header-dropdown pull-right">
+                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Languages</a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="#">English</a></li>
+                    <li><a href="#">Turkish</a></li>
+                    <li><a href="#">Chinese</a></li>
+                    <li><a href="#">French</a></li>
+                    <li><a href="#">Spanish</a></li>
+                </ul>
+            </div><!-- End .header-dropdown -->
+
+            <div class="dropdown header-dropdown pull-right">
+                <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Currency</a>
+
+                <ul class="dropdown-menu">
+                    <li><a href="#">Dollar</a></li>
+                    <li><a href="#">Euro</a></li>
+                    <li><a href="#">Pound</a></li>
+                    <li><a href="#">Yen</a></li>
+                </ul>
+            </div><!-- End .header-dropdown -->
+
+            <ul class="top-menu pull-right">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+
+            <div class="top-text pull-left hidden-sm hidden-xs">
+                We create the best templates for you. Join us Now!
+            </div><!-- End .top-text -->*@
+        <div class="pull-right">
+            @{
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+                var user = userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+
+                var id = User.Identity.GetUserId();
+
+                if (Request.IsAuthenticated)
+                {
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <!--Navbar -->
+                        <ul class="nav navbar-nav navbar-right" style=" margin-top: 10px">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="@Url.Content("~/Content/no_avatar.png")" alt="" class="" style="width: 50px"><span style="color: white" class="caret"></span></a>
+                                <ul class="dropdown-menu" style="z-index: 9999;">
+                                    <li><h3 style="text-align: center; margin-top: 15px; font-family: 'Oswald' " href="#">@user.Nombre @user.Apellido</h3></li>
+                                    <li style="text-align: center;  margin-top: -15px;"><span href="#"></span>@user.Email</li>
+                                    <li style="text-align: center;  margin-top: 15px;"><span href="#"></span>@user.Role</li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="@Url.Action("Perfil", "Account", new{ id = user.Id, editar = true})"><i class="fa fa-user"></i> Perfíl</a></li>
+                                    <li><a href="@Url.Action("ChangePassword", "Manage")"><i class="fa fa-cog"></i> Cambiar Contraseña</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="" data-toggle="modal" data-target="#cambiarRol-modal" id="loginLink"><i class="fa fa-exchange"></i> Cambiar Rol</a></li>
+                                    @*<li>
+                                            <a href="@Url.Action("AgregarRol", "Account", new{id = user.Id})"><i class="fa fa-plus"></i> Agregar nuevo rol</a>
+                                        </li>*@
+                                    <li role="separator" class="divider"></li>
+
+                                    @*<li><a href="@Url.Action("CambiarRol", "Account", new {id = user.Id})"><i class="fa fa-exchange"></i> Cambiar Rol </a></li>*@
+                                    <li style="background-color: darkorange"><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-power-off"></i> Cerrar Sesión</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--/.Navbar -->
+
+                        @*<ul class="nav navbar-nav navbar-right">
+
+                                <li>
+                                    @Html.ActionLink("Saludos, " + user.Nombre + " " + user.Apellido + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                                </li>
+                                <li><a href="javascript:document.getElementById('logoutForm').submit()">Cerrar Sesión</a></li>
+                                <li>
+                                    <img src="@Url.Content("~/Content/no_avatar.png")" alt="" class="img-circle" style="width: 50px">
+                                </li>
+                            </ul>*@
+
+                    }
+                }
+                else
+                {
+                    <div class="top-links">
+                        @*<a href="" data-toggle="modal" data-target="#modal-contact-form" style="font-size: 20px">
+                                Registrarse
+                            </a>*@
+                        @*@Html.ActionLink("Registro Nuevo", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })*@
+                        <a href="" data-toggle="modal" data-target="#modal-redirect" id="loginLink" style="font-size: 20px">Acceder</a>
+                    </div>
+
+
+                }
+            }
+
+        </div><!-- End .top-links -->
+    </div><!-- End .container -->
+</div><!-- End .header-top -->
+
+<div class="header-inner">
+    <div class="container">
+        <a href="@Url.Action("Index", "Home")" class="site-logo" title="Ministerio de Administración Pública">
+            <img src="~/Content/assets/images/logo-map.png" alt="Simple Logo" />
+        </a>
+
+        <div class="site-logo" title="Ministerio de Administración Pública" style="width: 200px;margin-left: 90px;">
+            <img src="~/Content/assets/images/logosgppng.png" alt="Simple Logo" />
+        </div>
+
+        @*<div class="dropdown header-dropdown cart-dropdown">
+                <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span>
+                        <i class="fa fa-shopping-bag"></i>
+                        <span class="dcart-total-count">2</span>
+                    </span>
+                </a>
+
+                <div class="dropdown-menu">
+                    <p>2 item(s) in your cart - <span>$279.00</span></p>
+                    <div class="dcart-products">
+                        <div class="product">
+                            <figure>
+                                <a href="#">
+                                    <img src="assets/images/products/thumbs/product1.jpg" alt="Product">
+                                </a>
+                            </figure>
+                            <div class="product-meta">
+                                <h5 class="product-title">
+                                    <a href="#">Oluptate cumque quo archi deleni.</a>
+                                </h5>
+                                <div class="product-price-container">
+                                    <span class="product-price">$180.00</span>
+                                </div><!-- End .product-price-container -->
+                                <span class="product-quantity">x 1</span>
+                            </div><!-- End .product-meta -->
+                            <a href="#" class="delete-btn" title="Delete Product"><i class="fa fa-trash"></i></a>
+                        </div><!-- End .product -->
+                        <div class="product">
+                            <figure>
+                                <a href="#">
+                                    <img src="assets/images/products/thumbs/product2.jpg" alt="Product">
+                                </a>
+                            </figure>
+                            <div class="product-meta">
+                                <h5 class="product-title">
+                                    <a href="#">Lorem ipsum dolor sit amet consect.</a>
+                                </h5>
+                                <div class="product-price-container">
+                                    <span class="old-price">$140.00</span>
+                                    <span class="product-price">$99.00</span>
+                                </div><!-- End .product-price-container -->
+                                <span class="product-quantity">x 2</span>
+                            </div><!-- End .product-meta -->
+                            <a href="#" class="delete-btn" title="Delete Product"><i class="fa fa-trash"></i></a>
+                        </div><!-- End .product -->
+                    </div><!-- End .dcart-products -->
+
+                    <div class="dcart-action-container">
+                        <div class="dcart-action-info">
+                            <p>Shipping: <span>$12.00</span></p>
+                            <p>Tax: <span>Free</span></p>
+                            <p>Total: <span>$390.00</span></p>
+                        </div><!-- End .dcart-action-info -->
+
+                        <div class="dcart-action">
+                            <a href="#" class="btn btn-gray btn-sm">View Cart</a>
+                            <a href="#" class="btn btn-custom btn-sm">Checkout</a>
+                        </div><!-- End .dcart-action -->
+                    </div><!-- End .dcart-action-container -->
+                </div><!-- End .dropdown-menu -->
+            </div><!-- End .cartdropdown -->*@
+
+        @*<div class="header-info-boxes">
+            <div class="header-info-box">
+                <i class="fa fa-truck"></i>
+                <div class="info-box-title">Free Delivery</div>
+                <p>No charge for shipping</p>
+            </div><!-- End .header-info-box -->
+
+            <div class="header-info-box">
+                <i class="fa fa-support"></i>
+                <div class="info-box-title">24/7 Free Support</div>
+                <p>We provide live chat support</p>
+            </div><!-- End .header-info-box -->*@
+
+        <div class="menu-extras">
+
+            <ul class="nav navbar-nav navbar-right pull-right" style="display:inline-grid">
+                <li class="" style="float: initial;">
+                    <img src="~/Content/assets/images/escudo.png" alt="" height="auto" />
+
+                </li>
+                <li class="navMenu">
+                    <ul class="menu" style="display:inline-flex">
+                        <li><a href="@Url.Action("Index", "Home")">Inicio</a></li>
+                        <li style="font-weight:800; margin: 0 10px; color:darkgrey">|</li>
+                        <li><a href="#">Mapa de sitio</a></li>
+                        <li style="font-weight:800; margin: 0 10px; color:darkgrey">|</li>
+                        <li><a href="#">Contacto</a></li>
+
+
+                    </ul>
+                </li>
+                <li class="navbar-c-items">
+                    <form role="search" class="navbar-left app-search pull-left hidden-xs" style="display:contents">
+                        <input type="text" placeholder="Buscar..." class="form-control">
+                        <a href=""><i class="fa fa-search" style=" position: relative; margin-right: 15px; float: right; z-index: 9998; margin-top: -45px;"></i></a>
+                    </form>
+                </li>
+
+
+            </ul>
+            <div class="menu-item">
+                <!-- Mobile menu toggle-->
+                <a class="navbar-toggle">
+                    <div class="lines">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </a>
+                <!-- End mobile menu toggle-->
+            </div>
+        </div><!-- End .header-info-box -->
+    </div><!-- End header-info-boxes -->
+</div><!-- End .container -->
+
+<div id="topheader" class="header-bottom">
+    <div class="container">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav-container" aria-expanded="false">
+            <span class="toggle-text">Menu</span>
+            <span class="toggle-wrapper">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-nav-container">
+            <ul class="nav navbar-nav">
+                <li class="dropdown active">
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+
+                </li>
+                <li class="dropdown">
+                    <a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Premios<span class="angle"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        
+                        
+                        @Html.Action("TipoPremiosLi", "Home")
+
+
+                        @*<li class="dropdown">
+                            <a href="@Url.Action("PremioNacional", "Premios", new {siglas = "PNC"})">Premio Nacional a la Calidad</a>
+
+                        </li>
+                        <li class="dropdown">
+                            <a href="@Url.Action("PremioProvincial", "Premios", new {premio = "Premio a la Calidad de los Servicios de la Provincia de Santiago"})" class="dropdown-toggle" role="button" aria-expanded="false">Premio a la Calidad de los Servicios de la Provincia de Santiago</a>
+
+                        </li>
+                        <li class="dropdown">
+                            <a href="@Url.Action("PremioInstitucional", "Premios", new {premio = "Premio Institucional a las Mejores Prácticas"})" class="dropdown-toggle" role="button" aria-expanded="false">Premio Institucional a las Mejores Prácticas</a>
+                        </li>*@
+
+                        @*<li><a href="404.html">404 Page</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Coming Soon<span class="angle"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="coming-soon.html">Coming Soon</a></li>
+                                    <li><a href="coming-soon2.html">Coming Soon 2</a></li>
+                                </ul>
+                            </li>*@
+                    </ul>
+                </li>
+                <li class="dropdown megamenu-container">
+                    <a href="@Url.Action("Referencias", "Home")" class="dropdown-toggle" role="button" aria-expanded="false">Documentaciones y Referencias</a>
+
+                </li>
+
+                @{
+                    if (Request.IsAuthenticated)
+                    {
+
+                        @Html.Action("GetMenuButton", "Home");
+
+
+
+
+                    }
+                }
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- End .container -->
+</div><!-- End .header-bottom -->
+<!-- Cambiar Rol modal-->
+<div class="modal fade" id="cambiarRol-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="myModalLabel4">Seleccione el rol con el que desea estar en el sistema</h3>
+            </div><!-- End .modal-header -->
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                        @if (user != null)
+                        {
+
+                            @Html.Action("CambiarRol", "Account", new { id = user.Id })
+
+                        }
+
+                    </div>
+                    <div class="col-sm-2"></div>
+
+
+                </div>
+                <div class="row">
+
+
+
+                </div>
+
+            </div><!-- End .modal-body -->
+
+        </div><!-- End .modal-content -->
+    </div><!-- End .modal-dialog -->
+</div><!-- End .modal -->
+<!-- Modal Contact Form-->
+<div class="modal fade" id="modal-redirect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <form id="#" method="get" action="#">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title" id="myModalLabel4">Elija el ambiente donde desea trabajar</h3>
+                </div><!-- End .modal-header -->
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div class="col-sm-6">
+
+                            <div class="pricing-table">
+                                <header>
+                                    <h3 class="pricing-title">Ambiente Público</h3>
+                                    <div class="price-container">
+                                        <span class="price">
+                                            <i class="fa fa-user icon-bg"></i>
+
+                                        </span>
+                                    </div><!-- End .price-container -->
+
+                                </header>
+                                <div class="pricing-body">
+                                    <p class="desc">Este ambiente está destinado para postulantes o usuarios que deseen registrarse en un premio</p>
+                                    <ul>
+                                        <li><i class="fa fa-check"></i>Postular en un premio</li>
+                                        <li><i class="fa fa-check"></i>Ver perfíl de su institución postulante</li>
+                                        <li><i class="fa fa-check"></i>Agregar un nuevo rol</li>
+                                        <li><i class="fa fa-check"></i>Cambiar contraseña</li>
+                                        <li><i class="fa fa-check"></i>Editar datos del usuario</li>
+
+                                    </ul>
+                                    <div class="price-action">
+                                        <a href="@Url.Action("Login", "Account")" class="btn btn-custom min-width-sm">Iniciar Sesión</a>
+                                    </div><!-- End .price-action -->
+                                </div><!-- End .pricing-body -->
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="pricing-table">
+                                <header>
+                                    <h3 class="pricing-title">Ambiente Evaluación</h3>
+                                    <div class="price-container">
+                                        <span class="price">
+                                            <i class="fa fa-pencil icon-bg"></i>
+
+                                        </span>
+                                    </div><!-- End .price-container -->
+
+                                </header>
+                                <div class="pricing-body">
+                                    <p class="desc">Este ambiente está destinado para Evaluadores y jurados.</p>
+                                    <ul>
+                                        <li><i class="fa fa-check"></i>Evaluar Memorias</li>
+                                        <li><i class="fa fa-check"></i>Editar datos del usuario</li>
+                                        <li><i class="fa fa-check"></i>Ver datos de los miembros de equipo</li>
+                                        <li><i class="fa fa-check"></i>Comunicarse con el equipo</li>
+                                        <li><i class="fa fa-check"></i>Cambiar contraseña</li>
+
+                                    </ul>
+                                    <div class="price-action">
+                                        <a href="@rutaAdmin" target="_blank" class="btn btn-custom min-width-sm">Iniciar Sesión</a>
+                                    </div><!-- End .price-action -->
+                                </div><!-- End .pricing-body -->
+                            </div>
+
+                        </div>
+
+                        @*<div class="col-sm-4">
+                                <a href="@rutaAdmin">
+                                    <div class="service service-box">
+                                        <i class="fa fa-black-tie icon-bg"></i>
+                                        <h3 class="service-title">Jurado</h3>
+                                    </div>
+                                </a>
+                            </div>*@
+                    </div>
+
+                    <h3 class="text-primary" style="text-align: center">Si no tiene cuenta elija uno de estos premios para registrarse</h3>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="pricing-table ">
+                                <h1>
+                                    <a class="btn btn-green btn-block min-width-sm text-white tipso" title="Premino Nacional a la Calidada del Sector Público" style="font-size: 20px;" href="@Url.Action("PremioNacional", "Premios", new{siglas = "PNC"})">PNC</a>
+                                    <span style="font-size: 14px">Premino Nacional a la Calidada del Sector Público</span>
+
+                                </h1>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="pricing-table">
+                                <h1>
+                                    <a class="btn btn-green btn-block min-width-sm text-white" title="Premio a la Calidad de los Servicios de la Provincia de Santiago" style="font-size: 20px;" href="@Url.Action("PremioProvincial", "Premios", new{siglas = "PPC"})">PPC</a>
+                                    <span style="font-size: 14px">Premio a la Calidad de los Servicios de la Provincia de Santiago</span>
+
+                                </h1>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="pricing-table">
+                                <h1>
+                                    <a class="btn btn-green btn-block min-width-sm text-white" title="Premio Institucional a las Mejores Prácticas" style="font-size: 20px;" href="@Url.Action("PremioInstitucional", "Premios", new{siglas = "PIMP"})">PIMP</a>
+                                    <span style="font-size: 14px">Premio Institucional a las Mejores Prácticas</span>
+
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- End .modal-body -->
+
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </form>
+</div><!-- End .modal -->
+
+@section scripts
+{
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link href="~/Content/assets/css/tooltip/tipso.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            // $('.tooltip').tooltipster();
+            $('.tipso').tipso();
+        });
+    </script>
+}

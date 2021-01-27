@@ -1,0 +1,155 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model  IEnumerable<ProyectoCalidad.Domain.Entities.EquipoEvaluador>
+
+@{
+
+    var institucion = ViewBag.institucionpostulante;
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId<string>());
+
+    var num = 1;
+
+}
+@section Style
+{
+    <!-- Custom box css -->
+    <link href="~/plugins/custombox/css/custombox.min.css" rel="stylesheet">
+}
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Lista de equipos </h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "InstitucionPostulante", new{userID = user.Id})">Instituciones Postulantes </a>
+                </li>
+                <li class="active">
+                    @institucion.InstitucionNombre
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+@*<div class=" m-b-30 ">
+    <button type="button" data-toggle="modal" data-target="#custom-modal" data-animation="contentscale" data-overlayspeed="100" class="btn btn-primary waves-effect waves-light"><i class="mdi mdi-account-multiple-plus m-r-5"></i>Asignar equipos</button>
+</div>*@
+
+<a href="#custom-modal" class="btn btn-primary waves-effect waves-light m-r-5 m-b-10" data-animation="blur" data-plugin="custommodal"
+   data-overlaySpeed="100" data-overlayColor="#36404a">Asginar Equipo</a>
+
+<!-- end row -->
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 col-sm-6">
+            <div class="property-card">
+                <div class="property-content">
+                    <div class="listingInfo">
+                        <div class="">
+                            <h5 class="text-success m-t-0"><i class="mdi mdi-trophy-outline"></i> @item.Premio.Descripcion</h5>
+                        </div>
+                        <div class="">
+                            <h3 class="text-overflow"><a href="#" class="text-dark">@item.Equipo.Nombre</a></h3>
+                            <h4 class="text-overflow"><a href="#" class="text-dark">@item.Equipo.Descripcion</a></h4>
+                            <p class="text-muted text-overflow"><i class="mdi mdi-calendar-blank-outline m-r-5"></i>@item.InstitucionPostulantes.InstitucionNombre</p>
+
+                            <div class="row text-center">
+                                <div class="col-xs-4">
+                                    <h4>@ViewBag.integrantes[num-1]</h4>
+                                    <p class="text-overflow" title="Bedrooms">Integrantes</p>
+                                </div>
+                                @*<div class="col-xs-4">
+                                    <h4>premios</h4>
+                                    <p class="text-overflow" title="Parking Space">evaluando</p>
+                                </div>*@
+                            </div>
+
+                            <div class="m-t-20">
+                                <button type="button" class="btn btn-success btn-block waves-effect waves-light">Más</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- end. Card actions -->
+                </div>
+                <!-- /inner row -->
+            </div>
+            <!-- End property item -->
+        </div>
+        if (num % 3 == 0)
+        {
+            
+            <!-- end col -->
+            @:</div><div class="row">
+        }
+        num++;
+    }
+
+</div>
+
+<!-- Modal -->
+<div id="custom-modal" class="modal-demo" style="width: 400px">
+    <button type="button" class="close" onclick="Custombox.close();">
+        <span>&times;</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="custom-modal-title">Asignación de Equipo</h4>
+    <div class="modal-body">
+        @using (Html.BeginForm("AsignarEquipoEvaluador", "InstitucionPostulante", new { }, FormMethod.Post, new { @role = "form" }))
+        {
+            <input type="hidden" value="@institucion.InstitucionPostulanteID"/>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="field-1" class="control-label pull-left">Nombre de la Institución</label>
+                        <input type="text" name="InstitucionPostulanteID" class="form-control" id="field-1" placeholder="@institucion.InstitucionNombre" disabled="disabled"/>
+                        <input type="hidden" name="InstitucionPostulanteID" value="@institucion.InstitucionPostulanteID"/>
+                    </div>
+                </div>
+                @*<div class="col-md-12">
+                    <div class="form-group">
+                        <label for="field-2" class="control-label">Surname</label>
+                        <input type="text" class="form-control" id="field-2" placeholder="Doe">
+                    </div>
+                </div>*@
+            </div>
+            <br/>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="field-3" class="control-label pull-left">Address</label>
+                        @Html.DropDownList("EquipoID", null, new{@class="form-control"})
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="Submit"  class="btn btn-primary waves-effect waves-light">Guardar</button>
+                <button type="button" onclick="Custombox.close();" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
+        }
+
+    </div>
+</div>
+
+
+@section scripts
+{
+    <!-- Modal-Effect -->
+    <script src="~/plugins/custombox/js/custombox.min.js"></script>
+    <script src="~/plugins/custombox/js/legacy.min.js"></script>
+    
+
+}

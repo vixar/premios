@@ -1,0 +1,197 @@
+﻿@model  ProyectoCalidad.Domain.Entities.Guia
+
+@{
+    ViewBag.Title = "Editar Guia";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Guia</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos de la Guia - <strong>@Model.Descripcion</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarGuia", "Guia", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.GuiaID)
+
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                <label for="Descripcion" class="col-md-3 control-label">Descripci&oacute;n</label>
+                <div class="col-md-9">
+                    @*  @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia." })*@
+                    @Html.TextBoxFor(model => model.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Descripcion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Titulo" class="col-md-3 control-label">T&iacute;tulo</label>
+                <div class="col-md-9">
+                    @*  @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia." })*@
+                    @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control", @placeholder = "Titulo de la Guia.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Titulo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Presentacion" class="col-md-3 control-label">Presentaci&oacute;n</label>
+                <div class="col-md-9">
+                    @*  @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia." })*@
+                    @Html.TextAreaFor(model => model.Presentacion, 4, 55, new { @class = "form-control", @placeholder = "Presentación de la Guia.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Presentacion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Instrucciones" class="col-md-3 control-label">Instrucciones</label>
+                <div class="col-md-9">
+                    @*  @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia." })*@
+                    @Html.TextAreaFor(model => model.Instrucciones, 4, 55, new { @class = "form-control", @placeholder = "Instrucciones de la Guia.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Instrucciones, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Nota" class="col-md-3 control-label">Nota</label>
+                <div class="col-md-9">
+                    @*  @Html.TextBoxFor(x => x.Descripcion, new { @class = "form-control", @placeholder = "Descripción de la Guia." })*@
+                    @Html.TextAreaFor(model => model.Nota, 4, 55, new { @class = "form-control", @placeholder = "Nota de la Guia.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Nota, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Version" class="col-md-3 control-label">Version</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Version, new { @class = "form-control", @placeholder = "Version de la Guia." })
+                    @Html.ValidationMessageFor(x => x.Version, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="TipoPuntuacion" class="col-md-3 control-label">Tipo de Puntuaci&oacute;n</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.TipoPuntuacion, new { @class = "form-control", @placeholder = "Tipo de Puntuacion de la Guia." })
+                    @Html.ValidationMessageFor(x => x.TipoPuntuacion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+
+                    @Html.CheckBoxFor(m => m.Estado, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    
+                    <button type="submit" class="btn btn-success waves-effect waves-light m-r-5"><i class="fa fa-floppy-o"></i></button>
+                    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <!--Wysiwig js-->
+    <script src="~/plugins/tinymce/tinymce.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if ($("#Presentacion").length > 0) {
+                tinymce.init({
+                    selector: "textarea#Presentacion",
+                    theme: "modern",
+                    height: 300, menubar: false, statusbar: false,
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l ink | fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+
+            if ($("#Instrucciones").length > 0) {
+                tinymce.init({
+                    selector: "textarea#Instrucciones",
+                    theme: "modern",
+                    height: 300, menubar: false, statusbar: false,
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l ink | fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+
+            if ($("#Nota").length > 0) {
+                tinymce.init({
+                    selector: "textarea#Nota",
+                    theme: "modern",
+                    height: 300, menubar: false, statusbar:false,
+                    plugins: [
+                        "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                        "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                        "save table contextmenu directionality emoticons template paste textcolor"
+                    ],
+                    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l ink | fullpage | forecolor backcolor emoticons",
+                    style_formats: [
+                        { title: 'Bold text', inline: 'b' },
+                        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+                        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+                        { title: 'Example 1', inline: 'span', classes: 'example1' },
+                        { title: 'Example 2', inline: 'span', classes: 'example2' },
+                        { title: 'Table styles' },
+                        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+                    ]
+                });
+            }
+        });
+    </script>
+}
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Guia", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

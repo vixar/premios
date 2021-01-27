@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.InstitucionPostulante>
+
+@{
+    ViewBag.Title = "InsitucionesPostulantesPorUsuario";
+}
+
+<h2>InsitucionesPostulantesPorUsuario</h2>
+
+@{
+    if (Model.Count() == 0)
+    {
+
+    }
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Premio.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InstitucionNombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Telefono2)*@
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaximaAutoridad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ComentarioCoordinador)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ComentarioJurado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comentario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PuntuacionFinal)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Premio.Descripcion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InstitucionNombre)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Telefono)
+        </td>
+        <td>
+            @*@Html.DisplayFor(modelItem => item.Telefono2)*@
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaximaAutoridad)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.ComentarioCoordinador)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComentarioJurado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comentario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PuntuacionFinal)
+        </td>
+        <td>
+            @Html.ActionLink("Perfil", "Perfil", new { id=item.InstitucionPostulanteID })
+        </td>
+    </tr>
+}
+
+</table>

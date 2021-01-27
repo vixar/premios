@@ -1,0 +1,162 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.Domain.Entities.ApplicationUser
+@{
+    ViewBag.Title = "Edición de Usuario";
+    var store = new UserStore<ApplicationUser>(new EFDbContext());
+    var manager = new UserManager<ApplicationUser>(store);
+
+    var mensaje =  ViewBag.mensaje;
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.PoliticaPrivacidad)
+            @Html.HiddenFor(m => m.PoliticaUso)
+            @Html.HiddenFor(m => m.Imagen)
+            @Html.HiddenFor(m => m.FechaCreacion)
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.FechaModificacion)
+
+            <h4>Edici&oacute;n de la cuenta de usuario.</h4>
+            <hr />
+            <div class="form-group">
+                <label for="Nombre" class="col-md-3 control-label">Nombre(s)</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", @placeholder = "Nombre de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Nombre, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Apellido" class="col-md-3 control-label">Apellido(s)</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.Apellido, new { @class = "form-control", @placeholder = "Apellido de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Apellido, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cedula" class="col-md-3 control-label">Cédula</label>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.NumeroDocumentoIdentidad, new { @class = "form-control", @placeholder = "Número de identificación" })
+                    @Html.ValidationMessageFor(x => x.NumeroDocumentoIdentidad, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Masculino</label>
+                <div class="col-md-6">
+                    <div class="radio radio-primary">
+                        @Html.RadioButtonFor(m => m.Genero, "Masculino", new { @class = "form-control" })
+                        @Html.Label(" ", new { style = "font-family: 'Hind Madurai', sans-serif;" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Femenino</label>
+                <div class="col-md-6">
+                    <div class="radio radio-primary">
+                        @Html.RadioButtonFor(m => m.Genero, "Femenino", new { @class = "form-control" })
+                        @Html.Label(" ", new { style = "font-family: 'Hind Madurai', sans-serif;" })
+                    </div>
+                </div>
+            </div>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-3 control-label" })
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Roles asignados</label>
+                @{
+                    var roles = manager.GetRoles(Model.Id);
+                    var num = roles.Count;
+                    foreach (var rol in roles)
+                    {
+                        <div class="col-md-8">
+                            <span class="label label-primary">
+                                @rol
+                            </span>
+                            @if (num > 1)
+                            {
+                                <a href="@Url.Action("EliminarRole", "Account", new {userID = Model.Id, roleName = rol})"> <i class="mdi mdi-close" style="color: red; font-weight: bolder"></i></a>
+                            }
+
+                        </div>
+
+                    }
+
+                }
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Asignar Rol</label>
+                <div class="col-md-6">
+
+                    @Html.DropDownList("Role", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            //CARGA DE IMAGEN
+            <div class="form-group">
+                @Html.Label("Foto", new { @class = "control-label col-md-3" })
+                <div class="col-md-6">
+                    <input class="btn btn-primary" type="file" id="Photo" name="upload" />
+                </div>
+            </div>
+            //FIN
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-6">
+
+                    @Html.CheckBox("IsActive", true, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ccc" })
+
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <div class="col-md- pull-right">
+                    <input type="submit" class="btn btn-primary" value="Guardar" />
+                    <a class="btn btn-default" href="@Url.Action("Index", "Account")">Regresar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Content/assets/pages/jquery.fileuploads.init.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    
+    
+    <script>
+        $(document).ready(function() {
+            //MENSAJES
+
+            if ('@mensaje.tipo'.length > 0) {
+
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+
+            }
+
+
+            //-->END
+        })
+    </script>
+}

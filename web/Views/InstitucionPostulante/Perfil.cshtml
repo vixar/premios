@@ -1,0 +1,1023 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.WebUI.Models
+@*@model ProyectoCalidad.Domain.Entities.InstitucionPostulante*@
+@model WebPublico.WebUI.Models.InstitucionPostulantePerfilModel
+
+@{
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+    var urlmeroria = Server.MapPath("~/Memorias/");
+
+    Mensajes mensaje = new Mensajes();
+
+    if (ViewBag.mensaje != null)
+    {
+        mensaje = ViewBag.mensaje;
+    }
+    var advertenciaCierre = ViewBag.advertencia;
+
+    var guia = ViewBag.guiadetalle;
+    var memoria = ViewBag.memoria;
+    List<Postulante> equipoPostulante = (List<Postulante>)ViewBag.equipoPostulante;
+    var equipoPostulanteUsuarios = ViewBag.equipoPostulanteUsuarios;
+    var compromiso = ViewBag.compromiso;
+    var institucionunidad = "Institución";
+    //TODO crear parametro
+    if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas == "PIMP")
+    {
+        ViewBag.Title = "Perfil de la unidad Postulante";
+        institucionunidad = "Unidad";
+        Layout = "~/Views/Shared/_LayoutPIMP.cshtml";
+    }
+    else
+    {
+        institucionunidad = "Institución";
+        ViewBag.Title = "Perfil de la Institución";
+    }
+
+    var TotalPuntos = (ViewBag.criterios.Count * 100);
+    // var limite = (DateTime)ViewBag.cierre;
+    var limite = new DateTime(2030, 9, 6, 18, 30, 00);
+    var dateDiff = (limite - DateTime.Now).TotalMinutes;
+
+
+}
+@section style{
+    <link href="https://fonts.googleapis.com/css?family=Oswald:400,600" rel="stylesheet">
+    <link href="~/Content/premio.css" rel="stylesheet" />
+
+}
+
+<div class="page-header larger parallax custom" style="background-image:url(~/Content/assets/images/MAP/m1.png)">
+    <div class="container">
+        <h1>@ViewBag.Title</h1>
+        <ol class="breadcrumb">
+            <li><a href="/Home/Index">Inicio</a></li>
+            <li><a href="#">@institucionunidad</a></li>
+            <li class="active">Perfíl</li>
+        </ol>
+    </div><!-- End .container -->
+
+</div><!-- End .page-header -->
+
+@if (advertenciaCierre != null)
+{
+    <div class="container">
+        <div class="alert alert-@advertenciaCierre.tipo alert-dismissible" style="background-color: #fff5d6; color: #000; border-color:#e7ddbd">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" style="top: 0; right: 0">&times;</a>
+            <strong>@advertenciaCierre.mensaje</strong>: @advertenciaCierre.texto
+        </div>
+    </div>
+}
+
+<div class="container">
+    @{ if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas == "PIMP")
+        {
+            <h2 class="title text-center" style="font-family: 'Oswald', sans-serif;">DATOS DE LA UNIDAD POSTULANTE</h2>
+
+        }
+        else
+        { <h2 class="title text-center" style="font-family: 'Oswald', sans-serif;">DATOS DE LA INSTITUCIÓN</h2>
+        }
+
+    }
+    <div class="row">
+        <table class="table table-primary table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre de la @institucionunidad</th>
+                    @{
+                        if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas != "PIMP")
+                        {
+                            <th>Dirección</th>
+                            <th>Teléfono principal</th>
+                            <th>Teléfono secundario</th>
+                        }
+                        else
+                        {
+                            <th>Extensión</th>
+                        }
+                    }
+                    <th class="center">Persona Responsable de la Postulación</th>
+                    <th class="center">Premio a Postular</th>
+                    <th class="center">Estado Actual</th>
+                    <th style="width:30px">Panel de Control</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@ViewBag.organismo.Nombre</td>
+
+                    @{
+                        if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas != "PIMP")
+                        {
+                            <td>@ViewBag.organismo.DireccionFisica</td>
+                            <td>@ViewBag.organismo.TelefonoOrganismo1</td>
+                            <td>@ViewBag.organismo.TelefonoOrganismo2</td>
+                        }
+                        else
+                        {
+                            <td>@ViewBag.organismo.TelefonoOrganismo2</td>
+                        }
+                    }
+
+
+                    <td>@ViewBag.organismo.FuncionarioNombre @ViewBag.organismo.FuncionarioApellido</td>
+                    <td>@Model.InstitucionPostulante.Premio.Descripcion</td>
+                    <td>
+                        @if (@Model.InstitucionPostulante.Estado == "PENDIENTE-VALIDACION")
+                        {
+                            <label class="btn btn-yellow">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "PENDIENTE-VALIDACION-MEMORIA")
+                        {
+                            <label class="btn btn-purple">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "ACEPTADA")
+                        {
+                            <label class="btn btn-success">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "AUTOEVALUANDO")
+                        {
+                            <label class="btn btn-blue">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "MEMORIA-RECHAZADA")
+                        {
+                            <label class="btn btn-danger">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "RECHAZADA")
+                        {
+                            <label class="btn btn-danger">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "POSTULANDO")
+                        {
+                            <label class="btn btn-orange">@Model.InstitucionPostulante.Estado</label>
+                        }
+                        @if (@Model.InstitucionPostulante.Estado == "DELIBERACIÓN")
+                        {
+                            <label class="btn btn-orange">POSTULANDO</label>
+                        }
+                    </td>
+
+                    <td>
+                        @{
+
+                            @*<div>@dateDiff / @limite  / @DateTime.Today</div>*@
+
+                            if (@Model.InstitucionPostulante.Estado == "ACEPTADA" || @Model.InstitucionPostulante.Estado == "AUTOEVALUANDO" || @Model.InstitucionPostulante.Estado == "RECHAZADA" || @Model.InstitucionPostulante.Estado == "MEMORIA-RECHAZADA")
+                            {
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        @if (Model.InstitucionPostulante.Estado == "RECHAZADA" || Model.InstitucionPostulante.Estado == "MEMORIA-RECHAZADA")
+                                        {
+
+                                            @*<li>
+                                                    <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-compromiso">
+                                                        Cargar Compromiso
+                                                    </a>
+                                                </li>*@
+
+                                            if (dateDiff >= 0)
+                                            {
+                                                if (ViewBag.total >= TotalPuntos)
+                                                {
+                                                    <li>
+                                                        <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-memoria">
+                                                            Cargar Memoria
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (@Model.InstitucionPostulante.Estado != "RECHAZADA")
+                                            {
+                                                if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas == "PPC")
+                                                {
+                                                    <li><a style="color: #0087e3" href="@Url.Action("Index", "GuiaPostulantePPC", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})"><b>Completar Guía</b></a></li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li><a style="color: #0087e3" href="@Url.Action("Index", "GuiaPostulantes", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})"><b>Completar Guía</b></a></li>
+
+                                                }
+
+                                            }
+
+
+                                            @*<li><a href="@Url.Action("VerMemoria", "GuiaPostulantes", new{InstitucionPostulanteID = Model.InstitucionPostulanteID})">Memoria</a></li>*@
+                                            <li><a href="@Url.Action("VerFortalezas", "GuiaPostulantes", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})">Reporte de Fortalezas</a></li><!--Puntos fuertes-->
+                                            @*@if (ViewBag.total == 100)*@
+                                            if (ViewBag.total >= TotalPuntos && Model.InstitucionPostulante.Premio.TipoPremio.Siglas == "PNC")
+                                            {
+                                                if (dateDiff >= 0)
+                                                {
+                                                    if (Model.InstitucionPostulante.Estado == "RECHAZADA" || Model.InstitucionPostulante.Estado == "MEMORIA-RECHAZADA")
+                                                    {
+                                                        <li>
+                                                            <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-memoria">
+                                                                Ver Memoria
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-memoria">
+                                                                Cargar Memoria
+                                                            </a>
+                                                        </li>
+                                                    }
+
+                                                }
+                                                else
+                                                {
+                                                    <li>
+                                                        <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-incompleta">
+                                                           Cargar Memoria
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            if (ViewBag.total >= TotalPuntos && Model.InstitucionPostulante.Premio.TipoPremio.Siglas != "PNC")
+                                            {
+                                                <li>
+                                                    <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-memoria">
+                                                        Cargar Memoria
+                                                    </a>
+                                                </li>
+                                            }
+
+
+                                            <li><a href="@Url.Action("Index", "GuiaDetalle", new {guiaID = guia.GuiaID})">Guía en blanco</a></li>
+                                        }
+                                        @if (Model.InstitucionPostulante.Premio.TipoPremio.Siglas != "PIMP")
+                                        {
+                                            <li><a href="@Url.Action("EditarOrganismo", "Organismo", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})"><b>Editar Postulación</b></a></li>
+
+                                        }
+
+                                    </ul>
+                                </div>
+
+                                <br />
+                            }
+                            else
+                            {
+                                if (@Model.InstitucionPostulante.Estado == "POSTULANDO" || @Model.InstitucionPostulante.Estado == "PENDIENTE-VALIDACION" || Model.InstitucionPostulante.Estado == "DELIBERACIÓN")
+                                {
+                                    <div class="btn-group">
+                                        <button disabled="disabled" type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu">
+
+                                            @if (Model.InstitucionPostulante.Estado == "POSTULANDO" || Model.InstitucionPostulante.Estado == "DELIBERACIÓN")
+                                            {
+
+                                                var informeFinal = Path.GetFileName(Model.InstitucionPostulante.ComentarioCoordinador);
+                                                if (!string.IsNullOrEmpty(informeFinal))
+                                                {
+                                                    if (user.IsCoordinador)
+                                                    {
+                                                        <li>
+                                                            <a target="_blank" href="@Url.Action("VerInformeRetornoFinal", new {InstitucionPostulanteID=Model.InstitucionPostulante.InstitucionPostulanteID})"> <i class="mdi mdi-eye"></i> Ver Informe final</a>
+
+                                                        </li>
+                                                    }
+
+                                                }
+
+
+                                            }
+
+                                            @*@*<li><a href="#">Actividad de Seguimiento</a></li>*@@*
+                                                @if (user.IsCoordinador)
+                                                {
+                                                    if (Model.Estado == "RECHAZADA")
+                                                    {
+                                                        <li><a href="#">Actualizar Datos</a></li>
+
+                                                    }
+
+                                                }*@
+
+                                        </ul>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                        <ul class="dropdown-menu" role="menu">
+
+                                            @if (Model.InstitucionPostulante.Estado == "PENDIENTE-VALIDACION-MEMORIA")
+                                            {
+
+                                                <li>
+
+                                                    <a class="btn" style="text-align: left" data-toggle="modal" data-target="#modal-memoria">
+
+                                                        Ver Memoria
+
+                                                    </a>
+
+                                                </li>
+
+                                            }
+
+                                            @*<li><a href="#">Actividad de Seguimiento</a></li>*@
+                                            @if (user.IsCoordinador)
+                                            {
+                                                if (Model.InstitucionPostulante.Estado == "RECHAZADA")
+                                                {
+                                                    <li><a href="#">Actualizar Datos</a></li>
+
+                                                }
+
+                                            }
+
+                                        </ul>
+                                    </div>
+
+                                }
+
+                                <br />
+                            }
+                        }
+
+
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+
+        <div class="clearfix mb25 visible-xs visible-sm"></div><!-- margin -->
+    </div>
+    <br />
+    <h2 class="title text-center" style="font-family: 'Oswald', sans-serif;">NIVEL DE AVANCE AUTO EVALUACIÓN</h2>
+    <div class="row">
+        <div class="col-md-6">
+            @{
+                var num = 1;
+            }
+            @foreach (var item in ViewBag.progress)
+            {
+
+                <div class="progress-container">
+                    <h4 class="progress-title">@item.Criterio <span>@Math.Ceiling(item.porcentaje)%</span></h4>
+                    <div class="progress bordered">
+                        <div class="progress-bar progress-animate custom" role="progressbar" data-width="@item.porcentaje" aria-valuenow="@item.porcentaje" aria-valuemin="0" aria-valuemax="100">
+                            <span class="sr-only">@item.porcentaje Completo</span>
+                        </div><!-- End .progress-bar -->
+                    </div><!-- End .progress -->
+                </div><!-- End .progress-container -->
+
+
+                if (num % 5 == 0)
+                {
+                @: </div><div class="col-md-6">
+                }
+
+
+                num++;
+            }
+        </div>
+
+    </div><!-- End .row -->
+</div><!-- End .container -->
+
+<div class="mb50"></div><!-- margin -->
+@* EQUIPOS DE EVALUADORES INTERNOS *@
+
+<div class="bg-gray border pt65 pb50">
+    <div class="container">
+        <h2 class="text-center" style="font-family: 'Oswald', sans-serif; text-transform: uppercase">Equipo de Evaluadores Internos</h2>
+        <h4 class="title text-muted text-center" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; margin-top: -10px;">(Comité de Calidad)</h4>
+        <div class="row">
+
+            @if (Model.Postulantes.Count > 0)
+            {
+                foreach (Postulante integrante in Model.Postulantes.ToList())
+                {
+                    <div class="col-md-4 col-xs-6 col-xss-12">
+                        <div class="member">
+
+                            <h3 class="member-title">@integrante.Usuario.Nombre @integrante.Usuario.Apellido </h3>
+
+                            <ul>
+                                @if (integrante.Usuario.IsCoordinador)
+                                {
+                                    <li>Coordinador del Equipo</li>
+                                }
+                                else
+                                {
+                                    <li>Evaluador Interno</li>
+                                }
+                                <li>@integrante.Usuario.Email</li>
+                                <li>@integrante.Usuario.Telefono</li>
+                            </ul>
+                        </div><!-- End .member -->
+                    </div><!-- End .col-md-3 -->
+                }
+            }
+            else
+            {
+                foreach (var integrante in equipoPostulanteUsuarios)
+                {
+                    <div class="col-md-4 col-xs-6 col-xss-12">
+                        <div class="member">
+
+                            <h3 class="member-title">@integrante.Nombre @integrante.Apellido </h3>
+
+                            <ul>
+                                @if (integrante.IsCoordinador)
+                                {
+                                    <li>Coordinador del Equipo</li>
+                                }
+                                else
+                                {
+                                    <li>Evaluador Interno</li>
+                                }
+                                <li>@integrante.Email</li>
+                                <li>@integrante.Telefono</li>
+                            </ul>
+                        </div><!-- End .member -->
+                    </div><!-- End .col-md-3 -->
+                }
+            }
+
+
+
+
+        </div><!-- End .row -->
+    </div><!-- End .container -->
+</div><!-- End .bg-gray -->
+<!-- Contact form trigger -->
+<!-- Modal Contact Form-->
+<div class="modal fade" id="modal-memoria" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="myModalLabel4">Remisión de Memoria</h3>
+            </div><!-- End .modal-header -->
+            <div class="modal-body">
+                @{
+                    if (dateDiff <= 0)
+                    {
+                        <div class="col-md-8">
+                            El tiempo para cargar la Memoria ha caducado.
+                        </div>
+
+                    }
+                    else
+                    {
+                        if (memoria == null)
+                        {
+                            using (Html.BeginForm("GuardarMemoria", "Memoria", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+                            {
+                                var id = Model.InstitucionPostulante.InstitucionPostulanteID;
+                                @Html.Hidden("InstitucionPostulanteID", Model.InstitucionPostulante.InstitucionPostulanteID)
+
+                                if (memoria == null)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                        </div>
+                                        <div>
+                                            <code style="margin-top: -15px; font-size: 14px; margin-bottom: 10px">El documento debe ser tipo .pdf</code>
+
+                                        </div>
+                                        <div class="col-md-2" style="padding-left: 9px;">
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="form-group mb5 col-md-4">
+                                            <label for="memorias" class="btn btn-success"> Seleccione el documento</label>
+                                            <input type="file" class="fileMemoria form-control mb5" data-text="Seleccionar Archivo" id="memorias" style="visibility:hidden " name="memoria" required title="Para guardar es necesesario que cargue el documento: Memoria.pdf">
+
+                                        </div>
+                                        <div class="col-md-6" id="filename" style="font-size: 15px; font-weight: bolder">
+                                            <span>Ningun archivo seleccionado...</span>
+                                        </div>
+                                        <div class="col-md-2" style="padding-left: 9px;">
+
+                                            <button type="submit" class="btn btn-custom">Cargar Memoria</button>
+                                        </div>
+                                        <br />
+                                    </div>
+
+
+
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            if (memoria != null && memoria.Estado == "eliminado")
+                            {
+
+
+                                using (Html.BeginForm("GuardarMemoria", "Memoria", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+                                {
+                                    @Html.Hidden("InstitucionPostulanteID", Model.InstitucionPostulante.InstitucionPostulanteID)
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+
+
+                                        </div>
+                                        <div>
+                                            <code style="margin-top: -15px; font-size: 14px; margin-bottom: 10px">El documento debe ser tipo .pdf</code>
+
+                                        </div>
+                                        <div class="col-md-2" style="padding-left: 9px;">
+
+
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="form-group mb5 col-md-4">
+                                            <label for="memorias" class="btn btn-success"> Seleccione el documento</label>
+                                            <input type="file" class="fileMemoria form-control mb5" data-text="Seleccionar Archivo" id="memorias" style="visibility:hidden " name="memoria" required title="Para guardar es necesesario que cargue el documento: Memoria.pdf">
+
+                                        </div>
+                                        <div class="col-md-6" id="filename" style="font-size: 15px; font-weight: bolder">
+                                            <span>Ningun archivo seleccionado...</span>
+                                        </div>
+                                        <div class="col-md-2" style="padding-left: 9px;">
+
+                                            <button type="submit" class="btn btn-custom">Cargar Memoria</button>
+                                        </div>
+                                        <br />
+                                    </div>
+
+
+                                }
+
+
+                            }
+                        }
+                    }
+
+
+                }
+
+                <br />
+
+                <div class="panel panel-default">
+
+                    <table class="table table table-hover m-0" id="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre de archivo</th>
+                                <th style="width: 30px">Tipo Documento</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @if (memoria != null && memoria.Estado != "eliminado")
+                                {
+                                    if (File.Exists(urlmeroria + memoria.RutaMemoria))
+                                    {
+
+                                        <td>@Path.GetFileName(memoria.NombreArchivo)</td>
+                                        <td>@Path.GetExtension(memoria.RutaMemoria)</td>
+                                        <td>
+
+                                            @{
+                                                if (dateDiff <= 0)
+                                                {
+                                                    <div>El tiempo para cargar la Memoria ha caducado.</div>
+                                                    <a href="@Url.Action("VerMemoria", new {memoriaID = memoria.MemoriaGuiaPostulanteID, institucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})" target="_blank" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("VerMemoria", new {memoriaID = memoria.MemoriaGuiaPostulanteID, institucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})" target="_blank" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+
+                                                    if (Model.InstitucionPostulante.Estado == "MEMORIA-RECHAZADA")
+                                                    {
+                                                        <a href="@Url.Action("EliminarMemoria", new {memoriaID = memoria.MemoriaGuiaPostulanteID, institucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+
+                                                    }
+                                                }
+                                            }
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+
+                                        if (dateDiff <= 0)
+                                        {
+                                            <div>El tiempo para cargar la Memoria ha caducado.</div>
+                                        }
+                                        else
+                                        {
+                                            using (Html.BeginForm("GuardarMemoria", "Memoria", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+                                            {
+                                                @Html.Hidden("InstitucionPostulanteID", Model.InstitucionPostulante.InstitucionPostulanteID)
+
+                                                <div class="form-group mb5">
+                                                    <input type="file" class="form-control mb5" id="memoria" name="memoria" required title="Para guardar es necesesario que cargue el documento: Memoria.pdf">
+
+                                                </div>
+                                                <!-- End .from-group -->
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <code style="margin-top: -15px; font-size: 14px; margin-bottom: 10px">El documento debe ser tipo .pdf</code>
+
+                                                    </div>
+
+                                                    <div class="col-md-8">
+                                                        <button type="submit" class="btn btn-custom pull-right">Cargar Memoria</button>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <br />
+
+                                            }
+                                        }
+
+
+                                    }
+                                }
+                                else
+                                {
+
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                }
+
+
+
+
+                            </tr>
+                            @*@{
+                        var num = 1;
+                    }
+                    @foreach (var item in evidencias)
+                    {
+                        if (System.IO.File.Exists(item.RutaEvidencia))
+                        {
+
+                            <tr>
+                                <td>@item.NumeroEvidencia</td>
+                                <td>@item.NombreArchivo</td>
+                                <td>@item.Descripcion</td>
+                                <td>
+                                    <a href="@Url.Action("VerEvidencia", new {id = Model.EjemploID, guiaPostulanteID = Model.GuiaPostulanteID})" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                    <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        else if (item.Descripcion == "Url")
+                        {
+                            <tr>
+                                <td>@item.NumeroEvidencia</td>
+                                <td>@item.NombreArchivo</td>
+                                <td>@item.Descripcion</td>
+                                <td>
+                                    <a href="@item.RutaEvidencia" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                    <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        num++;
+
+
+                    }*@
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div><!-- End .modal-body -->
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div><!-- End .modal-footer -->
+        </div><!-- End .modal-content -->
+    </div><!-- End .modal-dialog -->
+</div><!-- End .modal -->
+<!-- Modal Contact Form-->
+<div class="modal fade" id="modal-incompleta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <form id="#" method="get" action="#">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title" id="myModalLabel4">Remisión de la Memoria de Postulación</h3>
+                </div><!-- End .modal-header -->
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <h4>Debe de completar toda la guía para cargar la memoria</h4>
+                    </div><!-- End .from-group -->
+
+                </div><!-- End .modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-black" data-dismiss="modal">Cerrar</button>
+                </div><!-- End .modal-footer -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </form>
+</div><!-- End .modal -->
+<div class="modal fade" id="modal-fecha-finalizada" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <form id="#" method="get" action="#">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h3 class="modal-title" id="myModalLabel4">Remisión de la Memoria de Postulación</h3>
+                </div><!-- End .modal-header -->
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <h4>El período de remisión de memoria ha terminado</h4>
+                    </div><!-- End .from-group -->
+
+                </div><!-- End .modal-body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-black" data-dismiss="modal">Cerrar</button>
+                </div><!-- End .modal-footer -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </form>
+</div><!-- End .modal -->
+@* COMPROMISO DE POSTULACION *@
+
+<div class="modal fade" id="modal-compromiso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="myModalLabel4">Re-enviar Compromiso</h3>
+            </div><!-- End .modal-header -->
+            <div class="modal-body">
+                @using (Html.BeginForm("CargarCompromiso", "InstitucionPostulante", FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+                {
+                    @Html.Hidden("InstitucionPostulanteID", Model.InstitucionPostulante.InstitucionPostulanteID)
+                    if (compromiso == null || ViewBag.compromiso == "eliminado")
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+
+
+                            </div>
+                            <div>
+                                <code style="margin-top: -15px; font-size: 14px; margin-bottom: 10px">El documento debe ser tipo .pdf</code>
+
+                            </div>
+                            <div class="col-md-2" style="padding-left: 9px;">
+
+
+                            </div>
+                        </div>
+
+                        <br />
+                        <div class="row">
+                            <div class="form-group mb5 col-md-4">
+                                <label for="compromiso" class="btn btn-success"> Seleccione el documento</label>
+                                <input type="file" class="fileMemoria form-control mb5" data-text="Seleccionar Archivo" id="compromiso" style="visibility:hidden " name="memoria" required title="Para guardar es necesesario que cargue el documento: Memoria.pdf">
+
+                            </div>
+                            <div class="col-md-6" id="filename" style="font-size: 15px; font-weight: bolder">
+                                <span>Ningun archivo seleccionado...</span>
+                            </div>
+                            <div class="col-md-2" style="padding-left: 9px;">
+
+                                <button type="submit" class="btn btn-custom">Cargar compromiso</button>
+                            </div>
+                            <br />
+                        </div>
+
+
+                    }
+
+                }
+                <br />
+
+                <div class="panel panel-default">
+                    <table class="table table table-hover m-0" id="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre de archivo</th>
+                                <th style="width: 30px">Tipo Documento</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @if (compromiso != null && ViewBag.compromiso != "eliminado")
+                                {
+                                    <td>@Path.GetFileName(ViewBag.compromiso)</td>
+                                    <td>@Path.GetExtension(ViewBag.compromiso)</td>
+                                    <td>
+                                        <a href="@Url.Action("VerCompromiso", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})" target="_blank" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                        <a href="@Url.Action("EliminarCompromiso", new {InstitucionPostulanteID = Model.InstitucionPostulante.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                    </td>
+                                }
+                                else
+                                {
+
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                }
+
+                            </tr>
+                            @*@{
+                        var num = 1;
+                    }
+                    @foreach (var item in evidencias)
+                    {
+                        if (System.IO.File.Exists(item.RutaEvidencia))
+                        {
+
+                            <tr>
+                                <td>@item.NumeroEvidencia</td>
+                                <td>@item.NombreArchivo</td>
+                                <td>@item.Descripcion</td>
+                                <td>
+                                    <a href="@Url.Action("VerEvidencia", new {id = Model.EjemploID, guiaPostulanteID = Model.GuiaPostulanteID})" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                    <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        else if (item.Descripcion == "Url")
+                        {
+                            <tr>
+                                <td>@item.NumeroEvidencia</td>
+                                <td>@item.NombreArchivo</td>
+                                <td>@item.Descripcion</td>
+                                <td>
+                                    <a href="@item.RutaEvidencia" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                    <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, guiaPostulanteID = Model.GuiaPostulanteID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        num++;
+
+
+                    }*@
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div><!-- End .modal-body -->
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+            <div id="loading" style="text-align: center" hidden><asp:Image ID="loadingImage" runat="server" ImageUrl="~/Images/loading.gif" /></div>
+            <!-- End .modal-footer -->
+        </div><!-- End .modal-content -->
+    </div><!-- End .modal-dialog -->
+</div><!-- End .modal -->
+
+
+
+@section scripts{
+
+    <script src="~/Content/assets/js/twitter/jquery.tweet.min.js"></script>
+    @*<script src="~/Content/assets/js/bootstrap-filestyle.min.js"></script>*@
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+    <script src="~/Content/assets/js/premio.js"></script>
+
+    <script>
+        var retorno = '@ViewBag.retorno';
+        debugger;
+        if (retorno === "success") {
+            Swal.fire(
+                'Remisión realizada!',
+                'Su memoria ha sido remitida para fines de validación',
+                'success'
+            );
+        } else if (retorno === "size") {
+            Swal.fire({
+                title: 'Custom animation with Animate.css',
+                animation: false,
+                customClass: {
+                    popup: 'animated shake'
+                }
+            });
+        } else if (retorno === "empty") {
+            Swal.fire({
+                title: 'Custom animation with Animate.css',
+                animation: false,
+                customClass: {
+                    popup: 'animated shake'
+                }
+            });
+        }
+        $(document).ready(function () {
+
+
+            //MENSAJES
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+            }
+            //END
+
+            //BOTONES FILES
+            $("#memorias").change(function() {
+                filename = this.files[0].name;
+                console.log(filename);
+
+                $("#filename").html(filename);
+            });
+
+            debugger;
+            if ('@TempData["mensaje"]' === "documentoInvalido") {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Documento Inválido',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "institucionNoExiste") {
+                Swal.fire({
+                    type: 'error',
+                    title: 'La institución no existe',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "sizeArchivo") {
+                Swal.fire({
+                    type: 'error',
+                    title: 'El documento muy grande',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "noCarga") {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Documento no pudo cargar',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "cargaCompleta") {
+                Swal.fire({
+                    type: 'success',
+                    title: 'Compromiso Cargado',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "compromisoEliminado") {
+                Swal.fire({
+                    type: 'success',
+                    title: 'Compromiso ha sido eliminado',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["mensaje"]' === "edicionCompleta") {
+                Swal.fire({
+                    type: 'success',
+                    title: 'Actualización Completa!',
+                    html: '@TempData["texto"]'
+                });
+            }
+            if ('@TempData["tipo"]' === "error") {
+                Swal.fire({
+                    type: '@TempData["tipo"]',
+                    title: '@TempData["mensaje"]',
+                    html: '@TempData["texto"]'
+                });
+            }
+        });
+
+
+    </script>
+
+}

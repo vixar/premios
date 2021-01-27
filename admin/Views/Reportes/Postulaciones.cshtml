@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.InstitucionPostulante>
+
+@{
+    ViewBag.Title = "Instituciones y unidades que han postulado por premiación";
+}
+
+<hr />
+<h2><span class="glyphicon glyphicon-user"></span>&nbsp;Instituciones y unidades que han postulado por premiación" : </h2>
+<hr />
+
+
+<br />
+<table>
+    <tr>
+        <th>
+            InstitucionNombre
+        </th>
+        <th>
+            FucionarioResponsable
+        </th>
+        <th>
+            Telefono
+        </th>
+        <th>
+            PuntuacionFinal
+        </th>
+
+        <th>
+            Email
+        </th>
+
+       
+    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.InstitucionNombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.FucionarioResponsable)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Telefono)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Email)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.PuntuacionFinal)
+    </td>
+
+
+
+</tr>
+    }
+
+</table>
+<br />
+<br />

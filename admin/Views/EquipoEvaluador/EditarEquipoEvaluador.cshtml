@@ -1,0 +1,150 @@
+﻿@model ProyectoCalidad.WebUI.Models.EquiposListViewModel
+
+@{
+    ViewBag.Title = "";
+}
+@section Style {
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Asignar Memoria a un Equipo </h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "EquipoEvaluador", new { Id = Model.PremioID})">Equipos </a>
+                </li>
+                <li class="active">
+                    Asignar Memoria
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card-box">
+            @using (Html.BeginForm("EditarEquipoEvaluador", "EquipoEvaluador", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-sm-12 col-xs-12 col-md-12">
+                            <div class="form-horizontal">
+                                <h4> @ViewBag.Title</h4>
+                                <hr />
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                @Html.HiddenFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
+
+                                @*<div class="form-group">
+                                        <div class="col-md-10">
+                                            @Html.HiddenFor(model => model.EquipoEvaluadorID, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.EquipoEvaluadorID, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        @Html.HiddenFor(model => model.PremioID, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.PremioID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @{
+                                    if (Model.Premio != null)
+                                    {
+                                        <div class="form-group">
+                                            @Html.Label("Premio", htmlAttributes: new { @class = "control-label col-md-2" })
+                                            <div class="col-md-10">
+                                                @Html.DisplayFor(model => model.Premio.Descripcion)
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                <div class="form-group">
+                                    @Html.Label("Equipo", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @*@Html.DropDownList("EquipoID", null, htmlAttributes: new { @class = "form-control" })*@
+                                        @Html.DropDownListFor(m => m.EquipoID, new SelectList(Model.Equipos, "EquipoID", "Nombre"), "Seleccionar Equipo", new { @class = "form-control" })
+                                        @*@Html.DropDownListFor(m => m.EvaluadorPremio.EquipoID, new SelectList(Model.Equipos, "EquipoID", "Nombre"), "Seleccionar Equipo", new { @class = "form-control select2" })*@
+
+                                        @Html.ValidationMessageFor(model => model.EquipoID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Postulantes</label>
+                                    <div class="col-md-10 m-t-20">
+
+                                        @Html.DropDownList("ListaPostulantes", new MultiSelectList(Model.Postulantes, "InstitucionPostulanteID", "InstitucionNombre", Model.InstitucionPostulanteID), new { multiple = "multiple", @id = "my_multi_select3" })
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-offset-2 col-md-6">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                        @Html.ActionLink("Regresar", "Index", new { id = Model.PremioID }, new { @class = "btn btn-danger" })
+
+                    </div>
+                </div> <!--end row-->
+
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section scripts{
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+    <script src="~/Scripts/pages/jquery.autocomplete.init.js"></script>
+    <script src="~/Scripts/pages/jquery.form-advanced.init.js"></script>
+
+    @*<script>
+            $(document).ready(function() {
+                $("#my_multi_select3").attr("style", "max-width: 100% !important");
+            });
+        </script>*@
+}
+
+
+
+
+
+
+
+
+

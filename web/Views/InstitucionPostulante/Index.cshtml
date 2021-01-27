@@ -1,0 +1,114 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.InstitucionPremio>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="container">
+    <table class="table table-bordered">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Premio.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Provincia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Documento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Premio.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Provincia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Imagen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Documento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+
+                    @Html.ActionLink("Details", "Perfil", new { id=item.InstitucionID })
+
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+@section scripts
+{
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+
+
+    <script>
+    $(document).ready(function() {
+
+        if ('@TempData["mensaje"]' === 'institucionNoExiste') {
+            Swal.fire({
+                type: 'error',
+                title: 'Ya Existe!',
+                text: 'Una institucíon con este numero de RNC ya existe'
+            });
+        }
+
+        if ('@TempData["mensaje"]' === 'guardado') {
+            Swal.fire({
+                position: 'top',
+                type: 'success',
+                title: 'Nueva Institución Creada',
+                showConfirmButton: false,
+                timer: 1000
+            });
+        }
+    })
+
+    </script>
+}
+

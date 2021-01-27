@@ -1,0 +1,284 @@
+﻿@using ProyectoCalidad.Domain.Utilities
+@model IEnumerable<ProyectoCalidad.Domain.Entities.Jurado>
+@{
+    ViewBag.Title = "Lista de Aspirantes";
+
+    var premioID = ViewBag.premioID;
+    var url = Request.Url;
+
+    MensajesViewModel mensaje = new MensajesViewModel();
+
+    if (TempData["mensaje"] != null)
+    {
+        mensaje = TempData.Get<MensajesViewModel>("mensaje");
+
+    }
+}
+
+
+
+@section Style{
+
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+
+@{
+    @*if (Request.IsAuthenticated)
+        {
+
+            @Html.Action("Breadcrumb", "Home", new { controllerName = "Jurado", viewName = "Sin Asignación", premioID = premioID });
+
+
+        }*@
+}
+
+
+<div class="row">
+    <div class="col-sm-4">
+        <a href="javascript:window.history.back();" class="btn btn-danger btn-bordered waves-effect waves-light m-l-10 m-b-20" data-animation="fadein" data-plugin="custommodal"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+    </div><!-- end col -->
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card-box panel panel-border panel-primary">
+            @*<h4 class="m-t-0 header-title"><b>Buttons example</b></h4>
+                <p class="text-muted font-13 m-b-30">
+                    The Buttons extension for DataTables provides a common set of options, API methods and
+                    styling to display buttons on a page that will interact with a DataTable. The core
+                    library provides the based framework upon which plug-ins can built.
+                </p>*@
+
+            <table id="datatable-buttons" class="table table-striped  table-colored table-info dt-responsive" width="100%">
+                <thead>
+                    <tr>
+                        <th class="text-center">Imagen</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Insititucón</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Teléfono</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                    @{
+                        var num = 0;
+
+                    }
+                    @foreach (var item in Model.Where(u => u.Usuario.IsActive).ToList())
+                    {
+                        num++;
+                        var NombreCompleto = item.Usuario.NombreCompleto(item.Usuario.Nombre, item.Usuario.Apellido);
+                        var imagen = Path.GetFileName(item.Usuario.Imagen);
+
+                        <tr>
+                            <td class="user-box text-center">
+                                @if (imagen != "Default.jpg")
+                                {
+                                    <a href="@Url.Action("PerfilEvaluador", "Account", new {id = item.Usuario.Id, premioID = item.PremioID })" class="dropdown-toggle waves-effect waves-light user-link" data-toggle="dropdown" aria-expanded="true">
+                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img">
+
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="" class="dropdown-toggle waves-effect waves-light user-link" data-toggle="dropdown" aria-expanded="true">
+                                        <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" alt="user-img" class="img-circle user-img thumbnail">
+
+                                    </a>
+                                }
+
+                            </td>
+                            <td class="text-center">
+                                @*@Html.DisplayFor(modelItem => NombreCompleto)*@
+                                @item.Usuario.NombreCompleto(item.Usuario.Nombre, item.Usuario.Apellido)
+                                <p class="text-muted">@Html.Raw((item.Presidente == true && item.Usuario.IsJurado) ? "Pesidente" : " ")</p>
+                            </td>
+                            <td class="text-center">
+                                @Html.DisplayFor(modelItem => item.Usuario.LugarTrabajo)
+                            </td>
+                            <td class="text-center">
+                                @item.Usuario.Email
+                            </td>
+
+                            <td class="text-center">
+                                @item.Usuario.Telefono | @item.Usuario.TelefonoSecundario
+                            </td>
+
+                            <td class="text-center">
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                    <ul class="dropdown-menu" role="menu">
+
+                                        <li>
+                                            <a href="@Url.Action("Perfil", "Account", new{id = item.UsuarioId})">Perfíl</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("CrearEquipoJurado", "JuradoInstitucion", new{id = item.JuradoID})">Asignar Memorias</a>
+                                        </li>
+
+                                        @*<li>
+                                                <a style="cursor: pointer" onclick="activarModal('@item.Usuario.Id', @premioID)">Rechazar</a>
+                                            </li>*@
+                                        @if (User.IsInRole("ADMIN") || User.IsInRole("COORDINADOR-COMITE-INTERNO"))
+                                        {
+                                            <li>
+                                                <a target="_blank" href="@Url.Action("VerCV", "Account", new {userID = item.Usuario.Id, premioID = premioID})">Ver CV</a>
+                                            </li>
+                                            <li>
+                                                <a target="_blank" href="@Url.Action("VerCompromisoEtico", "Account", new {userID = item.Usuario.Id, premioID = premioID})">Ver código ético</a>
+                                            </li>
+                                            @*<li>
+                                                    <a href="@Url.Action("ListaEquiposEvaluadores", "InstitucionPostulante", new {InstitucionPostulanteID = item.InstitucionPostulanteID})"><i class=" mdi mdi-library-plus"></i> Evaluadores</a>
+                                                </li>*@
+                                            <li>
+                                                <a href="@Url.Action("DelegarPresidencia", "Jurado", new{id = item.JuradoID, siglas = item.Premio.TipoPremio.Siglas, url = url.AbsoluteUri})">Delegar Presidencia</a>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+    <script src="~/Scripts/pages/jquery.form-advanced.init.js"></script>
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/pages/jquery.tooltipster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+    <script>
+                // mensajes:
+        if ("@mensaje.Tipo".length > 0) {
+            $.confirm({
+                title: '@mensaje.Titulo',
+                content: '@mensaje.Texto',
+                type: '@mensaje.Tipo',
+                typeAnimated: true,
+                boxWidth: '500px',
+                autoClose: 'cerrar|5000',
+                useBootstrap: false,
+                buttons: {
+                    cerrar: function() {}
+                },
+                onClose: function() {
+                    // before the modal is hidden.
+                    $.ajax({
+                        type: 'get',
+                        url: '/sgp_admin/Home/ClearTempData',
+                        success: function() {
+
+                        }
+                    });
+                }
+            });
+        }
+
+         $(document).ready(function () {
+
+
+            // Tooltips Initialization
+
+
+            $('#datatable').dataTable({
+
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+    </script>
+
+}

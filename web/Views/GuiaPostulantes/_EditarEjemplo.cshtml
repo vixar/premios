@@ -1,0 +1,459 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.Domain.Entities.GuiaPostulantes
+
+
+
+@{
+    /**/
+
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    var evidencias = ViewBag.evidencias;
+
+    var institucion = ViewBag.ip;
+
+
+}
+
+@using (Html.BeginForm("EditarGuiaPostulante", "GuiaPostulantes", FormMethod.Post, new { id = "form-ejemploEdit", @class = "full-form", enctype = "multipart/form-data" }))
+{
+    @Html.Hidden("GuiaPostulanteID", Model.GuiaPostulanteID);
+    @Html.HiddenFor(model => model.PremioID);
+    @Html.HiddenFor(model => model.InstitucionPostulanteID);
+    @Html.HiddenFor(model => model.GuiaID);
+    @Html.HiddenFor(model => model.CriterioID);
+    @Html.HiddenFor(model => model.CriterioDescripcion);
+    @Html.HiddenFor(model => model.CriterioCodigo);
+    @Html.HiddenFor(model => model.CriterioNombre);
+    @Html.HiddenFor(model => model.CriterioPonderacion);
+    @Html.HiddenFor(model => model.SubCriterioID);
+    @Html.HiddenFor(model => model.SubCriterioDescripcion);
+    @Html.HiddenFor(model => model.SubCriterioCodigo);
+    @Html.HiddenFor(model => model.SubCriterioPonderacion);
+    @Html.HiddenFor(model => model.EjemploID);
+    @Html.HiddenFor(model => model.EmeploDescripcion);
+    @Html.HiddenFor(model => model.EmeploCodigo);
+
+    if (user.Role == "EVALUADOR-INTERNO" ||
+         user.Role == "EVALUADOR-EXTERNO")
+    {
+        @Html.HiddenFor(model => model.PuntosFuertes);
+        @Html.HiddenFor(model => model.AreadeMejoras);
+        @Html.HiddenFor(model => model.PuntuacionCoordinador);
+        @Html.HiddenFor(model => model.ComentarioCoordinadorEvaluadores);
+    }
+    if (user.Role == "POSTULANTE")
+    {
+        @Html.HiddenFor(model => model.PuntuacionEvaluador);
+        @Html.HiddenFor(model => model.ComentarioEvaluador);
+        @Html.HiddenFor(model => model.PuntuacionCoordinador);
+        @Html.HiddenFor(model => model.ComentarioCoordinadorEvaluadores);
+
+    }
+    if (user.Role == "COORDINADOR-EVALUADOR-EXTERNO")
+    {
+        @Html.HiddenFor(model => model.PuntosFuertes);
+        @Html.HiddenFor(model => model.AreadeMejoras);
+        @Html.HiddenFor(model => model.PuntuacionEvaluador);
+        @Html.HiddenFor(model => model.ComentarioEvaluador);
+    }
+
+
+    @*<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><i class="fa fa-times-circle"></i></span>
+        </button>
+        <h4 class="modal-title">Completar Ejemplo</h4>
+    </div>
+    <div class="modal-body">*@
+        <div class="form-horizontal">
+
+            <div class="card card-primary card-border">
+
+                @*INICIO: Encabezado del formulario*@
+                <div class="card-heading">
+                    <h2 class="card-title">Ejemplo</h2>
+                    <div class="space"></div>
+                </div>
+                @*INICIO: Encabezado del formulario*@
+
+
+                @*INICIO: Formulario*@
+
+                <div class="card-box">
+                <div class="col-md-12">
+
+
+                    <b> @Model.EmeploCodigo - @Model.EmeploDescripcion </b>
+                </div>
+                <br/>
+                <br/>
+
+                    @if (user.Role == "POSTULANTE")
+                    {
+                        <div class="form-group">
+                            <i class="mdi mdi-eye"></i><label for="Codigo" class="col-md-3 control-label">Punto Fuerte <i class="fa fa-asterisk" style="font-size: 10px;"></i></label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(x => x.PuntosFuertes, new { @class = "form-control", @placeholder = "Redacte su respuesta" })
+                                <div id="charNum" class="text-muted" style="margin-top: -20px;"><small>Caracteres restantes:</small> 1000</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Nombre" class="col-md-3 control-label">Área de Mejora</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(x => x.AreadeMejoras, new { @class = "form-control", @placeholder = "Redacte su respuesta" })
+                            </div>
+                        </div>
+                        <div id="mensaje">
+                        </div>
+                        <div id="evidencias">
+                            @*style="display: none"*@
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="Descripcion" class="col-md-3 control-label">Evidencias</label>
+                                    <label for="Descripcion" class="col-md-1 control-label">1.</label>
+                                    <div class="col-md-2">
+
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia1" value="documento" id="documento1" checked="">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span>Documento</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia1" value="enlace" id="enlace1">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span>Enlace URL</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaDocumento1"  style="margin-top: 22px;">
+                                        @*display:none*@
+                                        <input class="form-control FilUploader filestyle" type="file" id="eDocumento1" data-buttonText="Find file" name="EvidenciaDocumento" value="">
+                                        <input class="form-control filestyle" type="hidden" data-buttonText="Find file" name="tipoDocumento" value="1">
+
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaEnlace1"  style="margin-top: 22px;">
+                                        @*display:none*@
+                                        <input class="form-control" type="url" id="eEnlace1" pattern="https?://.+" placeholder="https://"
+                                               name="EvidenciaEnlace" value=""
+                                               oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div style="border-bottom:double">
+                                    <div class="row">
+                                        <label for="Descripcion" class="col-md-3 control-label"></label>
+                                        <label for="Descripcion" class="col-md-1 control-label">2.</label>
+                                        <div class="col-md-2">
+                                            <div class="radio">
+                                                <label class="custom-radio-wrapper">
+                                                    <span class="custom-radio-container">
+                                                        <input type="radio" name="evidenia2" value="documento" id="documento2">
+                                                        <span class="custom-radio-icon"></span>
+                                                    </span>
+                                                    <span>Documento</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="radio">
+                                                <label class="custom-radio-wrapper">
+                                                    <span class="custom-radio-container">
+                                                        <input type="radio" name="evidenia2" value="enlace" id="enlace2">
+                                                        <span class="custom-radio-icon"></span>
+                                                    </span>
+                                                    <span>Enlace URL</span>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-5" id="evidenciaDocumento2"  style="margin-top: 22px;">
+                                        @*display:none*@
+                                            <input class="form-control FilUploader filestyle" type="file" id="eDocumento2" data-buttonText="Find file" name="EvidenciaDocumento" value="">
+                                            <input class="form-control filestyle" type="hidden" data-buttonText="Find file" name="tipoDocumento" value="2">
+
+                                        </div>
+                                        <div class="col-md-5" id="evidenciaEnlace2"  style="margin-top: 22px;">
+                                        @*display:none*@
+                                            <input class="form-control" type="url" id="eEnlace2" pattern="https?://.+"
+                                                   placeholder="https://" name="EvidenciaEnlace" value=""
+                                                   oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="Descripcion" class="col-md-3 control-label"></label>
+                                    <label for="Descripcion" class="col-md-1 control-label">3.</label>
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia3" value="documento" id="documento3">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span>Documento</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia3" value="enlace" id="enlace3">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span>Enlace URL </span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaDocumento3" style="margin-top: 22px;">
+                                        @*display:none*@
+                                        <input class="form-control FilUploader filestyle" type="file" id="eDocumento3" data-buttonText="Find file" name="EvidenciaDocumento" value="">
+                                        <input class="form-control filestyle" type="hidden" data-buttonText="Find file" name="tipoDocumento" value="3">
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaEnlace3" style="margin-top: 22px; display:none">
+                                        <input class="form-control" type="url" id="eEnlace3" pattern="https?://.+"
+                                               placeholder="https://" name="EvidenciaEnlace" value=""
+                                               oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    }
+
+                    @if (user.Role == "EVALUADOR-INTERNO" ||
+                         user.Role == "EVALUADOR-EXTERNO" ||
+                         user.Role == "COORDINADOR-EVALUADOR-EXTERNO"
+                         )
+                    {
+                        <div class="form-group">
+                            <label for="Codigo" class="col-md-3 control-label">Comentario</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.ComentarioEvaluador, new { @class = "form-control", @placeholder = "Codigo del Criterio." })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Nombre" class="col-md-3 control-label">Puntuación</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.PuntuacionEvaluador, new { @class = "form-control", @placeholder = "Nombre del Criterio." })
+                            </div>
+                        </div>
+                    }
+
+                    @* EVIDENCIAS SUMINISTRADAS *@
+                    <div class="panel-group" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-custom">
+                            <div class="panel-heading" style=" " role="tab" id="headingSeven">
+                                <h2 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" style="font-size: 15px; background-color: #00ab66; text-transform: uppercase; font-weight:bold">
+                                        Relación de evidencias Suministradas
+                                    </a>
+                                </h2>
+                            </div><!-- End .panel-heading -->
+                            <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                                <div class="panel-body ">
+
+                                    @* Tabla de evidencias *@
+
+                                    <div class="card-box" id="listaEvidencia">
+                                        @*style="display: none"*@
+
+                                        <div class="col-md-12">
+                                        </div>
+
+                                        <table class="table table-bordered table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nombre Evidencia</th>
+                                                    <th>Tipo Documento</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    var urlevidencia = Server.MapPath("~/Evidencias/");  /*+ institucion.Nombre + "/"*/
+                                                }
+                                                @foreach (var evidencia in ViewBag.listaEvidencias)
+                                                {
+                                                    if (System.IO.File.Exists(urlevidencia + evidencia.NombreArchivo) && @evidencia.Estado != "eliminado")
+                                                    {
+                                                        <tr id="id_@evidencia.EvidenciaID">
+                                                            <td>@evidencia.NombreArchivo</td>
+                                                            <td>@evidencia.Descripcion</td>
+                                                            <td>
+                                                                <button type="submit" class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes", new {evidenciaID = evidencia.EvidenciaID, guiaPostulanteID = evidencia.GuiaPostulanteID, ejemploID = Model.EjemploID})', 'id_@evidencia.EvidenciaID')">
+                                                                    Asignar
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+
+                                                }
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div><!-- End .panel-body -->
+                            </div><!-- End .panel-collapse -->
+                        </div>
+                    </div>
+
+
+                    <hr />
+                    <div class="panel panel-default">
+                        <h3 style="text-transform:uppercase">Evidencias cargadas</h3>
+                        <table class="table table table-hover m-0" id="table">
+                            <thead>
+                                <tr>
+                                    @*<th>#</th>*@
+                                    <th>Nombre de archivo</th>
+                                    <th style="width: 30px">Tipo Documento</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var num = 1;
+                                    var url = Server.MapPath("~/Evidencias/" ) /*+ institucion.Nombre + "/"*/
+                                }
+                                @foreach (var item in evidencias)
+                                {
+                                    if (System.IO.File.Exists(url + item.RutaEvidencia) && item.Estado != "eliminado")
+                                    {
+
+                                        <tr>
+                                            @*<td>@item.EvidenciaID</td>*@
+                                            <td>@item.NombreArchivo</td>
+                                            <td>@item.Descripcion</td>
+                                            <td>
+                                                <a href="@Url.Action("VerEvidencia", new {evidenciaID = item.EvidenciaID})" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                                <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    else if (item.Descripcion == "Url")
+                                    {
+                                        <tr>
+                                            <td>@item.NombreArchivo</td>
+                                            <td>@item.Descripcion</td>
+                                            <td>
+                                                <a href="@item.RutaEvidencia" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                                <a href="@Url.Action("EliminarEvidencia", new {evidenciaID = item.EvidenciaID, InstitucionPostulanteID = Model.InstitucionPostulanteID})" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    num++;
+
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <div class="">
+                        <input class="btn btn-primary active" id="btnSave" type="button" value="Guardar" />
+                        <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+
+                @*FIN: Formulario*@
+
+            </div>
+
+        </div>
+    @*</div>*@
+}
+
+@section scripts
+{
+
+    <script src="~/Content/assets/js/plugins/bootstrap-filestyle.min.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+            $(":file").filestyle({ buttonText: "Seleccionar" });
+            var documento = $("#documento");
+            console.log("input ", documento);
+
+
+        });
+
+        $(function () {
+            // Wrap your File input in a wrapper <div>
+            var wrapper = $('<div/>').css({ height: 0, width: 0, 'overflow': 'hidden' });
+            var fileInput = $(':file').wrap(wrapper);
+
+            // When your file input changes, update the text for your button
+            fileInput.change(function () {
+                $this = $(this);
+                // If the selection is empty, reset it
+                if ($this.val().length == 0) {
+                    $('#file').text("Your Text to Choose a File Here!");
+                } else {
+                    $('#file').text($this.val());
+                }
+            })
+
+            // When your fake button is clicked, simulate a click of the file button
+            $('#file').click(function () {
+                fileInput.click();
+            }).show();
+        });
+
+        $("input[id='carta']").change(function (e) {
+            var $this = $(this);
+            $("#filename").html($this.val().split('\\').pop());
+            $("#filename").change().html(function () {
+                console.log("donde estoy: ", $(this));
+                $("#filename").html($this.val().split('\\').pop()).css({
+                    "font-weight": "bolder"
+                });
+            });
+        });
+    </script>
+
+    @*<script src="~/Content/assets/js/plugins/bootstrap-filestyle.min.js"></script>
+        <script>
+            $(":file").filestyle({ buttonText: "Seleccionar Memoria" });
+
+        </script>*@
+}

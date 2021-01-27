@@ -1,0 +1,29 @@
+﻿@model ProyectoCalidad.Domain.Entities.InstitucionPublica
+
+@if (Model != null)
+{
+    <div class="row animated fadeIn fast">
+        <div class="col-sm-12">
+            <h2></h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.Nombre</td>
+                            <td>@Model.Direccion</td>
+                            <td>@Model.Telefono</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div><!-- End .table-responsive -->
+        </div><!-- End .col-sm-12 -->
+    </div>
+}

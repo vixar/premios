@@ -1,0 +1,395 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.ApplicationUser>
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Evaluadores </h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="#">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#">Cuentas</a>
+                    </li>
+                    <li class="active">
+                        Evaluadores
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+        <div class="col-sm-4">
+            <a href="#custom-modal" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20" data-animation="fadein" data-plugin="custommodal"
+               data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add Member</a>
+        </div><!-- end col -->
+    </div>
+    <!-- end row -->
+
+
+    <div class="row">
+        @{
+            int cnt = 0;
+
+            
+
+            foreach (var item in Model)
+            {
+                var filename = System.IO.Path.GetFileName(item.Imagen);
+
+                if (cnt++ % 3 == 0)
+                {
+                    @:<div class="row"></div>
+                }
+
+                <div class="col-md-4">
+                    <div class="text-center card-box">
+                        <div class="dropdown pull-right">
+                            <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                                <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Edit</a></li>
+                                <li><a href="#">Delete</a></li>
+                                <li><a href="#">Block</a></li>
+                            </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="member-card">
+                            <div class="thumb-xl member-thumb m-b-10 center-block">
+                                <img src="@Url.Content("~/Usuarios/Imagenes/" + item.NumeroDocumentoIdentidad + "/" + filename)" class="img-circle img-thumbnail" alt="profile-image">
+                                <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                            </div>
+
+                            <div class="">
+                                <h4 class="m-b-5">@item.Nombre @item.Apellido</h4>
+                                <p class="text-muted">@item.Email<span> | </span> <span> <a href="#" class="text-pink">@item.Role</a> </span></p>
+                            </div>
+
+                            <p class="text-muted">@item.Genero<span> | </span> <span> <a href="#" class="text-pink">@item.Telefono</a> </span></p>
+
+                            <a href="@Url.Action("SendEmail", "SendEmail")" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Enviar Invitación</a>
+
+                            <ul class="social-links list-inline m-t-30">
+                                <li>
+                                    <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                                </li>
+                                <li>
+                                    <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                                </li>
+                                <li>
+                                    <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div> <!-- end col -->
+            }
+        @:</div>
+        }
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-1.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-muted">Email: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-2.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-muted" title="unverified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-muted">Emairl: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-3.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-muted">Email: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+    
+    <!-- end row -->
+
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-4.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-muted" title="unverified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-mute"> Email: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-5.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-muted">Email: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="dropdown pull-right">
+                    <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                        <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Delete</a></li>
+                        <li><a href="#">Block</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        <img src="assets/images/users/avatar-6.jpg" class="img-circle img-thumbnail" alt="profile-image">
+                        <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">Mark A. McKnight</h4>
+                        <p class="text-muted">Email: webdesigner <span> | </span> <span> <a href="#" class="text-pink">websitename.com</a> </span></p>
+                    </div>
+
+                    <p class="text-muted font-13">
+                        Hi I'm Johnathn Deo,has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type.
+                    </p>
+
+                    <button type="button" class="btn btn-info btn-rounded waves-effect m-t-10 waves-light">Send Message</button>
+
+                    <ul class="social-links list-inline m-t-30">
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+
+
+</div> <!-- container -->

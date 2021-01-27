@@ -1,0 +1,99 @@
+﻿@model ProyectoCalidad.Models.MailModel
+@{
+    ViewBag.Title = "Contacto";
+  
+}
+
+<h2><span class="glyphicon glyphicon-phone-alt"></span>&nbsp;M&eacute;todos de Contacto</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-earphone"></span>&nbsp;Tel&eacute;fonos</h3>
+    </div>
+    <div class="panel-body">
+        <p>
+            Oficina Princial: 809-682-3298 <br />
+            Desde el interior sin cargos: 809-200-3297 <br />
+            Fax: 809-686-6652
+        </p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span>&nbsp;Correo Electrónico</h3>
+    </div>
+    <div class="panel-body">
+        <p>
+            Informaci&oacute;n MAP: <a href="mailto:info@map.gob.do">info@map.gob.do</a> <br />
+            
+        </p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-home"></span>&nbsp;Direcci&oacute;n</h3>
+    </div>
+    <div class="panel-body">
+        <p>
+            Av. 27 de Febrero No. 419, sector El Millón II.<br />
+            Santo Domingo, Rep&uacute;blica Dominicana <br />
+            Horario de Trabajo: De 8:00 a.m. a 4 p.m. de Lunes a Viernes
+        </p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-send"></span>&nbsp;Formulario de contacto</h3>
+    </div>
+    <div class="panel-body">
+
+        @*@using (Html.BeginForm("Edit", "Organismo", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))*@
+
+        @using (Html.BeginForm("Contact", "Home", FormMethod.Post, new { @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.ValidationSummary()
+            @*@Html.HiddenFor(model => model.To)*@
+            @*@Html.HiddenFor(model => model.From)*@
+            @Html.HiddenFor(m => m.From, new { Value = "info@map.gob.do" })
+            
+
+            <div class="form-group">
+                <label for="Nombre" class="col-sm-2 control-label">Nombre</label>
+                <div class="col-sm-10">
+                    @*<input type="text" class="form-control" id="inputNombre" placeholder="Nombres" maxlength="75" autocomplete="off" />*@
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @placeholder = "Su Nombre" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Correo" class="col-sm-2 control-label">Correo electrónico</label>
+                <div class="col-sm-10">
+                    @*<input type="text" class="form-control" id="inputCorreoElectronico" placeholder="ejemplo@ejemplo.com" maxlength="150" autocomplete="off" />*@
+                    @Html.TextBoxFor(model => model.Correo, new { @class = "form-control", @placeholder = "ejemplo@ejemplo.com" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Nombre" class="col-sm-2 control-label">Asunto</label>
+                <div class="col-sm-10">
+                    @*<input type="text" class="form-control" id="inputNombre" placeholder="Nombres" maxlength="75" autocomplete="off" />*@
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", @placeholder = "Asunto" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Mensaje" class="col-sm-2 control-label">Mensaje</label>
+                <div class="col-sm-10">
+                    @*<textarea class="form-control" id="inputMesaje" placeholder="Mensaje de contacto" maxlength="500" rows="5"></textarea>*@
+                    @Html.TextAreaFor(model => model.Body, 4, 55, new { @class = "form-control", @placeholder = "Mensaje a enviar" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Enviar mensaje</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

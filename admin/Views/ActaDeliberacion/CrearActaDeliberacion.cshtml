@@ -1,0 +1,99 @@
+﻿
+@using ProyectoCalidad.WebUI.Models
+@model ProyectoCalidad.Domain.Entities.ReporteActaDeliberacion
+
+@{
+    ViewBag.Title = "CrearActaDeliberacion";
+
+    Mensajes mensaje = new Mensajes();
+
+    if (ViewBag.mensaje != null)
+    {
+        mensaje = ViewBag.mensaje;
+    }
+
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">Formulario</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    Agregar
+                </li>
+                <li>
+                    <a href="#">Actas</a>
+                </li>
+                <li class="active">
+                    Acta
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20 hidden-print"
+   data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i> Regresar</a>
+
+
+
+<h4> Acta de Deliberación</h4>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card-box">
+            @using (Html.BeginForm("EditarActaDeliberaion", "ActaDeliberacion", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(model => model.PremioID)
+                @Html.HiddenFor(model => model.Creacion)
+                @Html.HiddenFor(model => model.Modificaicon)
+                @Html.HiddenFor(model => model.ReporteActaDeliberacionID)
+
+                <div class="form-group row">
+                    <label class="col-md-2 control-label">Comentario</label>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.Comentario, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-2 control-label"> Acta de Deliberación</label>
+                    <div class="col-md-10">
+                        <input type="file" name="acta" id="acta" class="form-control filestyle" data-buttonBefore="true" data-text="Find file" />
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-2"></div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+
+            }
+
+        </div>
+
+
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+
+    <script>
+    if("@mensaje.tipo".length > 0) {
+        Swal.fire({
+            title: "@mensaje.mensaje",
+            html: "@mensaje.texto",
+            type: "@mensaje.tipo"
+        });
+    </script>
+
+}
+

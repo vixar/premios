@@ -1,0 +1,270 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@using ProyectoCalidad.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model ProyectoCalidad.Domain.Entities.GuiaPostulantePuntuacion
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    Mensajes mensaje = ViewBag.mensaje;
+
+    GuiaPostulantes gp = ViewBag.criterio;
+
+    //var evidencia = Model.Evidencia;
+    //var e = Path.GetFileName(evidencia);
+}
+@section style{
+    <style>
+        .aumentarTexto {
+            font-size: 18px;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("EditarGuiaPostulantePuntuacion", "GuiaPostulantePuntuacion", new { criterioSelecionado = gp.CriterioID.ToString(), vista = "POST" }, FormMethod.Post, new { id = "form-accountprofileedit", @class = "full-form", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.InstitucionPostulanteID);
+    @Html.HiddenFor(model => model.EquipoEvaluadorID);
+    @Html.HiddenFor(model => model.GuiaPostulantePuntuacionID);
+    @Html.HiddenFor(model => model.SubCriterioID);
+    @Html.Hidden("FechaHora", DateTime.Now);
+    @Html.HiddenFor(model => model.EvaluadorID);
+    @Html.HiddenFor(model => model.NombreEvaluador);
+    @Html.HiddenFor(model => model.Estado);
+    @Html.HiddenFor(model => model.PuntuacionP);
+    @Html.HiddenFor(model => model.PuntuacionD);
+    @Html.HiddenFor(model => model.PuntuacionC);
+    @Html.HiddenFor(model => model.PuntuacionA);
+    @Html.HiddenFor(model => model.EquipoID);
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Informaciones para puntuación</h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">Guía Postulante</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Evaluador")">Evaluación </a>
+                    </li>
+                    <li class="active">
+                        Evaluación Post-Visita
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Evaluación: @ViewBag.NombreIp</h3>
+
+
+    <div class="">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card-box">
+                        <div class="panel panel-primary panel-border">
+
+                            @*INICIO: Encabezado del formulario*@
+
+                            @*INICIO: Encabezado del formulario*@
+
+                            @*INICIO: Formulario*@
+
+                            <div class="" style="padding: 15px">
+
+                                <table class="table table-bordered ">
+                                    <thead class="bg-primary">
+                                        <tr>
+                                            <th>Ejemplo</th>
+                                            <th>Puntos Fuertes</th>
+                                            <th>Áreas de Mejora</th>
+                                            @*<th>Puntos para visitas</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            List<ComentariosEvaluadoresViewModel> listaComentarios = ViewBag.comentarios;
+                                        }
+                                        @if (listaComentarios.Count != 0)
+                                        {
+                                            foreach (var item in listaComentarios)
+                                            {
+                                                <tr>
+                                                    <td style="width: 33%; text-align: justify">@item.Ejemplo.Codigo - @item.Ejemplo.Descripcion</td>
+                                                    <td>@Html.Raw(item.Fortalezas)</td>
+                                                    <td>@Html.Raw(item.InformRetorno)</td>
+                                                    @*<td>@Html.Raw(item.PuntoDeVista)</td>*@
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            <tr>
+                                                <td colspan="4" class="text-center">
+                                                    No hay información para mostrar
+
+                                                </td>
+
+                                            </tr>
+
+                                        }
+
+
+                                    </tbody>
+
+                                </table>
+
+                                <div class="col-md-12">
+                                    @*<b> @ViewBag.subcriterio.SubCriterioCodigo - @ViewBag.subcriterio.SubCriterioDescripcion</b>*@
+                                    <p class="aumentarTexto"><b> @Model.SubCriterios.Codigo - @Model.SubCriterios.Descripcion</b></p>
+                                </div>
+                                <hr />
+                                <table class="table table-bordered table-striped table-warning">
+                                    <thead class="bg-success">
+                                        <tr>
+                                            @if (gp.CriterioCodigo == "6" || gp.CriterioCodigo == "7" || gp.CriterioCodigo == "8" || gp.CriterioCodigo == "9")
+                                            {
+                                                <th class="text-center aumentarTexto">
+                                                    TENDENCIAS
+                                                </th>
+                                                <th class="text-center aumentarTexto">
+                                                    OBJETIVOS
+                                                </th>
+
+                                                @*<th class="text-center">
+                                                        Puntuación C
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Puntuación A
+                                                    </th>*@
+                                            }
+                                            else
+                                            {
+                                                <th class="text-center aumentarTexto">
+                                                    P
+                                                </th>
+                                                <th class="text-center aumentarTexto">
+                                                    D
+                                                </th>
+
+                                                <th class="text-center aumentarTexto">
+                                                    C
+                                                </th>
+                                                <th class="text-center aumentarTexto">
+                                                    A
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            @if (gp.CriterioCodigo == "6" || gp.CriterioCodigo == "7" || gp.CriterioCodigo == "8" || gp.CriterioCodigo == "9")
+                                            {
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionPPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionDPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionPPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionDPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionCPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+
+                                                </td>
+                                                <td>
+                                                    @Html.TextBoxFor(x => x.PuntuacionAPostVisita, new { @class = "form-control", @type = "number", @placeholder = "0 a 100" })
+
+                                                </td>
+                                            }
+
+
+                                        </tr>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+
+                                @*<div class="form-group">
+                                        <label for="Nombre" class="col-md-3 control-label">P</label>
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(x => x.PuntuacionP, new { @class = "form-control", @placeholder = "0 a 100" })
+                                        </div>
+                                        <label for="Nombre" class="col-md-3 control-label">D</label>
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(x => x.PuntuacionD, new { @class = "form-control", @placeholder = "0 a 100" })
+                                        </div>
+                                        <label for="Nombre" class="col-md-3 control-label">C</label>
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(x => x.PuntuacionC, new { @class = "form-control", @placeholder = "0 a 100" })
+                                        </div>
+                                        <label for="Nombre" class="col-md-3 control-label">A</label>
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(x => x.PuntuacionA, new { @class = "form-control", @placeholder = "0 a 100" })
+                                        </div>
+                                    </div>*@
+
+                                <hr />
+
+                                <div class="form-group">
+                                    <label for="Comentarios" class="col-md-3 control-label"><i class="mdi mdi-asterisk" style="color:red"></i> Comentarios Finales del Subcriterio </label>
+                                    <div class="col-md-9">
+
+                                        @Html.TextAreaFor(x => x.Comentario, new { @class = "form-control", @placeholder = "Comentario" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer" style="padding: 15px">
+                                <input class="btn btn-primary" id="btsave" type="submit" value="Guardar" />
+                                <button class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            </div>
+
+                            @*FIN: Formulario*@
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script>
+        if("@mensaje.tipo".length > 0) {
+            Swal.fire({
+                title: "@mensaje.mensaje",
+                html: "@Html.Raw(mensaje.texto)",
+                type: "@mensaje.tipo"
+            });
+        }
+    </script>
+}

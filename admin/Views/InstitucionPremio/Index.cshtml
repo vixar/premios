@@ -1,0 +1,84 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.InstitucionPremio>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Instituciones inscritas en premios </h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="#">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="#">Premio</a>
+                    </li>
+                    <li class="active">
+                        Instituciones
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+    <!-- end row -->
+    <div class="row">
+        <div class="col-md-8">
+
+            @{
+                foreach (var item in Model)
+                {
+                    <div class="property-card property-horizontal">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="property-image" style="background: url('/images/properties/1.jpg') center center / cover no-repeat;">
+                                    <span class="property-label label label-danger">Activo</span>
+                                </div>
+                            </div>
+                            <!-- /col 4 -->
+                            <div class="col-sm-8">
+                                <div class="property-content">
+                                    <div class="listingInfo">
+                                        <div class="">
+                                            <h4 class="text-success m-t-0">@item.PremioID</h4>
+                                        </div>
+                                        <div class="">
+                                            <h3><a href="#" class="text-dark">@item.Nombre</a></h3>
+                                            <p class="text-muted"><i class="mdi mdi-map-marker-radius m-r-5"></i>@item.Provincia</p>
+
+                                            <p class="font-13 text-muted m-b-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit Aliquam gravida magna et fringilla convallis. Pellentesque habitant morb</p>
+                                        </div>
+                                    </div>
+                                    <div class="property-action">
+                                        @*<a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="280 square feet"><i class="mdi mdi-view-grid"></i><span>280</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="4 Bedroom House"><i class="mdi mdi-hotel"></i><span>4</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="2 Parking space"><i class="mdi mdi-car"></i><span>2</span></a>
+                                            <a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="24h Electricity"><i class="mdi mdi-battery-charging-80"></i><span> 24H</span></a>*@
+                                        <div class="pull-right">
+                                            <a href="@Url.Action("Perfil", "InstitucionPremio", new{id = item.UserID})" class="btn btn-default"><i class="fa fa-eye"></i><span>ver</span></a>
+                                        </div>
+                                    </div>
+                                    <!-- end. Card actions -->
+                                </div>
+                            </div>
+                            <!-- /col 8 -->
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                }
+            }
+
+            <!-- /inner row -->
+        </div>
+
+
+    </div>
+
+</div>

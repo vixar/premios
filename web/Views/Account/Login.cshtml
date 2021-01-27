@@ -1,0 +1,197 @@
+﻿@using WebPublico.WebUI.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Inicio de sesión";
+    var mensaje = ViewBag.mensaje;
+}
+
+<div class="main">
+    <div class="page-header larger parallax custom" style="background-image:url(assets/images/page-header-bg.jpg)">
+        <div class="container">
+            <h1>Inicio de sesión</h1>
+
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 ">
+                @using (Html.BeginForm("PreLogin", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", required = "required" })
+                    </div>
+                    <!-- End .from-group -->
+
+                    @*<div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <label>Contraseña </label>
+
+                            </div>
+                            <div class="col-xs-6">
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password pull-right"></span>
+                            </div>
+
+                        </div>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", required = "required", id = "toggle-password" })
+                    </div>*@
+                    <!-- End .from-group -->
+
+                    @*<div class="row">
+                            <div class="col-xs-6 mt10-r">
+                                <div class="checkbox mb25">
+                                    <label class="custom-checkbox-wrapper">
+                                        <span class="custom-checkbox-container">
+                                            <input type="checkbox" value="true">
+                                            <span class="custom-checkbox-icon"></span>
+                                        </span>
+                                        <small>Remember me</small>
+                                    </label>
+                                </div><!-- End .checkbox -->
+                            </div><!-- End .col-xs-6 -->
+
+                            <div class="col-xs-6 mt10-r text-right">
+                                <a href="#"><small>Recover Password?</small></a>
+                            </div><!-- End .col-xs-6 -->
+                        </div>*@
+                    <!-- End .row -->
+
+                    <button class="btn btn-custom min-width">Iniciar Sesión</button>
+                    <a href="javascript:window.history.back();" class="btn btn-default min-width">Regresar</a>
+
+                }
+            </div><!-- End .col-sm-6 -->
+
+            <div class="clearfix mb40 visible-xs"></div><!--margin -->
+            @*<div class="col-sm-6 ">
+                    <h2 class="mb30">Register</h2>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex rerum consectetur, aspernatur dolore optio, dolor mollitia temporibus ad repellat perspiciatis obcaecati eaque qui similique nemo voluptas repellendus. Ex, magni. Id.</p>
+                    <p>Repellat quo vero fugiat, assumenda iste. Molestiae corporis provident, quae recusandae ipsam optio nostrum nam, eveniet, maxime, consequuntur reprehenderit libero a rem repellendus excepturi eum est. Doloribus at officiis animi!</p>
+
+                    <div class="mb10"></div><!-- margin -->
+
+                    <a href="#" class="btn btn-black min-width">Register Now</a>
+                </div><!-- End .col-sm-6 -->*@
+        </div><!-- End .row -->
+    </div><!-- End .container -->
+
+    <div class="mb85"></div><!-- margin -->
+</div><!-- End .main -->
+@*<div class="row">
+        <div class="col-md-8">
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Use a local account to log in.</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Log in" class="btn btn-default" />
+                        </div>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Register as a new user", "Register")
+                    </p>
+                    @* Enable this once you have account confirmation enabled for password reset functionality
+                        <p>
+                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                        </p>
+                }
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+            </section>
+        </div>
+    </div>*@
+
+@section Scripts {
+
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.8.5/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            //MENSAJES  
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    title: "@mensaje.mensaje",
+                    html: "@mensaje.texto",
+                    type: "@mensaje.tipo"
+                });
+            }
+            //END
+
+            if ('@mensaje.tipo'.length > 0) {
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+            }
+
+            $(".toggle-password").click(function () {
+
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $("#toggle-password");
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+
+            var msg = '@ViewBag.noexiste';
+            debugger;
+            if (msg) {
+                Swal.fire({
+                    title: "No Existe",
+                    text: "Revise el correo electrónico y la contraseña",
+                    type: "error",
+                    confirmButtonText: 'Ok'
+                });
+
+            }
+
+            if ('@TempData["mensaje"]' === "error") {
+                Swal.fire({
+                    title: "Sesión no iniciada",
+                    html: '@TempData["texto"]',
+                    type: "error"
+                });
+            }
+        })
+
+    </script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.EvaluadorPremio>
+
+@{
+    ViewBag.Title = "EqupipoPostulaciones";
+}
+
+@foreach (var item in Model)
+{
+    <div class="col-md-6">
+        <div class="custom-dd dd" id="nestable_list_2">
+            <ol class="dd-list">							
+                <li class="dd-item" data-id="15"><button data-action="collapse" type="button" style="">Collapse</button><button data-action="expand" type="button" style="display: none;">Expand</button>
+                    <div class="dd-handle">
+                        @item.Premio.Descripcion
+                    </div>
+                    @foreach (var i in ViewBag.integrantes)
+                    {
+                        <ol class="dd-list" style="">
+                            <li class="dd-item" data-id="16">
+                                <div class="dd-handle">
+                                    @i.NombreCompleto(i.Nombre, i.Apellido)
+                                </div>
+                            </li>
+                        </ol>
+                    }
+                    
+                </li>
+            </ol>
+        </div>
+    </div>
+}
+

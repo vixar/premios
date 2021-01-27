@@ -1,0 +1,275 @@
+﻿@using System.ServiceModel.Activities
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Migrations
+@using ProyectoCalidad.WebUI.Models
+@using ApplicationUser = ProyectoCalidad.Domain.Entities.ApplicationUser
+@model IEnumerable<ProyectoCalidad.Domain.Entities.EvaluadorPremio>
+
+@{
+    ViewBag.Title = "Lista de Evaluadores";
+
+    var ep = ViewBag.model as EvaluadorViewModel;
+    var equipoEvaluadorID = ViewBag.equipoEvaluador.EquipoEvaluadorID;
+
+    
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+
+}
+
+@section style{
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+}
+
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-title-box">
+            <h4 class="page-title">@ViewBag.Title - Equipo: @ep.Descripcion</h4>
+            <ol class="breadcrumb p-0 m-0">
+                <li>
+                    <a href="#">Inicio</a>
+                </li>
+                <li>
+                    <a href="#">Evaluadores </a>
+                </li>
+                <li class="active">
+                    Listado
+                </li>
+            </ol>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+
+<div class="row">
+    <div class="col-sm-4">
+        @{
+            var cantidad = Model.Count();
+        }
+        @if (cantidad != 0)
+        {
+            var usuario = userManager.FindById(User.Identity.GetUserId());
+
+            <a onclick="confirmacion(@equipoEvaluadorID, '@usuario.Nombre', '@usuario.PasswordHash')" class="btn btn-danger btn-bordered waves-effect waves-light m-l-10 m-b-20" data-animation="fadein" data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Generar Base de Puntuación</a>
+            <i id="tooltip-html" class="mdi mdi-help-circle" title="Este botón generará los campos necesarios para que los evaluadores puedan realizar sus puntuaciones y observaciones" style="font-size: 35px; color: darkgray;"></i>
+        }
+        else
+        {
+            <button type="button" class="btn btn-danger btn-bordered waves-effect waves-light m-l-10 m-b-20" data-animation="fadein" data-plugin="custommodal"
+                    data-overlaySpeed="200" data-overlayColor="#36404a" disabled="">
+                <i class="md md-add"></i>Generar Base de Puntuación
+            </button>
+        }
+    </div><!-- end col -->
+</div>
+<!-- end row -->
+
+@{
+    int index = 1;
+}
+@if (cantidad != 0)
+{
+    foreach (var item in Model)
+    {
+
+
+        var usuario = userManager.FindById(item.UsuarioID);
+
+        var imagen = Path.GetFileName(usuario.Imagen);
+
+
+
+
+        if (index % 3 == 0)
+        {
+            @: <div class="row">
+            }
+
+
+            <div class="col-md-4">
+                <div class="text-center card-box">
+                    <div class="dropdown pull-right">
+                        <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
+                            <h3 class="m-0 text-muted"><i class="mdi mdi-dots-horizontal"></i></h3>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Edit</a></li>
+                            <li><a href="#">Delete</a></li>
+                            <li><a href="#">Block</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="member-card">
+                        <div class="thumb-xl member-thumb m-b-10 center-block">
+                            @if (imagen != "Default.jpg")
+                            {
+                                <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                            }
+                            @if (item.IsActive)
+                            {
+                                <i class="mdi mdi-checkbox-marked member-star text-success" title="verified user"></i>
+                            }
+                            else
+                            {
+                                <i class="mdi mdi-alert-circle member-star text-warning" title="Usuario Inactivo"></i>
+                            }
+
+                        </div>
+
+                        <div class="">
+                            <h4 class="m-b-5">@usuario.NombreCompleto(usuario.Nombre, usuario.Apellido)</h4>
+                            <p class="text-muted"> <span> | </span> <span> <a href="#" class="text-pink">@usuario.Email</a> </span></p>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table m-0 table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td class="pull-right">Rol</td>
+                                        <td class="text-lowercase bg-secondary">@usuario.Role</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="pull-right">Estado</td>
+                                        @if (@item.IsActive)
+                                        {
+                                            <td class=" bg-light">Activo</td>
+                                        }
+                                        else
+                                        {
+                                            <td class=" bg-light">Suspendido</td>
+                                        }
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (item.IsActive)
+                        {
+                            <a href="@Url.Action("CambiarEstado","Evaluador", new{id = item.EvaluadorPremioID})" class="btn btn-warning btn-rounded waves-effect m-t-10 waves-light">Desactivar</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("CambiarEstado", "Evaluador", new{id = item.EvaluadorPremioID})" class="btn btn-success btn-rounded waves-effect m-t-10 waves-light">Activar</a>
+                        }
+
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect m-t-10 waves-light">Ver</button>
+                        @if (item.EquipoID == null)
+                        {
+                            <a href="@Url.Action("EditarEvaluador", "Evaluador", new{eID = item.EvaluadorPremioID})" class="btn btn-primary btn-rounded waves-effect m-t-10 waves-light">Asignar equipo</a>
+
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("EditarEvaluador", "Evaluador", new{eID = item.EvaluadorPremioID})" class="btn btn-secondary btn-rounded waves-effect m-t-10 waves-light">Reasignar equipo</a>
+
+                        }
+
+
+                    </div>
+
+                </div>
+
+            </div> <!-- end col -->
+            if (index % 3 == 0)
+            {
+            @: </div>
+        }
+
+        index++;
+
+    }
+}
+else
+{
+    <div class="row">
+        <div class="col-sm-12 text-center">
+
+            <div class="wrapper-page">
+                <img src="~/images/icons8-empty-box-64.png" alt="">
+                <h2 class="text-uppercase text-muted">No hay evaluadores</h2>
+                <p class="text-muted">Este equipo aún no se les ha asignado evaluadores puede hacerlo pulsando este botón asignar evaluadores, o puede usar el botón de regresar.</p>
+
+                <a class="btn btn-success waves-effect waves-light m-t-20" href="@Url.Action("Index", "Evaluador")"> Asignar Evaluadores</a>
+                <a class="btn btn-default waves-effect waves-light m-t-20" href="@Url.Action("index", "EquipoEvaluador")"> Regresar</a>
+            </div>
+
+        </div>
+    </div>
+}<!-- end row -->
+
+@section scripts{
+    <!-- Tooltipster js -->
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/pages/jquery.tooltipster.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <script>
+        "use strict";
+
+        function generarDatos(id, nombre, con) {
+            debugger;
+            $.ajax({
+                type: "get",
+                url: "/Evaluador/GenerarGuiaPuntuacion?equipoEvaluadorID=" + id,
+                username: nombre,
+                password: con,
+                success: function(data) {
+                    debugger;
+                    if (data === "True") {
+
+                        Swal.fire(
+                            'Generados!',
+                            'Todos los archivos fueron generados',
+                            'success'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Cancelado',
+                            'No se pudo ejecutar la operación',
+                            'error'
+                        );
+                    }
+                }
+            });
+        }
+
+        function confirmacion(id, nombre, con) {
+            debugger;
+
+            Swal.fire({
+                title: 'Confirmar',
+                html: "Va a generar los campos de puntuación para los evaluadores asignados a este equipo, una ves generados no podrán ser editados, desea continuar?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Generar'
+            }).then((result) => {
+                debugger;
+                if (result.value) {
+
+                    generarDatos(id, nombre, con);
+
+                }
+            });
+
+
+        }
+
+    </script>
+
+}

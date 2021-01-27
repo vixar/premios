@@ -1,0 +1,33 @@
+﻿@model ProyectoCalidad.WebUI.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>RoleViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("DeleteConfirmed", "Role", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id);
+        <div class="form-actions no-color">
+            <button href="@Url.Action("DeleteConfirmed", new { Id = Model.Id})" type="submit" class="btn btn-danger">Delete</button>
+            <a class=" btn btn-default" href="@Url.Action("Index", "Role", new { id = Model.Id})">Regresar</a>
+        </div>
+    }
+</div>

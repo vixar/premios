@@ -1,0 +1,539 @@
+﻿
+@using ProyectoCalidad.WebUI.Models
+@model ProyectoCalidad.WebUI.Models.GuiaPostulantePuntuacionPimpModel
+
+@{
+    int ip = ViewBag.ip;
+    Mensajes mensaje = ViewBag.mensaje;
+}
+
+
+<h2>@Model.InstitucionPostulante.InstitucionNombre</h2>
+<hr />
+<div class="row">
+    <div class="col-sm-4">
+        @{
+            //var premio = ViewBag.Premio;
+            var premioid = ViewBag.premioID;
+        }
+
+        <a href="javascript:history.back()" class="btn btn-danger btn-bordered waves-effect waves-light m-b-20 hidden-print"
+           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Regresar</a>
+
+        <button class="btn btn-primary  btn-bordered waves-effect waves-light m-b-20 hidden-print" onclick="imprimir()"><span class="glyphicon glyphicon-print" aria-hidden="true"></span> Imprimir</button>
+    </div><!-- end col -->
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+            <table class="table table-hover m-0">
+                <thead>
+                    <tr>
+                        <th>Criterio</th>
+                        <th>Puntos Fuertes</th>
+                        <th>Area de Mejora</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.ComentarioJurado.OrderBy(x => x.CriterioID))
+                    {
+                        <tr>
+                            <th scope="row">@Model.Criterios.FirstOrDefault(x => x.CriterioID == item.CriterioID).CriterioNombreCompleto</th>
+                            <td style="word-wrap:break-word; text-align:justify">@Html.Raw(@item.PuntosFuertes)</td>
+                            <td style="word-wrap:break-word; text-align:justify">@Html.Raw(@item.AreaMejora)</td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+@if (!ViewBag.isreporte)
+{
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div class="card-box">
+
+                <table class="table m-0 table-colored-bordered table-bordered-info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">PUNTUACIÓN</th>
+
+                            <th class="text-center">DEFINICIONES PARA LAS PUNTUACIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">0 - 2</td>
+
+                            <td class="text-center">Algunas evidencias débiles relativas a los aspectos del criterio</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2 - 4</td>
+
+                            <td class="text-center">Algunas buenas evidencias relativas a aspectos relevantes del criterio</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">4 - 6</td>
+
+                            <td class="text-center">Fuertes evidencias relativas a la mayoría de los aspectos del criterio</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">6 - 8</td>
+
+                            <td class="text-center">Evidencias muy fuertes relativas a todos de los aspectos del criterio</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">8 - 10</td>
+
+                            <td class="text-center">Excelentes evidencias relativas a todos los aspectos del criterio</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+            <table class="table table-hover m-0">
+                <thead>
+                    <tr>
+
+                        <th>Criterio</th>
+                        @if (!ViewBag.isreporte)
+                        {
+                            <th>Puntuación</th>
+
+                        }
+                        <th>
+                            Total
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @using (Html.BeginForm("GuardarPuntuacion", "GuiaPostulantePuntuacionPimp", new { institucionPostulanteID = ip }))
+                    {
+                        @Html.HiddenFor(x => x.GuiaPostulantePuntuacionPimpID)
+                        @Html.HiddenFor(x => x.ComentarioJurado)
+                        <tr>
+                            <td style="width: 80%">
+                                1 - Memoria de Postulación. Resultados del Autodiagnóstico <b>(30 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                var puntuacionUno = @Model.PuntuacionCriterioUno/3;
+                                <td class="text-center">
+                                    <select class="form-control" name="PuntuacionCriterioUno" id="pUno" value="10">
+                                        <option value="@puntuacionUno">@puntuacionUno</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                    @*<input class="form-control parsley-success" name="@Model.PuntuacionCriterioUno" value="@Model.PuntuacionCriterioUno" required="" type="text range" min="6" max="100" placeholder="Number between 6 - 100" data-parsley-id="75">*@
+                                    @*@Html.TextBoxFor(x => x.PuntuacionCriterioUno,
+                                        new { @class = "form-control", @type = "number", @placeholder = "1 a 30" })*@
+                                </td>
+                            }
+
+                            <td style="width: 10%">
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioUno" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                2 - Implementación de Buena(s) Práctica(s) <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioDos" id="pDos">
+                                        <option value="@Model.PuntuacionCriterioDos">@Model.PuntuacionCriterioDos</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioDos" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                3 - Interés, relevancia y carácter innovador y/o creativo de la(s) Buena(s) Práctica(s). Repercusión de la(s) iniciativa(s) en la imagen pública del MAP <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioTres" id="pTres">
+                                        <option value="@Model.PuntuacionCriterioTres">@Model.PuntuacionCriterioTres</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioTres" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                4 - Consistencia en su implementación, costos, rigor en los mecanismos de control, seguimiento y validación de la(s) práctica(s) <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioCuatro" id="pCuatro">
+                                        <option value="@Model.PuntuacionCriterioCuatro">@Model.PuntuacionCriterioCuatro</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioCuatro" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                5 - Aplicaciones de tecnologías de la información en la racionalización, simplificación, mejora y transparencia de la gestión y de los procesos <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioCinco" id="pCinco">
+                                        <option value="@Model.PuntuacionCriterioCinco">@Model.PuntuacionCriterioCinco</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioCinco" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                6 - Usuarios afectados e impacto de la atención a los mismos (externos y/o internos) <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioSeis" id="pSeis">
+                                        <option value="@Model.PuntuacionCriterioSeis">@Model.PuntuacionCriterioSeis</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioSeis" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                7 - Beneficios para el área de donde se implementó la(s) práctica(s) y las posibilidades de replicarla(s) en otras áreas. Implicaciones en el proceso de mejora continua del área <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioSiete" id="pSiete">
+                                        <option value="@Model.PuntuacionCriterioSiete">@Model.PuntuacionCriterioSiete</option>
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioSiete" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                8 - Incidencia de la(s) iniciativa(s) en la mejora de los indicadores contenidos en el Plan Operativo del área <b>(10 puntos)</b>
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                    <select class="form-control" name="PuntuacionCriterioOcho" id="pOcho">
+                                        <option value="@Model.PuntuacionCriterioOcho">@Model.PuntuacionCriterioOcho</option>
+                                        <option value="">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                </td>
+                            }
+
+                            <td>
+                                <input type="text" class="form-control" readonly="" value="@Model.PuntuacionCriterioOcho" style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 20px;">
+                                TOTAL
+                            </td>
+                            @if (!ViewBag.isreporte)
+                            {
+                                <td>
+                                </td>
+                            }
+
+                            <td style="/* background-color: #2fba82; */color: #02a7bb;font-size: 20px; text-align: center">
+                                @(Model.PuntuacionCriterioUno + Model.PuntuacionCriterioDos + Model.PuntuacionCriterioTres + Model.PuntuacionCriterioCuatro + Model.PuntuacionCriterioCinco + Model.PuntuacionCriterioSeis + Model.PuntuacionCriterioSiete + Model.PuntuacionCriterioOcho)
+                            </td>
+                        </tr>
+                        @*<tr>
+                                <td>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary m-b-15" ><i class="mdi mdi-content-save-outline"></i> Guardar puntuación </button>
+
+                                    </div>
+                                </td>
+                            </tr>*@
+                        if (!ViewBag.isreporte)
+                        {
+                            <button type="button" onclick="evnaiarPuntuacion(@Model.GuiaPostulantePuntuacionPimpID)" class="btn btn-primary m-b-15"><i class="mdi mdi-content-save-outline"></i> Guardar puntuación </button>
+
+                        }
+
+
+                    }
+
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <script>
+
+        function imprimir() {
+            window.print();
+        }
+
+        $(document).ready(function() {
+
+            if ("@mensaje.tipo".length > 0) {
+                Swal.fire({
+                    title: "@mensaje.mensaje",
+                    html: "@mensaje.texto",
+                    type: "@mensaje.tipo"
+                });
+            }
+
+        });
+
+        function evnaiarPuntuacion(id) {
+
+            var uno, dos, tres, cuatro, cinco, seis, siete, ocho;
+            uno = 0;
+            dos = 0;
+            tres = 0;
+            cuatro = 0;
+            cinco = 0;
+            seis = 0;
+            siete = 0;
+            ocho = 0;
+
+            if ($("#pUno option:selected").val() !== "") {
+                uno = $("#pUno option:selected").val();
+
+            }
+            if ($("#pDos option:selected").val() !== "") {
+                dos = $("#pDos option:selected").val();
+            }
+            if ($("#pTres option:selected").val() !== "") {
+                tres = $("#pTres option:selected").val();
+            }
+            if ($("#pCuatro option:selected").val() !== "") {
+                cuatro = $("#pCuatro option:selected").val();
+            }
+            if ($("#pCinco option:selected").val() !== "") {
+                cinco = $("#pCinco option:selected").val();
+            }
+            if ($("#pSeis option:selected").val() !== "") {
+                seis = $("#pSeis option:selected").val();
+            }
+            if ($("#pSiete option:selected").val() !== "") {
+                siete = $("#pSiete option:selected").val();
+            }
+            if ($("#pOcho option:selected").val() !== "") {
+                ocho = $("#pOcho option:selected").val();
+            }
+            var model = {
+                GuiaPostulantePuntuacionPimpID: id,
+                PuntuacionCriterioUno: uno,
+                PuntuacionCriterioDos: dos,
+                PuntuacionCriterioTres: tres,
+                PuntuacionCriterioCuatro: cuatro,
+                PuntuacionCriterioCinco: cinco,
+                PuntuacionCriterioSeis: seis,
+                PuntuacionCriterioSiete: siete,
+                PuntuacionCriterioOcho: ocho
+            }
+
+            console.log(model);
+
+            Swal.fire({
+                title: 'Está seguro?',
+                html: "Va a modificar la puntuación actual con estos valores: <hr/> <br/>Criterio 1: <button class='btn btn-secondary' style='color:black'>" + uno
+                    +
+                    "</button><br /> <br />Criterio 2: <button class='btn btn-secondary'>" +
+                    dos +
+                    "</button><br /> <br />Criterio 3: <button class='btn btn-secondary'>" +
+                    tres
+                    +
+                    "</button><br /> <br />Criterio 4: <button class='btn btn-secondary'>" +
+                    cuatro +
+                    "</button><br /> <br />Criterio 5: <button class='btn btn-secondary'>" +
+                    cinco
+                    +
+                    "</button><br /> <br />Criterio 6: <button class='btn btn-secondary'>" +
+                    seis +
+                    "</button><br /> <br />Criterio 7: <button class='btn btn-secondary'>" +
+                    siete
+                    +
+                    "</button><br /> <br />Criterio 8: <button class='btn btn-secondary'>" +
+                    ocho + "</button> <hr/>",
+
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/sgp_admin/GuiaPostulantePuntuacionPimp/GuardarPuntuacion',
+                        data: model,
+                        success: function(data) {
+                            if (result.value) {
+                                Swal.fire(
+                                    'Evaluación registrada',
+                                    '',
+                                    'success'
+                                );
+                                setTimeout(function() {
+
+                                        location.reload();
+
+                                    },
+                                    2500);
+                            }
+
+
+                        }
+
+                    });
+                }
+
+
+            });
+        }
+
+
+    </script>
+}

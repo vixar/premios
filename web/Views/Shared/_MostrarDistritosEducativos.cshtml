@@ -1,0 +1,11 @@
+﻿@model ProyectoCalidad.Domain.Entities.DistritoEducativo
+
+<option value=""> -- Seleccione --</option>
+
+@if (ViewBag.DistritosList != null)
+{
+    foreach (var item in ViewBag.DistritosList)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+}

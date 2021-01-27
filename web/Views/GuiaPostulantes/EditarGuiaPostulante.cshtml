@@ -1,0 +1,185 @@
+﻿@model  ProyectoCalidad.Domain.Entities.GuiaPostulantes
+
+
+@{
+    ViewBag.Title = "Editar Guia Postulante";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Guia Postulante</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Guia Postulante <strong>@Model.GuiaPostulanteID</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarGuiaPostulante", "GuiaPostulantes", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.GuiaPostulanteID)
+
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Premio</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("PremioID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Guia</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("GuiaID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Ejemplo</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("EjemploID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="PuntosFuertes" class="col-md-3 control-label">PuntosFuertes</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PuntosFuertes, new { @class = "form-control", @placeholder = "Puntos Fuertes." })
+                    @Html.ValidationMessageFor(x => x.PuntosFuertes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="AreadeMejoras" class="col-md-3 control-label">Area de Mejoras</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.AreadeMejoras, new { @class = "form-control", @placeholder = "Area de Mejoras." })
+                    @Html.ValidationMessageFor(x => x.AreadeMejoras, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="AutoEvaluacion" class="col-md-3 control-label">Auto Evaluacion</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.AutoEvaluacion, new { @class = "form-control", @placeholder = "Auto Evaluacion." })
+                    @Html.ValidationMessageFor(x => x.AutoEvaluacion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Evidencia" class="col-md-3 control-label">Evidencia</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Evidencia, new { @class = "form-control", @placeholder = "Evidencia." })
+                    @Html.ValidationMessageFor(x => x.Evidencia, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="EvidenciaDocumentoID" class="col-md-3 control-label">EvidenciaDocumentoID</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.EvidenciaDocumentoID, new { @class = "form-control", @placeholder = "Evidencia DocumentoID." })
+                    @Html.ValidationMessageFor(x => x.EvidenciaDocumentoID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PuntuacionEvaluador" class="col-md-3 control-label">Puntuacion Evaluador</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PuntuacionEvaluador, new { @class = "form-control", @placeholder = "Puntuacion Evaluador." })
+                    @Html.ValidationMessageFor(x => x.PuntuacionEvaluador, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PuntuacionCoordinador" class="col-md-3 control-label">Puntuacion Coordinador</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PuntuacionCoordinador, new { @class = "form-control", @placeholder = "Puntuacion Coordinador." })
+                    @Html.ValidationMessageFor(x => x.PuntuacionCoordinador, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PuntuacionCoordinador" class="col-md-3 control-label">Puntuacion Coordinador</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PuntuacionCoordinador, new { @class = "form-control", @placeholder = "Puntuacion Coordinador." })
+                    @Html.ValidationMessageFor(x => x.PuntuacionCoordinador, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Equipo Postulante</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("EquipoPostulanteID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Comentario" class="col-md-3 control-label">Comentario</label>
+                <div class="col-md-9">
+                    @*@Html.TextBoxFor(x => x.Comentario, new { @class = "form-control", @placeholder = "Comentario." })*@
+                    @Html.TextAreaFor(model => model.Comentario, 4, 55, new { @class = "form-control", @placeholder = "Comentario.", maxlength = 254 })
+                    @Html.ValidationMessageFor(x => x.Comentario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Premio Persona</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("PremioPersonaID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="FechaHoraEvidencia" class="col-md-3 control-label">Fecha Hora Evidencia</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.FechaHoraEvidencia, new { @class = "form-control", @placeholder = "Fecha Hora Evidencia." })
+                    @Html.ValidationMessageFor(x => x.FechaHoraEvidencia, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="FechaHoraEvaluacion" class="col-md-3 control-label">Fecha Hora Evaluacion</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.FechaHoraEvaluacion, new { @class = "form-control", @placeholder = "FechaHora Evaluacion." })
+                    @Html.ValidationMessageFor(x => x.FechaHoraEvaluacion, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="FechaHoraCoordinador" class="col-md-3 control-label">Fecha Hora Coordinador</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.FechaHoraCoordinador, new { @class = "form-control", @placeholder = "Fecha Hora Coordinador." })
+                    @Html.ValidationMessageFor(x => x.FechaHoraCoordinador, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @{
+                        bool activo = true; // Model.Estado.Equals("Activo");
+                    }
+                    @Html.CheckBox("EstadoBool", activo, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Registrar datos</button>
+                    @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Guia Postulante", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

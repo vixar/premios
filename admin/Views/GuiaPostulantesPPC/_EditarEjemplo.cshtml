@@ -1,0 +1,80 @@
+﻿@model ProyectoCalidad.Domain.Entities.GuiaPostulantes
+
+@{
+    var evidencias = ViewBag.evidencias;
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btsave').click(function () {
+            $('#modal-container').modal('hide');
+        });
+
+    });
+</script>
+
+@{
+    var attributes = new Dictionary<string, object>();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var evidencia = Model.Evidencia;
+    var e = Path.GetFileName(evidencia);
+}
+
+<div class="panel panel-default">
+    <table class="table table table-hover m-0" id="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Nombre de archivo</th>
+                <th style="width: 30px">Tipo Documento</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var num = 1;
+            }
+            @foreach (var item in evidencias)
+            {
+                var path = Server.MapPath("~/evidencias/");
+                if (System.IO.File.Exists(path + item.RutaEvidencia))
+                {
+
+                    <tr>
+                        <td>@item.NumeroEvidencia</td>
+                        <td>@item.NombreArchivo</td>
+                        <td>@item.Descripcion</td>
+                        <td>
+                            <a href="@Url.Action("VerEvidencia", new {id = item.EvidenciaID})" class="btn btn-primary" target="_blank"><i class="fa fa-eye fa-3x"></i></a>
+                        </td>
+                    </tr>
+                }
+                else if (item.Descripcion == "Url")
+                {
+                    <tr>
+                        <td>@item.NumeroEvidencia</td>
+                        <td>@item.NombreArchivo</td>
+                        <td>@item.Descripcion</td>
+                        <td>
+                            <a href="@item.RutaEvidencia" class="btn btn-primary" target="_blank"><i class="fa fa-eye fa-3x"></i></a>
+                        </td>
+                    </tr>
+                }
+
+                num++;
+
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script src="~/Plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script>
+        $(":file").filestyle({ buttonText: "Seleccionar Memoria" });
+    </script>
+}

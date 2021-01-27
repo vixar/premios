@@ -1,0 +1,1005 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@model ProyectoCalidad.Domain.Entities.GuiaPostulantes
+
+@{
+    /**/
+
+    var attributes = new Dictionary<string, object>
+    ();
+    attributes.Add("Id", "frmCrearCriterio");
+    attributes.Add("novalidate", "novalidate");
+
+    var criterioSeleccionado = ViewBag.criterioSeleccionado;
+
+    var userManager = new UserManager<ApplicationUser>
+        (new UserStore<ApplicationUser>(new EFDbContext()));
+    var user = userManager.FindById(User.Identity.GetUserId());
+
+    var evidencias = ViewBag.evidencias;
+    var totalEvidencias = evidencias.Count;
+
+    var institucion = ViewBag.ip;
+
+    var mensaje = ViewBag.mensaje;
+
+    var activarSiguiente = ViewBag.siguiente;
+    var activarAnterior = ViewBag.anterior;
+
+
+}
+@section style{
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <link href="~/Content/premio.css" rel="stylesheet" />
+    <style>
+        td {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+    </style>
+}
+
+<div class="page-header larger parallax custom" style="background-image:url(../../Content/assets/images/MAP/m1.png)">
+    <div class="container">
+        <h1>Completar ejemplo </h1>
+        <ol class="breadcrumb">
+            <li><a href="/Home/Index" style="font-size:15px">Inicio</a></li>
+            <li><a style="font-size:15px" href="javascript:history.back()">Guía Postulante</a></li>
+            <li style="font-size:15px" class="active">Guía</li>
+        </ol>
+    </div><!-- End .container -->
+</div><!-- End .page-header -->
+<!-- CONTENIDO -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+
+                @using (Html.BeginForm("EditarGuiaPostulante", "GuiaPostulantes", new { criterioSeleccionado = criterioSeleccionado, vista = "ejemplo" }, FormMethod.Post, new { id = "form-ejemploEdit", @class = "full-form", enctype = "multipart/form-data" }))
+                {
+                    @Html.Hidden("GuiaPostulanteID", Model.GuiaPostulanteID)
+                    @Html.HiddenFor(model => model.PremioID)
+                    @Html.HiddenFor(model => model.InstitucionPostulanteID)
+                    @Html.HiddenFor(model => model.GuiaID)
+                    @Html.HiddenFor(model => model.CriterioID)
+                    @Html.HiddenFor(model => model.CriterioDescripcion)
+                    @Html.HiddenFor(model => model.CriterioCodigo)
+                    @Html.HiddenFor(model => model.CriterioNombre)
+                    @Html.HiddenFor(model => model.CriterioPonderacion)
+                    @Html.HiddenFor(model => model.SubCriterioID)
+                    @Html.HiddenFor(model => model.SubCriterioDescripcion)
+                    @Html.HiddenFor(model => model.SubCriterioCodigo)
+                    @Html.HiddenFor(model => model.SubCriterioPonderacion)
+                    @Html.HiddenFor(model => model.EjemploID)
+                    @Html.HiddenFor(model => model.EmeploDescripcion)
+                    @Html.HiddenFor(model => model.EmeploCodigo)
+
+                    if (user.Role == "EVALUADOR-INTERNO" ||
+                    user.Role == "EVALUADOR-EXTERNO")
+                    {
+                        @Html.HiddenFor(model => model.PuntosFuertes)
+                        @Html.HiddenFor(model => model.AreadeMejoras)
+                        @Html.HiddenFor(model => model.PuntuacionCoordinador)
+                        @Html.HiddenFor(model => model.ComentarioCoordinadorEvaluadores)
+                    }
+                    if (user.Role == "POSTULANTE" || user.Role == "POSTULANTE-PPC")
+                    {
+                        @Html.HiddenFor(model => model.PuntuacionEvaluador)
+                        ;
+                        @Html.HiddenFor(model => model.ComentarioEvaluador)
+                        ;
+                        @Html.HiddenFor(model => model.PuntuacionCoordinador)
+                        ;
+                        @Html.HiddenFor(model => model.ComentarioCoordinadorEvaluadores)
+                        ;
+
+                    }
+                    if (user.Role == "COORDINADOR-EVALUADOR-EXTERNO")
+                    {
+                        @Html.HiddenFor(model => model.PuntosFuertes)
+                        ;
+                        @Html.HiddenFor(model => model.AreadeMejoras)
+                        ;
+                        @Html.HiddenFor(model => model.PuntuacionEvaluador)
+                        ;
+                        @Html.HiddenFor(model => model.ComentarioEvaluador)
+                        ;
+                    }
+
+                    <!-- FORMULARIO -->
+                    <div class="">
+                        <h4>Criterio: @Model.CriterioCodigo</h4>
+                        <h5>Sub-Criterio: @Model.SubCriterioCodigo</h5>
+
+                        <b> @Model.EmeploCodigo - @Model.EmeploDescripcion </b>
+
+                        <br />
+                        <br />
+                    </div>
+
+
+                    if (user.Role == "POSTULANTE" || user.Role == "POSTULANTE-PPC")
+                    {
+
+                        <div class="form-group">
+                            <i class="mdi mdi-eye"></i><label for="Codigo" class="control-label">Punto Fuerte <i class="fa fa-asterisk" style="font-size: 10px;"></i></label>
+                            <div class="">
+                                @Html.TextAreaFor(x => x.PuntosFuertes, new { @class = "form-control", @placeholder = "Redacte su respuesta" })
+                                <div id="charNum" class="text-muted" style="margin-top: -20px;"><small>Caracteres restantes:</small> 1000</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Nombre" class="control-label">Área de Mejora</label>
+                            <div class="">
+                                @Html.TextAreaFor(x => x.AreadeMejoras, new { @class = "form-control", @placeholder = "Redacte su respuesta" })
+                                <div id="charNumArea" class="text-muted" style="margin-top: -20px;"><small>Caracteres restantes:</small> 1000</div>
+
+                            </div>
+                            <br />
+                            <br />
+                        </div>
+                        <div id="mensaje">
+                        </div>
+                        <div id="evidencias" style="display: none" class="form-group">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="Descripcion" class="col-md-3 control-label">Evidencias</label>
+                                    <label for="Descripcion" class="col-md-1 control-label">1.</label>
+                                    <div class="col-md-2">
+
+                                        @*<div class="toggleWrapper">
+                                                <input class="dn" type="checkbox" id="dn" value="1" />
+                                                <label class="toggle" for="dn"><span class="toggle__handler"></span></label>
+                                            </div>*@
+
+                                        <div class="radio">
+
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia1" value="documento" id="documento1">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span> <i class="fa fa-paperclip" style="color: #0069b0; font-size:20px"></i> - Documento</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia1" value="enlace" id="enlace1">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span><i class="fa fa-globe" style="color: #0069b0; font-size:20px"></i> - Enlace URL</span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaDocumento1" style="margin-top: 22px; display: none">
+
+                                        <div class="input-container">
+
+                                            <input class="form-control FilUploader custom-file-input" type="file" id="eDocumento1" class="filestyle" data-buttonText="Find file" name="EvidenciaDocumento" value="">
+
+                                            <button type="button" class="browse-btn-1">
+                                                Agregar documento
+                                            </button>
+                                            <span class="file-info1">...</span>
+                                        </div>
+                                        <input class="form-control" type="hidden" class="filestyle" data-buttonText="Find file" name="tipoDocumento" value="1">
+
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaEnlace1" style="margin-top: 22px; display: none">
+                                        <input class="form-control" type="url" id="eEnlace1" pattern="https?://.+" placeholder="https://"
+                                               name="EvidenciaEnlace" value=""
+                                               oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div style="border-bottom:">
+                                    <div class="row">
+                                        <label for="Descripcion" class="col-md-3 control-label"></label>
+                                        <label for="Descripcion" class="col-md-1 control-label">2.</label>
+                                        <div class="col-md-2">
+                                            <div class="radio">
+                                                <label class="custom-radio-wrapper">
+                                                    <span class="custom-radio-container">
+                                                        <input type="radio" name="evidenia2" value="documento" id="documento2">
+                                                        <span class="custom-radio-icon"></span>
+                                                    </span>
+                                                    <span><i class="fa fa-paperclip" style="color: #0069b0; font-size:20px"></i> - Documento</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="radio">
+                                                <label class="custom-radio-wrapper">
+                                                    <span class="custom-radio-container">
+                                                        <input type="radio" name="evidenia2" value="enlace" id="enlace2">
+                                                        <span class="custom-radio-icon"></span>
+                                                    </span>
+                                                    <span><i class="fa fa-globe" style="color: #0069b0; font-size:20px"></i> - Enlace URL</span>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-5" id="evidenciaDocumento2" style="margin-top: 22px; display: none">
+                                            <div class="input-container">
+
+                                                <input class="form-control FilUploader" type="file" id="eDocumento2" class="filestyle" name="EvidenciaDocumento" value="">
+
+                                                <button type="button" class="browse-btn-2">
+                                                    Agregar documento
+                                                </button>
+                                                <span class="file-info2">...</span>
+                                            </div>
+                                            @*<label>
+                                                    Seleccionar Evidencia
+                                                    <input size="60" class="form-control FilUploader" type="file" id="eDocumento2" class="filestyle" name="EvidenciaDocumento" value="">
+
+                                                </label>*@
+
+                                            <input class="form-control" type="hidden" class="filestyle" data-buttonText="Find file" name="tipoDocumento" value="2">
+
+                                        </div>
+                                        <div class="col-md-5" id="evidenciaEnlace2" style="margin-top: 22px; display: none">
+                                            <input class="form-control" type="url" id="eEnlace2" pattern="https?://.+"
+                                                   placeholder="https://" name="EvidenciaEnlace" value=""
+                                                   oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <label for="Descripcion" class="col-md-3 control-label"></label>
+                                    <label for="Descripcion" class="col-md-1 control-label">3.</label>
+                                    <div class="col-md-2">
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia3" value="documento" id="documento3">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span><i class="fa fa-paperclip" style="color: #0069b0; font-size:20px"></i> - Documento</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label class="custom-radio-wrapper">
+                                                <span class="custom-radio-container">
+                                                    <input type="radio" name="evidenia3" value="enlace" id="enlace3">
+                                                    <span class="custom-radio-icon"></span>
+                                                </span>
+                                                <span><i class="fa fa-globe" style="color: #0069b0; font-size:20px"></i> - Enlace URL </span>
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaDocumento3" style="margin-top: 22px; display: none">
+                                        <div class="input-container">
+
+                                            <input class="form-control FilUploader custom-file-input" type="file" id="eDocumento3" class="filestyle" data-buttonText="Find file" name="EvidenciaDocumento" value="">
+
+                                            <button type="button" class="browse-btn-3">
+                                                Agregar documento
+                                            </button>
+
+                                            <span class="file-info3">...</span>
+
+                                        </div>
+                                        <input class="form-control" type="hidden" class="filestyle" data-buttonText="Find file" name="tipoDocumento" value="3">
+
+                                    </div>
+                                    <div class="col-md-5" id="evidenciaEnlace3" style="margin-top: 22px; display:none">
+                                        <input class="form-control" type="url" id="eEnlace3" pattern="https?://.+"
+                                               placeholder="https://" name="EvidenciaEnlace" value=""
+                                               oninvalid="this.setCustomValidity('Por favor ingrese una URL válida')" oninput="setCustomValidity('')" />
+
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    }
+
+                    if (user.Role == "EVALUADOR-INTERNO" ||
+                    user.Role == "EVALUADOR-EXTERNO" ||
+                    user.Role == "COORDINADOR-EVALUADOR-EXTERNO"
+                    )
+                    {
+                        <div class="form-group">
+                            <label for="Codigo" class="col-md-3 control-label">Comentario</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.ComentarioEvaluador, new { @class = "form-control", @placeholder = "Codigo del Criterio." })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Nombre" class="col-md-3 control-label">Puntuación</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(x => x.PuntuacionEvaluador, new { @class = "form-control", @placeholder = "Nombre del Criterio." })
+                            </div>
+                        </div>
+                    }
+                    <hr />
+                    <label for="Descripcion" class="control-label">Controles</label>
+
+                    <div class="row" style="margin-top: 50px">
+                        @*<input class="btn btn-primary active" id="btnSave" type="button" value="Guardar" />*@
+                        @*<a class="btn btn-default" href="javascript:history.go(-1)">Regresar</a>*@
+
+
+
+                        <div class="col-sm-2">
+
+                            <a class="btn btn-default btn-block" href="@Url.Action("Index", "GuiaPostulantes" , new{ InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado})">Regresar</a>
+
+                        </div>
+
+                        <div class="col-sm-2">
+                            @if (activarAnterior)
+                            {
+                                <a class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("AnteriorEjemplo", "GuiaPostulantes" , new{ guiaPostulanteID=Model.GuiaPostulanteID, InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado})"><i class="fa fa-arrow-left"></i>  Anterior  </a>
+
+                            }
+                            else
+                            {
+
+                                <button disabled="disabled" class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("AnteriorEjemplo", "GuiaPostulantes" , new{ guiaPostulanteID=Model.GuiaPostulanteID, InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado})"><i class="fa fa-arrow-left"></i>  Anterior  </button>
+
+                            }
+                        </div>
+
+
+                        @*<a class="btn btn-default" href="javascript:history.go(-1)">Regresar</a>*@
+                        <div class="col-sm-4">
+                            <input class="btn btn-primary btn-block active" style="background-color: #0069b0;border-style: solid;border-width: thick; border-color: #204d74;margin-top: -6px;" id="btnSave" type="button" value="Guardar" />
+
+                        </div>
+
+                        <div class="col-sm-2">
+                            @if (activarSiguiente)
+                            {
+                                <a class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("SiguienteEjemplo", "GuiaPostulantes" , new{ guiaPostulanteID=Model.GuiaPostulanteID, InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado })"> Siguiente <i class="fa fa-arrow-right"></i></a>
+
+                            }
+                            else
+                            {
+                                <button disabled="disabled" class="btn btn-default btn-block" style="background-color: #ccc" href="@Url.Action("SiguienteEjemplo", "GuiaPostulantes" , new{ guiaPostulanteID=Model.GuiaPostulanteID, InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado })"> Siguiente <i class="fa fa-arrow-right"></i></button>
+
+                            }
+                        </div>
+
+                        <div class="col-sm-2">
+
+                            <a class="btn btn-default btn-block" href="@Url.Action("Perfil", "InstitucionPostulante" , new{ id=Model.InstitucionPostulanteID})">Perfíl</a>
+
+                        </div>
+
+                    </div>
+                    <br />
+                    @*<div class="">
+                        <input class="btn btn-primary active" id="btnSave" type="button" value="Guardar" />
+                        @*<a class="btn btn-default" href="javascript:history.go(-1)">Regresar</a>*@
+                    @*<a class="btn btn-default" href="@Url.Action("Index", "GuiaPostulantes" , new{ InstitucionPostulanteID=Model.InstitucionPostulanteID, criterioSelecionado=criterioSeleccionado})">Regresar</a>
+                        </div>*@
+                }
+            </div>
+
+            <hr />
+            @* EVIDENCIAS SUMINISTRADAS *@
+            <div class="panel-group" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-custom">
+                    <div class="panel-heading" style=" " role="tab" id="headingSeven">
+                        <h2 class="panel-title">
+                            <a data-toggle="collapse" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" style="font-size: 15px; background-color: #00ab66; text-transform: uppercase; font-weight:bold">
+                                Relación de evidencias Suministradas
+                            </a>
+                        </h2>
+                    </div><!-- End .panel-heading -->
+                    <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                        <div class="panel-body ">
+
+                            @* Tabla de evidencias *@
+
+                            <div class="card-box" style="display: none" id="listaEvidencia">
+
+                                <div class="col-md-12">
+                                </div>
+
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre Evidencia</th>
+                                            <th>Tido Documento</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            var urlevidencia = Server.MapPath("~/Evidencias/");
+                                        }
+                                        @foreach (var evidencia in ViewBag.listaEvidencias)
+                                        {
+                                            if (System.IO.File.Exists(urlevidencia + evidencia.RutaEvidencia) && @evidencia.Estado != "eliminado")
+                                            {
+                                                <tr id="id_@evidencia.EvidenciaID">
+                                                    <td>@evidencia.NombreArchivo</td>
+                                                    <td>@evidencia.Descripcion</td>
+                                                    <td>
+                                                        @if (totalEvidencias < 3)
+                                                        {
+                                                            <button type="submit" class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes" , new {evidenciaID=evidencia.EvidenciaID, guiaPostulanteID=evidencia.GuiaPostulanteID, ejemploID=Model.EjemploID})', 'id_@evidencia.EvidenciaID' )">
+                                                                Asignar
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button disabled="disabled" type="submit" class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes" , new {evidenciaID=evidencia.EvidenciaID, guiaPostulanteID=evidencia.GuiaPostulanteID, ejemploID=Model.EjemploID})', 'id_@evidencia.EvidenciaID' )">
+                                                                Asignar
+                                                            </button>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else if (evidencia.Descripcion == "Url" && @evidencia.Estado != "eliminado")
+                                            {
+                                                <tr>
+                                                    <td>@evidencia.NombreArchivo</td>
+                                                    <td>@evidencia.Descripcion</td>
+                                                    <td>
+                                                        @if (totalEvidencias < 3)
+                                                        {
+                                                            <button type="submit" class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes" , new {evidenciaID=evidencia.EvidenciaID, guiaPostulanteID=evidencia.GuiaPostulanteID, ejemploID=Model.EjemploID})', 'id_@evidencia.EvidenciaID' )">
+                                                                Asignar
+                                                            </button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button disabled="disabled" type="submit" class="btn btn-green" onclick="AsignacionEvidencia('@Url.Action("AsignarEvidencia", "GuiaPostulantes" , new {evidenciaID=evidencia.EvidenciaID, guiaPostulanteID=evidencia.GuiaPostulanteID, ejemploID=Model.EjemploID})', 'id_@evidencia.EvidenciaID' )">
+                                                                Asignar
+                                                            </button>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        }
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div><!-- End .panel-body -->
+                    </div><!-- End .panel-collapse -->
+                </div>
+            </div>
+            <hr />
+            <div class="panel panel-default">
+                <h3 style="text-transform:uppercase">Evidencias cargadas</h3>
+                <table class="table table table-hover m-0" id="table">
+                    <thead>
+                        <tr>
+                            @*
+                                <th>#</th>*@
+                            <th>Nombre de archivo</th>
+                            <th style="width: 30px">Tipo Documento</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var num = 1;
+                            var url = Server.MapPath("~/Evidencias/");
+                        }
+                        @foreach (var item in evidencias)
+                        {
+                            if (System.IO.File.Exists(url + item.RutaEvidencia) && item.Estado != "eliminado")
+                            {
+                                <tr>
+                                    @*
+                                        <td>@item.EvidenciaID</td>*@
+                                    <td>@item.NombreArchivo</td>
+                                    <td>@item.Descripcion</td>
+                                    <td>
+                                        <a href="@Url.Action("VerEvidencia", new {evidenciaID=item.EvidenciaID})" target="_blank" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                        <a onclick="confirmarEliminacion('@Url.Action("EliminarEvidencia", new {evidenciaID=item.EvidenciaID, InstitucionPostulanteID=Model.InstitucionPostulanteID, guiaPostulanteID=Model.GuiaPostulanteID})')" class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.Descripcion == "Url" && item.Estado != "eliminado")
+                            {
+                                <tr>
+                                    <td>@item.NombreArchivo</td>
+                                    <td>@item.Descripcion</td>
+                                    <td>
+                                        <a href="@item.RutaEvidencia" target="_blank" class="btn btn-primary"><i class="fa fa-eye fa-3x"></i></a>
+                                        <a onclick="confirmarEliminacion('@Url.Action("EliminarEvidencia", new {evidenciaID=item.EvidenciaID, InstitucionPostulanteID=Model.InstitucionPostulanteID, guiaPostulanteID=Model.GuiaPostulanteID})')"class="btn btn-danger"><i class="fa fa-trash fa-5x"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                            num++;
+
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="coverScreen" class="LockOn">
+</div>
+
+@section scripts{
+    <script src="~/Content/assets/sweetalert2.all.min.js"></script>
+    <script src="~/Content/assets/js/premio.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @*
+        <script src="~/Content/assets/js/bootstrap-filestyle.min.js"></script>*@
+
+    <script>
+
+
+        function confirmarEliminacion(url) {
+
+            //debugger;
+
+            Swal.fire({
+                title: 'Está de acuerdo?',
+                text: "Está a punto de eliminar esta evidencia!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, Eliminala!'
+            }).then((result) => {
+                if (result.value) {
+                    $("#coverScreen").show();
+                    //alert('se eliminará');
+                    //debugger;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data) {
+                            if (data.tipo !== "success") {
+                                Swal.fire({
+                                    title: data.mensaje,
+                                    html: data.texto,
+                                    type: data.tipo,
+                                    showConfirmButton: false
+                                });
+                            }
+
+                            setTimeout(function() { location.reload(); }, 2500);
+
+
+                            //console.log(data);
+                            //Swal.fire(
+                            //    'Proceso completo',
+                            //    'La evdencia fue eliminada',
+                            //    'success'
+                            //);
+                        }
+                    });
+
+                }
+            });
+
+
+        }
+
+
+        function AsignacionEvidencia(url, trID) {
+            debugger;
+            var trValor = $("#" + trID);
+            trValor.attr("style", "background-color:#49ba173b");
+            debugger;
+
+            Swal.fire({
+                title: 'Confirmación',
+                text: "Desea asignar esta evidencia? ",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Asignar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function(data) {
+
+                            debugger;
+                            if (data === "True") {
+                                $("form#form-ejemploEdit").submit();
+                                debugger;
+
+                                Swal.fire({
+                                    title: 'Evidencia Asignada',
+                                    type: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'De Acuerdo'
+                                }).then((result) => {
+                                    debugger;
+
+                                    if (result.value) {
+                                        //Activar el loading
+
+                                        $("#coverScreen").show();
+
+                                    }
+                                });
+                            } else {
+                                Swal.fire(
+                                    'Hubo un error',
+                                    'Intentelo de nuevo',
+                                    'question'
+                                )
+                            }
+                        }
+
+                    });
+                    //location.reload();
+                }
+
+            });
+        }
+
+
+        $(document).ready(function() {
+            $("#coverScreen").hide();
+
+
+            //MESAJES
+
+            if ('@TempData["type"]'.length > 0) {
+                Swal.fire({
+                    type: '@TempData["type"]',
+                    title: '@TempData["mensaje"]',
+                    html: '@TempData["texto"]'
+                });
+
+            }
+            if ('@mensaje.tipo'.length > 0) {
+                debugger;
+                if ('@mensaje.mensaje' === 'Ejemplo Actualizado') {
+                    Swal.fire({
+                        type: '@mensaje.tipo',
+                        title: '@mensaje.mensaje',
+                        html: '@mensaje.texto',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                } else {
+                    debugger;
+                    Swal.fire({
+                        type: '@mensaje.tipo',
+                        title: '@mensaje.mensaje',
+                        html: '@mensaje.texto'
+                    });
+                }
+
+            }
+
+            //ASIGNACIÓN
+
+
+            // --> END
+
+            var chars = $("#PuntosFuertes").val().length;
+            var texto = $('#PuntosFuertes').val().trim();
+            var areademejora = $("#AreadeMejoras").val();
+
+            var num = 0;
+            console.log('area: ', areademejora.length);
+
+            //debugger;
+            if (chars < 1000) {
+                var rest = 1000 - chars;
+                $("#charNum").html("Caracteres restantes: " + rest);
+            }
+            console.log(chars);
+
+            $("#PuntosFuertes").keyup(function() {
+                var el = $(this);
+                console.log(el.val().length);
+                if (el.val().length >= 1000) {
+                    el.val(el.val().substr(0, 1000));
+                } else {
+
+                    $("#charNum").text("Caracteres restantes: " + (999 - el.val().length));
+                }
+            });
+
+            //debugger;
+            if (areademejora.length < 1000) {
+                var rest = 1000 - chars;
+                $("#charNumArea").html("Caracteres restantes: " + rest);
+            }
+            console.log("areademejora:  ", areademejora.length);
+
+            $("#AreadeMejoras").keyup(function() {
+                var el = $(this);
+                console.log(el.val().length);
+                if (el.val().length >= 1000) {
+                    el.val(el.val().substr(0, 1000));
+                } else {
+
+                    $("#charNumArea").text("Caracteres restantes: " + (999 - el.val().length));
+                }
+            });
+
+            //BOTÓN DE GUARDAR
+
+
+            $('#btnSave').on('click',
+                function() {
+
+                    let arrEvidencias = [
+                        $("#eDocumento1").val(), $("#eEnlace1").val(), $("#eDocumento2").val(),
+                        $("#eEnlace2").val(), $("#eDocumento3").val(), $("#eEnlace3").val()
+                    ];
+
+
+                    //EVIDENCIAS
+                    arrEvidencias.forEach(evidencia => {
+                        if (evidencia !== "" && evidencia !== undefined) {
+                            num++;
+                            console.log("variable num", num);
+                        }
+                    });
+
+                    if (num > 0) {
+                        //debugger;
+
+                        let listaDocumentos = [
+                            $("#eDocumento1").val(), $("#eDocumento2").val(), $("#eDocumento3").val()
+                        ];
+
+                        let listaEnlaces = [
+                            $("#eEnlace1").val(), $("#eEnlace2").val(), $("#eEnlace3").val()
+                        ];
+
+                        //console.log('lista', listaDocumentos);
+
+                        //console.log('archivo', $("#eDocumento1").val().split('.').pop());
+                        listaDocumentos.forEach(documento => {
+                            if (documento.length > 0) {
+                                let extension = documento.split('.').pop();
+                                if (extension !== "pdf") {
+                                    Swal.fire({
+                                        type: 'error',
+                                        title: 'Documento Incorrecto',
+                                        text: 'La extensión permitida es .pdf',
+                                    });
+                                } else {
+                                    //debugger;
+
+                                    console.log("Listas de Evidencias:", arrEvidencias);
+                                    $(this).parents("form:first").submit();
+                                }
+                            }
+
+                        });
+
+                        listaEnlaces.forEach(enlace => {
+                            //    console.log("enlace1", $("#eEnlace1").val());
+                            //    console.log("enlace2", $("#eEnlace2").val());
+                            //    console.log("enlace3", $("#eEnlace3").val());
+                            //    console.log("=============================================================");
+                            //    setTimeout(function() {
+                            //            console.log("enlace: ", enlace);
+                            //        },
+                            //        2000);
+                            //console.log("enlace dentro del foreach: ", enlace);
+
+                            if (enlace.length > 0) {
+                                console.log("enlace dentro del if: ", enlace);
+                                $(this).parents("form:first").submit();
+                            }
+                        });
+
+                        //$(this).parents("form:first").submit();
+                        return;
+                    } else {
+                        //debugger;
+                        let num = 0;
+                        arrEvidencias = [
+                            $("#documento1"), $("#enlace1"), $("#documento2"), $("#enlace2"),
+                            $("#documento3"), $("#enlace3")
+                        ];
+                        arrEvidencias.forEach(evidencia => {
+                            let e = evidencia.is(':disabled');
+                            if (e) {
+                                num++;
+                            }
+                        });
+
+                        if (num > 0) {
+
+                            $(this).parents("form:first").submit();
+                        } else {
+                            let areademejora = $('#AreadeMejoras').val().trim();
+                            if (texto.length === 0 && areademejora.length === 0) {
+                                Swal.fire({
+                                    type: "warning",
+                                    title: "Advertencia",
+                                    html: "Es necesario seleccionar una evidencia"
+
+                                });
+
+                            } else {
+                                //alert('guardar');
+                                //debugger;
+                                $(this).parents("form:first").submit();
+                            }
+
+                        }
+
+                    }
+
+                });
+
+            if (texto.length > 0) {
+                //alert('texto ' + texto.length);
+                $("#evidencias").removeAttr('style', 'display=none');
+                $("#listaEvidencia").removeAttr('style', 'display=none; ');
+
+            } else {
+                console.log("puntos fuertes: ", $("#PuntosFuertes"));
+
+
+                $("#PuntosFuertes").blur(function() {
+
+                    //alert('Estoy dentro de Punto Fuertes');
+                    //debugger;
+
+                    let texto = $('#PuntosFuertes').val();
+                    console.log("texto on blur ", texto.length);
+
+                    if (texto.trim().length > 0) {
+                        $("#evidencias").removeAttr('style', 'display=none');
+                        $("#listaEvidencia").removeAttr('style', 'display=none');
+                    } else {
+                        if (texto.length)
+                        //$("#evidencias").attr('style', 'display=none');
+                            $('#btnSave').on('click',
+                                function() {
+                                    alert('Debe de completar el campo Punto Fuerte o cancelar la operación');
+                                });
+                    }
+
+                });
+            }
+
+
+            //VALIDACIONES DE ÁREA DE MEJORA
+
+            var tbody = $("#table tbody");
+
+            if (tbody.children().length !== 0) {
+
+                var conteo = tbody.children().length;
+
+
+                var cell = conteo;
+                cell = parseInt(cell);
+
+                if (cell === 1) {
+
+                    $("#documento1").attr("disabled", true);
+                    $("#enlace1").attr("disabled", true);
+                }
+
+                if (cell === 2) {
+
+                    $("#documento1").prop("disabled", true);
+                    $("#enlace1").prop("disabled", true);
+
+                    $("#documento2").attr("disabled", true);
+                    $("#enlace2").attr("disabled", true);
+                }
+
+
+                if (cell === 3) {
+
+                    $("#documento1").prop("disabled", true);
+                    $("#enlace1").prop("disabled", true);
+
+                    $("#documento2").attr("disabled", true);
+                    $("#enlace2").attr("disabled", true);
+
+                    $("#documento3").attr("disabled", true);
+                    $("#enlace3").attr("disabled", true);
+                }
+
+
+            }
+
+            //$(":file").filestyle({ buttonText: "subir archivo" });
+
+            $("#documento1").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaDocumento1").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaEnlace1").attr('style', 'margin-top: 22px; display:none');
+                }
+
+
+            });
+            $("#enlace1").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaEnlace1").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaDocumento1").attr('style', 'margin-top: 22px; display:none');
+                }
+
+
+            });
+
+            $("#documento2").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaDocumento2").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaEnlace2").attr('style', 'margin-top: 22px; display:none');
+                }
+
+
+            });
+            $("#enlace2").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaEnlace2").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaDocumento2").attr('style', 'margin-top: 22px; display:none');
+                }
+
+
+            });
+
+            $("#documento3").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaDocumento3").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaEnlace3").attr('style', 'margin-top: 22px; display:none');
+                }
+
+
+            });
+            $("#enlace3").click(function() {
+
+                if ($(this).is(':checked')) {
+                    $("#evidenciaEnlace3").removeAttr('style', 'margin-top: 22px; display:none');
+                    $("#evidenciaDocumento3").attr('style', 'margin-top: 22px; display:none');
+
+                }
+
+
+            });
+
+        });
+
+
+    </script>
+
+
+}

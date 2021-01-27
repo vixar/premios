@@ -1,0 +1,11 @@
+﻿@model ProyectoCalidad.Domain.Entities.DPS
+
+<option value=""> -- Seleccione --</option>
+
+@if (ViewBag.DPSList != null)
+{
+    foreach (var item in ViewBag.DPSList)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+}

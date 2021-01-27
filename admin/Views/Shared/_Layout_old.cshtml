@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Sistema de Gestion de Calidad</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                -webkit-border-radius: 0 6px 6px 6px;
+                -moz-border-radius: 0 6px 6px;
+                border-radius: 0 6px 6px 6px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > a:after {
+                display: block;
+                content: " ";
+                float: right;
+                width: 0;
+                height: 0;
+                border-color: transparent;
+                border-style: solid;
+                border-width: 5px 0 5px 5px;
+                border-left-color: #ccc;
+                margin-top: 5px;
+                margin-right: -10px;
+            }
+
+            .dropdown-submenu:hover > a:after {
+                border-left-color: #fff;
+            }
+
+            .dropdown-submenu.pull-left {
+                float: none;
+            }
+
+                .dropdown-submenu.pull-left > .dropdown-menu {
+                    left: -100%;
+                    margin-left: 10px;
+                    -webkit-border-radius: 6px 0 6px 6px;
+                    -moz-border-radius: 6px 0 6px 6px;
+                    border-radius: 6px 0 6px 6px;
+                }
+    </style>
+
+    @RenderSection("head", required: false)
+</head>
+<body>
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Sistema de Premios a la Calidad", "Index", "Home", null, new { @class = "navbar-brand" })
+        </div>
+        @{ var tex = 2;
+            if (tex == 1)
+            {
+                Html.RenderPartial("_MenuAdministradorPartial");
+            }
+            else
+            {
+                Html.RenderPartial("_MenuNuevoTemplate");
+            }
+
+        }
+
+
+    </div>
+
+    <div class="col-sm-3 col-sm-offset-9 col-md-2 col-md-offset-10 sidebar">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon-user"></span>&nbsp;Usuario</h3>
+            </div>
+            <div class="panel-body">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        @RenderSection("sideMenu", required: false)
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-9 col-md-10">
+                @*  <img alt="banner" src="~/Images/banner_SMT.jpg" class="img-responsive center-block" style="width:90%; height:70%;" />*@
+                <div class="clearfix"></div>
+                <hr />
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- pie de pagina -->
+    <div class="card" style="width: auto; box-shadow: 10px 10px 5px rgba(191, 197, 202, 0.38); margin-top: 20px; margin-bottom: 20px;">
+        <div class="card-body" style="text-align: center;">
+            <form class="form-horizontal">
+                <h5 class="card-title"></h5>
+                <div class="borderFooter"></div>
+                <footer class="footer">
+                    <div class="container">
+                        <div class="row hidden-xs">
+
+                            <div class="col-sm-4"></div>
+
+                            <div class="col-sm-4">
+
+                                <ul class="nav identidad">
+                                    <!-- logo organismo para footer -->
+                                    @*<li class="logo" style="margin-right:auto;">
+                                            <img src="http://mt.gob.do/images/docs/logo_only.png"
+                                                 width="67" height="67" class="img-responsive" alt="Ministerio de Trabajo" />
+                                        </li>*@
+                                    <!-- separador -->
+                                    <li class="separador"></li>
+                                    <!-- identidad país para el footer -->
+                                    <li class="rd">
+                                        <img src="/Images/repDomF.png" width="67" height="67" alt="Rep&uacute;blica Dominicana" title="Rep&uacute;blica Dominicana" />
+                                        <img src="~/Images/logo-map-only.jpg" width="67" height="67" />
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="col-sm-4"></div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p><a class="nombreOrganismo" href="/" style="color: #ff6600;">Ministerio de Administracion P&uacute;blica</a></p>
+                                <p class="hidden-xs">Av. 27 de Febrero No. 419, sector El Millón II. Santo Domingo, R</p>
+                                <p class="hidden-xs">Tel. 809-682-3298 | Fax. 809-686-6652 </p>
+                                <p class="hidden-xs"><a href="mailto:info@map.gob.do?subject=Ministerio de Administracion Publica - Contacto">info@map.gob.do</a></p>
+                                <p class="hidden-xs"><a href="mailto:premino.calidad@map.gob.do?subject=Premio a la calidad - Contacto">premio.calidad@map.gob.do</a></p>
+                                <p>
+
+
+                                </p>
+                                <p class="boton visible-xs"><a href="#" class="subir"><span class="glyphicon glyphicon-download"></span>Subir</a></p>
+                                <p class="visible-xs selloMobile">
+                                </p>
+                                <p>@DateTime.Now.Year. Todos los derechos reservados</p>
+                                <p class="visible-xs">Rep&uacute;blica Dominicana</p>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+
+            </form>
+        </div>
+    </div>
+
+
+
+    @RenderSection("scripts", required: false)
+
+
+
+
+    @Scripts.Render("~/bundles/jquery", "~/bundles/bootstrap")
+    @*@RenderSection("scripts", required: false)*@
+</body>
+</html>

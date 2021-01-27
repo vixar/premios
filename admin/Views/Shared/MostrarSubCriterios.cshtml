@@ -1,0 +1,15 @@
+﻿@model ProyectoCalidad.Domain.Entities.SubCriterios
+
+<option value=" ">
+    Selecciona el Sub Criterio
+</option>
+
+@{
+    if (ViewBag.SubCriterioID != null)
+    {
+        foreach (var item in ViewBag.SubCriterioID)
+        {
+            <option value="@item.Value">@item.Text</option>
+        }
+    }
+}

@@ -1,0 +1,408 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div class="row">
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-info">
+            <i class="mdi mdi-chart-areaspline widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Statistics">Statistics</p>
+                <h2 class="text-white"><span data-plugin="counterup">34578</span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>Last:</b> 30.4k</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-primary">
+            <i class="mdi mdi-layers widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="User This Month">User This Month</p>
+                <h2 class="text-white"><span data-plugin="counterup">52410 </span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>Last:</b> 40.33k</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-danger">
+            <i class="mdi mdi-access-point-network widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="Statistics">Statistics</p>
+                <h2 class="text-white"><span data-plugin="counterup">6352</span> <small><i class="mdi mdi-arrow-up text-success"></i></small></h2>
+                <p class="m-0"><b>Last:</b> 30.4k</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+    <div class="col-lg-3 col-md-6">
+        <div class="card-box widget-box-two widget-two-success">
+            <i class="mdi mdi-account-convert widget-two-icon"></i>
+            <div class="wigdet-two-content text-white">
+                <p class="m-0 text-uppercase font-600 font-secondary text-overflow" title="User Today">User Today</p>
+                <h2 class="text-white"><span data-plugin="counterup">895 </span> <small><i class="mdi mdi-arrow-down text-danger"></i></small></h2>
+                <p class="m-0"><b>Last:</b> 1250</p>
+            </div>
+        </div>
+    </div><!-- end col -->
+
+</div>
+<!-- end row -->
+
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card-box">
+
+            <div class="row">
+                <div class="col-sm-12 col-xs-12 col-md-6">
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Stacked Bar Chart</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            Create stacked bar charts using Morris.Bar(options), where options is an object
+                            containing the configuration options.
+                        </p>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5 class="text-teal"><i class="mdi mdi-crop-square m-r-5"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5><i class="mdi mdi-details m-r-5"></i>Series B</h5>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="morris-bar-stacked" style="height: 300px;"></div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-xs-12 col-md-6">
+
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Area Chart</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            Create an area chart using Morris.Area(options). Area charts take all the
+                            same options as line charts.
+                        </p>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5 class="text-brown"><i class="mdi mdi-crop-square m-r-5"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5><i class="mdi mdi-details m-r-5"></i>Series B</h5>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="morris-area-example" style="height: 300px;"></div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- end row -->
+
+
+            <div class="row m-t-50">
+                <div class="col-lg-6 m-t-20">
+
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Line Chart</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            The public API is terribly simple. It's just one function: Morris.Line
+                            (options), where options is an object containing some of the
+                            configuration options.
+                        </p>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5 class="text-primary"><i class="mdi mdi-crop-square m-r-5"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="text-success"><i class="mdi mdi-details m-r-5"></i>Series B</h5>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div id="morris-line-example" style="height: 300px;"></div>
+
+                    </div> <!-- demo-box -->
+
+                </div> <!-- end row -->
+
+                <div class="col-lg-6 m-t-20">
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Bar Chart</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            Create bar charts using Morris.Bar(options), where options is an object
+                            containing the configuration options.
+                        </p>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5 class="text-info"><i class="mdi mdi-crop-square m-r-5"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="text-orange"><i class="mdi mdi-details m-r-5"></i>Series B</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="text-danger"><i class="mdi mdi-checkbox-blank-circle-outline m-r-5"></i>Series C</h5>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="morris-bar-example" style="height: 320px;"></div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- end row -->
+
+
+            <div class="row m-t-50">
+
+                <div class="col-lg-6 m-t-20">
+
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Area Chart with Point</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            Create an area chart using Morris.Area(options). Area charts take all the
+                            same options as line charts.
+                        </p>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5 class="text-purple"><i class="mdi mdi-crop-square m-r-5"></i>Series A</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5><i class="mdi mdi-details m-r-5"></i>Series B</h5>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="morris-area-with-dotted" style="height: 300px;"></div>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-xs-12 col-md-6 m-t-20">
+
+                    <div class="demo-box">
+                        <h4 class="header-title m-t-0">Donut Chart</h4>
+                        <p class="text-muted font-13 m-b-30">
+                            This really couldn't be easier. Create a Donut chart using Morris.Donut(options).
+                        </p>
+
+                        <div id="morris-donut-example" style="height: 300px;"></div>
+
+                        <div class="text-center">
+                            <ul class="list-inline chart-detail-list">
+                                <li class="list-inline-item">
+                                    <h5><i class="mdi mdi-crop-square m-r-5"></i>Financial</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="text-info"><i class="mdi mdi-details m-r-5"></i>Markets</h5>
+                                </li>
+                                <li class="list-inline-item">
+                                    <h5 class="text-success"><i class="mdi mdi-checkbox-blank-circle-outline m-r-5"></i>Electricity</h5>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- end row -->
+
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="panel panel-color panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Messages</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="inbox-widget slimscroll-alt" style="min-height: 327px;">
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-1.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Chadengle</p>
+                                        <p class="inbox-item-text">Hey! there I'm available...</p>
+                                        <p class="inbox-item-date">13:40 PM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-2.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Tomaslau</p>
+                                        <p class="inbox-item-text">I've finished it! See you so...</p>
+                                        <p class="inbox-item-date">13:34 PM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-3.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Stillnotdavid</p>
+                                        <p class="inbox-item-text">This theme is awesome!</p>
+                                        <p class="inbox-item-date">13:17 PM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-4.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Kurafire</p>
+                                        <p class="inbox-item-text">Nice to meet you</p>
+                                        <p class="inbox-item-date">12:20 PM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-5.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Shahedk</p>
+                                        <p class="inbox-item-text">Hey! there I'm available...</p>
+                                        <p class="inbox-item-date">10:15 AM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-6.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Adhamdannaway</p>
+                                        <p class="inbox-item-text">This theme is awesome!</p>
+                                        <p class="inbox-item-date">9:56 AM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-8.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Arashasghari</p>
+                                        <p class="inbox-item-text">Hey! there I'm available...</p>
+                                        <p class="inbox-item-date">10:15 AM</p>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div class="inbox-item">
+                                        <div class="inbox-item-img"><img src="~/images/users/avatar-9.jpg" class="img-circle" alt=""></div>
+                                        <p class="inbox-item-author">Joshaustin</p>
+                                        <p class="inbox-item-text">I've finished it! See you so...</p>
+                                        <p class="inbox-item-date">9:56 AM</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end panel -->
+
+                </div>
+                <!-- end col -->
+
+                <div class="col-md-8">
+                    <div class="panel panel-color panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Recent Users</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table table-hover m-0">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>User Name</th>
+                                            <th>Phone</th>
+                                            <th>Location</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                <img src="~/images/users/avatar-6.jpg" alt="user" class="thumb-sm img-circle" />
+                                            </th>
+                                            <td>
+                                                <h5 class="m-0">Louis Hansen</h5>
+                                                <p class="m-0 text-muted font-13"><small>Web designer</small></p>
+                                            </td>
+                                            <td>+12 3456 789</td>
+                                            <td>USA</td>
+                                            <td>07/08/2016</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>
+                                                <span class="avatar-sm-box bg-primary">C</span>
+                                            </th>
+                                            <td>
+                                                <h5 class="m-0">Craig Hause</h5>
+                                                <p class="m-0 text-muted font-13"><small>Programmer</small></p>
+                                            </td>
+                                            <td>+89 345 6789</td>
+                                            <td>Canada</td>
+                                            <td>29/07/2016</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>
+                                                <img src="~/images/users/avatar-7.jpg" alt="user" class="thumb-sm img-circle" />
+                                            </th>
+                                            <td>
+                                                <h5 class="m-0">Edward Grimes</h5>
+                                                <p class="m-0 text-muted font-13"><small>Founder</small></p>
+                                            </td>
+                                            <td>+12 29856 256</td>
+                                            <td>Brazil</td>
+                                            <td>22/07/2016</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>
+                                                <span class="avatar-sm-box bg-pink">B</span>
+                                            </th>
+                                            <td>
+                                                <h5 class="m-0">Bret Weaver</h5>
+                                                <p class="m-0 text-muted font-13"><small>Web designer</small></p>
+                                            </td>
+                                            <td>+00 567 890</td>
+                                            <td>USA</td>
+                                            <td>20/07/2016</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>
+                                                <img src="~/images/users/avatar-8.jpg" alt="user" class="thumb-sm img-circle" />
+                                            </th>
+                                            <td>
+                                                <h5 class="m-0">Mark</h5>
+                                                <p class="m-0 text-muted font-13"><small>Web design</small></p>
+                                            </td>
+                                            <td>+91 123 456</td>
+                                            <td>India</td>
+                                            <td>07/07/2016</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div> <!-- table-responsive -->
+                        </div> <!-- end panel body -->
+                    </div>
+                    <!-- end panel -->
+                </div>
+                <!-- end col -->
+
+            </div>
+            <!-- end row -->
+        </div>
+
+    </div>
+</div>

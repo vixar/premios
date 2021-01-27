@@ -1,0 +1,111 @@
+﻿@model  ProyectoCalidad.Domain.Entities.PostulanteDocumentos
+
+@{
+    ViewBag.Title = "Editar Postulante DocumentoID";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Postulante DocumentoID</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del Postulante Documento <strong>@Model.PostulanteDocumentoID</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarPostulanteDocumento", "PostulanteDocumentos", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.PostulanteDocumentoID)
+
+
+            @Html.ValidationSummary(true)
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Tipo Documento</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("TipoDocumentoID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Postulante</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("PostulanteID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Premio</label>
+                <div class="col-md-9">
+                    @Html.DropDownList("PremioID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Documento" class="col-md-3 control-label">Documento</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Documento, new { @class = "form-control", @placeholder = "Documento." })
+                    @Html.ValidationMessageFor(x => x.Documento, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Comentario" class="col-md-3 control-label">Comentario</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Comentario, new { @class = "form-control", @placeholder = "Comentario." })
+                    @Html.ValidationMessageFor(x => x.Comentario, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="FechaHora" class="col-md-3 control-label">Fecha Hora</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.FechaHora, new { @class = "form-control", @placeholder = "FechaHora." })
+                    @Html.ValidationMessageFor(x => x.FechaHora, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="EstadoDocumento" class="col-md-3 control-label">EstadoDocumento</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.EstadoDocumento, new { @class = "form-control", @placeholder = "EstadoDocumento." })
+                    @Html.ValidationMessageFor(x => x.EstadoDocumento, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @{
+                        bool activo = true; // Model.Estado.Equals("Activo");
+                    }
+                    @Html.CheckBox("EstadoBool", activo, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Registrar datos</button>
+                    @Html.ActionLink("Cancelar registro", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Postulante Documento", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

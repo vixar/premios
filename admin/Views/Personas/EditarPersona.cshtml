@@ -1,0 +1,104 @@
+﻿@model  ProyectoCalidad.Domain.Entities.Personas
+
+@{
+    ViewBag.Title = "Editar Personas";
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-edit"></span>&nbsp;Editar Personas</h2>
+<hr />
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span>&nbsp;Datos del la Persona <strong>@Model.Nombre</strong></h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("EditarPersona", "Personas", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" }))
+        {
+            @Html.HiddenFor(x => x.PersonaID)
+
+
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                <label for="Nombre" class="col-md-3 control-label">Nombre(s)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Nombre, new { @class = "form-control", @placeholder = "Nombre(s) de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Nombre, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Apellido" class="col-md-3 control-label">Apellido(s)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Apellido, new { @class = "form-control", @placeholder = "Apellido(s) de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Apellido, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Genero" class="col-md-3 control-label">Genero</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Genero, new { @class = "form-control", @placeholder = "Genero de la Persona." })
+                    @Html.ValidationMessageFor(x => x.Genero, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="TipoInstitucionID" class="col-md-3 control-label">TipoInstitucion ID</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.TipoInstitucionID, new { @class = "form-control", @placeholder = "TipoInstitucionID de la Persona." })
+                    @Html.ValidationMessageFor(x => x.TipoInstitucionID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="InstitucionID" class="col-md-3 control-label">InstitucionID</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.InstitucionID, new { @class = "form-control", @placeholder = "InstitucionID de la Persona." })
+                    @Html.ValidationMessageFor(x => x.TipoInstitucionID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Role</label>
+                <div class="col-md-9">
+
+                    @Html.DropDownList("RoleID", null, new { @class = "form-control" })
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Estado</label>
+                <div class="col-md-9">
+                    @{
+                        bool activo = true; // Model.Estado.Equals("Activo");
+                    }
+                    @Html.CheckBox("EstadoBool", activo, new { data_plugin = "switchery", data_olor = "#9261c6", data_secondary_color = "#ff7aa3" })
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-info">Guardar</button>
+                    @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">@Html.ActionLink("Regresar a Personas", "Index", null, new { @class = "menu-item waves-effect waves-light" })</li>
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+    </ul>
+}

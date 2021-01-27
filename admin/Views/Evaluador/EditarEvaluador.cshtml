@@ -1,0 +1,335 @@
+﻿@using System.Collections.Specialized
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using ProyectoCalidad.Domain.Concrete
+@using ProyectoCalidad.Domain.Entities
+@*@using ProyectoCalidad.Domain.Concrete*@
+@*@model ProyectoCalidad.Domain.Entities.EvaluadorPremio*@
+@model ProyectoCalidad.WebUI.Models.EditarEvaluadorViewModel
+
+@{
+
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new EFDbContext()));
+    var usuario = userManager.FindById(Model.EvaluadorPremio.UsuarioID);
+    var premio = ViewBag.premio as ProyectoCalidad.Domain.Entities.Premio;
+
+    var mensaje = ViewBag.mensaje;
+
+
+}
+@section style{
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+    <!-- Tooltipster css -->
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+}
+
+<div class="main">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Asignación de equipo </h4>
+                <ol class="breadcrumb p-0 m-0">
+                    <li>
+                        <a href="@Url.Action("Index", "Home")">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Evaluador")">Evaluador</a>
+                    </li>
+                    <li class="active">
+                        Asignación
+                    </li>
+                </ol>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-center card-box">
+                <div class="member-card">
+                    <div class="thumb-xl member-thumb m-b-10 center-block">
+                        @{
+                            var imagen = Path.GetFileName(usuario.Imagen);
+
+
+                            if (imagen != "Default.jpg")
+                            {
+
+                                <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                                <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                            }
+                            else
+                            {
+
+                                <img src="@Url.Content("~/Usuarios/Imagenes/" + imagen)" class="img-circle img-thumbnail" alt="profile-image">
+                                <i class="mdi mdi-star-circle member-star text-success" title="verified user"></i>
+                            }
+                        }
+
+                    </div>
+
+                    <div class="">
+                        <h4 class="m-b-5">@usuario.Nombre @usuario.Apellido</h4>
+                        <p class="text-muted">@usuario.Email</p>
+                    </div>
+
+                    <a href="@Url.Action("VerCV", "Account", new{userID = usuario.Id})" class="btn btn-primary btn-sm w-sm waves-effect m-t-10 waves-light">Ver CV</a>
+                    @*<button type="button" onclick="invitar('@usuario.Id')" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Invitar</button>*@
+                    @*<a href="@Url.Action("Aspirantes", "Evaluador")" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Regresar a la lista</a>*@
+
+                    <p class="text-muted font-13 m-t-20">
+                    </p>
+
+                    <hr />
+
+                    <div class="text-left">
+                        @*<p class="text-muted font-13"><strong>Full Name :</strong> <span class="m-l-15">Johnathan Deo</span></p>*@
+
+                        <p class="text-muted font-13"><strong>Teléfono :</strong><span class="m-l-15">@usuario.Telefono</span></p>
+
+                        @*<p class="text-muted font-13"><strong>Email :</strong> <span class="m-l-15">coderthemes@gmail.com</span></p>*@
+
+                        <p class="text-muted font-13"><strong>Role :</strong> <span class="m-l-15">@usuario.Role</span></p>
+
+                        @*<p class="text-muted font-13"><strong>Role :</strong> <span class="m-l-15">@Model.</span></p>*@
+                        @if (Model.EvaluadorPremio.IsActive)
+                        {
+                            <p class="text-muted font-13"><strong>Estado :</strong> <span class="m-l-15">Activo</span></p>
+                        }
+                        else
+                        {
+                            <p class="text-muted font-13"><strong>Estado :</strong> <span class="m-l-15">Inactivo</span></p>
+                        }
+                    </div>
+
+                    @*<ul class="social-links list-inline m-t-30">
+                            <li>
+                                <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Twitter"><i class="fa fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Skype"><i class="fa fa-skype"></i></a>
+                            </li>
+                        </ul>*@
+
+                </div>
+
+            </div> <!-- end card-box -->
+
+        </div> <!-- end col -->
+
+        <div class="col-sm-4">
+            <div class="card-box">
+                @using (Html.BeginForm("EditarEvaluador", "Evaluador", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.EvaluadorPremio.UsuarioID)
+                    @Html.HiddenFor(m => m.EvaluadorPremio.EvaluadorPremioID)
+                    @Html.HiddenFor(m => m.EvaluadorPremio.IsActive)
+                    //@Html.Hidden("IsManager", Model.IsManager)
+                    @Html.Hidden("PremioID", premio.PremioID)
+
+                    <div class="form-group mb5">
+                        <h4 class="mb30">Asignación</h4>
+                        <div style="float: right; margin-top: -48px;">
+                            @*<a href="@Url.Action("CrearEquipoEvaluador", "EquipoEvaluador")" style="margin-right: 15px" class="btn btn-default min-width"> <i class="mdi mdi-plus"></i> Crear Equipo Evaluador</a>*@
+                        </div>
+                    </div><!-- End .from-group -->
+
+                    <hr />
+
+                    <br />
+
+
+                    <div class="row">
+                        @*<div class="col-sm-4 ">
+                                <div class="form-group">
+                                    <label>Elija el equipo</label>
+                                    @Html.DropDownList("EquipoEvaluadorID", null, "", new { @class = "form-control select2", onchange = "selectEquipo(" + @Model.EvaluadorPremioID + ")" })
+                                </div><!-- End .from-group -->
+                            </div><!-- End .col-sm-6 -->*@
+
+                        <div class="col-sm-12 ">
+                            <div class="form-group">
+                                <label>Equipo</label>
+                                @*@Html.DropDownList("EquipoID", null, "", new { @class = "form-control select2", onchange = "selectEquipo(" + @Model.EvaluadorPremio.EvaluadorPremioID + ")" })*@
+                               
+                            @Html.DropDownListFor(m => m.EvaluadorPremio.EquipoID, new SelectList(Model.Equipos, "EquipoID" ,"Nombre"), "Seleccionar Equipo", new { @class = "form-control select2" })
+                                    
+                            </div><!-- End .from-group -->
+                        </div><!-- End .col-sm-6 --> 
+                        <div class="mb10" style="height: 120px;"></div><!-- space -->
+                        <div class="col-sm-6" style="font-size: larger;">
+
+                            @*<div class="checkbox checkbox-primary checkbox-single">
+                                    <input type="checkbox" id="singleCheckbox2" name="IsNew" aria-label="Single checkbox Two">
+                                    @Html.CheckBox("IsNew", new { id = "singleCheckbox2", aria_label="Single checkbox Two" })
+                                    <label>Evaluador en Práctica</label>
+
+                                </div>*@
+
+
+                            @Html.CheckBox("IsNew", new { id = "singleCheckbox2", aria_label = "Single checkbox Two" })
+                            <label>Evaluador en práctica</label>
+
+                        </div><!-- End .col-sm-6 -->
+
+                        <div class="col-sm-6" style="font-size: larger;">
+
+                            @Html.CheckBox("IsManager", Model.EvaluadorPremio.IsManager, new { id = "singleCheckbox2", aria_label = "Single checkbox Two" })
+                            <label>Coordinador del Equipo</label>
+                            @*<div class="checkbox checkbox-primary checkbox-single">
+
+                                    @if (Model.IsManager)
+                                    {
+                                        <input type="checkbox" id="" name="IsManager" aria-label="Single checkbox Two" checked="">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" id="" name="IsManager" aria-label="Single checkbox Two" />
+                                    }
+
+                                    <label>Coordinador del Equipo</label>
+
+                                </div>*@
+
+                        </div><!-- End .col-sm-6 -->
+
+                    </div><!-- End .row -->
+
+
+                    <div class="mb10"></div><!-- space -->
+                    <hr />
+                    <button type="submit" class="btn btn-primary min-width btn-block"> <i class="mdi mdi-content-save"></i> Guardar</button>
+
+
+
+                }
+            </div>
+        </div>
+
+        @*<div class="col-sm-4">
+                <!--Información del equipo actual-->
+                <div class="card-box">
+
+                </div>
+            </div>*@
+
+    </div>
+
+    @*<div class="row">
+
+        <div class="col-sm-4" id="equiposInfo">
+            <div class="form-group">
+                <label class="m-l-10">Datos del equipo seleccionado</label>
+                <div id="equipoEvaluadorInfo">
+
+                </div>
+            </div> End .from-group 
+        </div> End .col-sm-6 
+    </div>*@
+
+</div>
+
+@section Scripts{
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+    <!-- Tooltipster js -->
+    <script src="~/plugins/tooltipster/tooltipster.bundle.min.js"></script>
+    <script src="~/Scripts/pages/jquery.tooltipster.js"></script>
+
+    <script src="/Scripts/pages/jquery.form-advanced.init.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "POST",
+                dataType: 'html',
+                url: "/Equipo/GetEquipoInfo?EquipoID=" + 5 + "&eID=" + 15,
+                success: function (data) {
+
+
+
+
+                }
+                //url: "/Equipo/startup",
+                //success: function() {
+                //    console.log('StartUp');
+                //}
+
+            });
+
+            if ('@mensaje.tipo'.length > 0) {
+
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                })
+
+
+            }
+
+        });
+
+        //function selectEquipo(eID) {
+        //    var e = $("#EquipoEvaluadorID").val();
+
+        //    alert(e);
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/EquipoEvaluador/GetEquipoEvaluadorInfo?EquipoEvaluadorID=" + e + "&eID=" + eID,
+        //        success: function (data) {
+
+        //            $("#equiposInfo").removeAttr("style", "display:none");
+
+        //            $("#equipoEvaluadorInfo").empty();
+        //            $("#equipoEvaluadorInfo").append(data);
+
+        //        }
+        //    });
+        //}
+
+        function selectEquipo(eID) {
+            var e = $("#EquipoID").val();
+            $.ajax({
+                type: "POST",
+                dataType : 'html',
+                url: "/Equipo/GetEquipoInfo?EquipoID=" + e + "&eID=" + eID,
+                success: function (data) {
+
+
+                    //$("#equiposInfo").removeAttr("style", "display:none");
+
+                    $("#equipoEvaluadorInfo").empty();
+                    $("#equipoEvaluadorInfo").append(data);
+
+                }
+            });
+        }
+
+    </script>
+
+
+}

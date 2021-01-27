@@ -1,0 +1,444 @@
+﻿@using ProyectoCalidad.Models.Paging;
+@model ProyectoCalidad.WebUI.Models.GuiaIndexData
+@*IPagedList<ProyectoCalidad.Domain.Entities.Guia>*@
+
+@{
+    /**/
+
+    ViewBag.Title = "Mantenimiento de Guia";
+
+}
+
+<h2>&nbsp;<span class="glyphicon glyphicon-tasks"></span>&nbsp;Mantenimiento de Guia</h2>
+<hr />
+
+@*<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-search"></span>&nbsp;B&uacute;squeda</h3>
+        </div>
+        <div class="panel-body">
+               </div>
+    </div>*@
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;Listado de Guia</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Descripci&oacute;n</th>
+                    <th>Version</th>
+                    <th>Tipo Puntuacion</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Guias)
+                {
+                    string selectedRow = "";
+                    string editicon = "fa-circle-o";
+                    if (item.GuiaID == ViewBag.GuiaID)
+                    {
+                        selectedRow = "success";
+                        editicon = "fa-dot-circle-o";
+                    }
+                <tr class="@selectedRow" valign="top">
+                    <td>
+                        <a href="@Url.Action("Index", new { id = item.GuiaID })" class="table-action-btn h3"><i class="fa @editicon text-purple"></i></a>
+                    </td>
+                    <td>@Html.ActionLink(item.Descripcion, "EditarGuia", new { id = item.GuiaID })</td>
+                    <td>@item.Version</td>
+                    <td>@item.TipoPuntuacion</td>
+                    <td>@item.Estado</td>
+                    @*<td style="width: 20px;">
+            <i class="fa fa-paperclip"></i>
+        </td>
+                    <td class="actions">
+                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
+                        <a href="#" class="on-default edit-row"><i class="fa fa-pencil"></i></a>
+                        <a href="#" class="on-default remove-row"><i class="fa fa-trash-o"></i></a>
+                    </td>
+
+                    *@
+
+
+                    <td class="actions">
+                        @Html.Hidden("GuiaID", item.GuiaID)
+                        <a href="@Url.Action("EditarGuia", "Guia", new { id = item.GuiaID })" class="table-action-btn h3"><i class="fa fa-pencil text-primary"></i></a>
+                        @{
+                            if (!item.Estado)
+                            {
+                                <a href="@Url.Action("InactivarGuia", "Guia", new { id = item.GuiaID })" class="table-action-btn h3"><i class="fa fa-toggle-off text-danger"></i></a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("InactivarGuia", "Guia", new { id = item.GuiaID })" class="table-action-btn h3"><i class="fa fa-toggle-on text-success"></i></a>
+                            }
+                        }
+                        <a href="@Url.Action("Index","GuiaDetalle", new { id = item.GuiaID })" class="table-action-btn h3"><i class="ti-printer text-brown"></i></a>
+                        @*<a href="#" class="table-action-btn h3"><i class="mdi mdi-close-box-outline text-danger"></i></a>*@
+                    
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            @{
+                RouteValueDictionary r = new RouteValueDictionary();
+                            r.Add("to", Request["to"]);
+                r.Add("from", Request["from"]);
+                r.Add("text", Request["text"]);
+            }
+            @*@Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount, r)*@
+        </div>
+
+
+
+    </div>
+</div>
+
+@if (Model.Criterios != null)
+{
+
+        <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;Criterios de: @Model.Guias.First().Descripcion</h3>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    @*@Html.ActionLink("Nuevo Criterio", "CrearCriterio", null,
+                        new { @class = "btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30", @data_animation="fadein", @data_plugin="custommodal"
+                        , @data_overlayspeed="200", @data_overlaycolor="#36404a"}) style="width:100%;white-space: unset;text-align: initial"*@
+
+
+                    <button class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" id=""
+                            onclick="createModal('@Url.Action("NuevoCriterio", "Criterios", new {id=ViewBag.GuiaID })')">
+                        @*<i class="fa fa-list"></i>*@
+                        <span>
+                            Nuevo Criterio
+                        </span>
+                    </button>
+
+
+                </div>
+                @*<div class="col-sm-4">
+                        <a href="#custom-modal" class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
+                           data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add New Agent</a>
+                    </div>*@
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Ponderacion</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Criterios)
+                    {
+                        string selectedRow = "";
+                        string editicon = "fa-circle-o";
+                        if (item.CriterioID == ViewBag.CriterioID)
+                        {
+                            selectedRow = "success";
+                            editicon = "fa-dot-circle-o";
+                        }
+                    <tr class="@selectedRow">
+                        <td>
+                            <a href="@Url.Action("Index", new { id = item.GuiaID, criterioId = item.CriterioID })" class="table-action-btn h3"><i class="fa @editicon text-purple"></i></a>
+                        </td>
+                        <td>@item.Codigo</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Ponderacion</td>
+                        <td>@item.Estado</td>
+                        <td class="actions">
+                            @Html.Hidden("CriterioID", item.CriterioID)
+                         
+                            <a href="#" onclick="createModal('@Url.Action("EditarCriterioPartial", "Criterios", new {id=item.CriterioID })')"
+                               class="table-action-btn h3"><i class="fa fa-pencil text-primary"></i></a>
+                            @{
+                                if (!item.Estado)
+                                {
+                                    <a href="@Url.Action("InactivarCriterioGuia", "Criterios", new { id = item.CriterioID })" class="table-action-btn h3"><i class="fa fa-toggle-off text-danger"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("InactivarCriterioGuia", "Criterios", new { id = item.CriterioID })" class="table-action-btn h3"><i class="fa fa-toggle-on text-success"></i></a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (Model.SubCriterios != null)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;SubCriterios de: @Model.Criterios.Where(c => c.CriterioID == ViewBag.CriterioID).First().CriterioNombreCompleto</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    @*@Html.ActionLink("Nuevo Criterio", "CrearCriterio", null,
+                new { @class = "btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30", @data_animation="fadein", @data_plugin="custommodal"
+                , @data_overlayspeed="200", @data_overlaycolor="#36404a"}) style="width:100%;white-space: unset;text-align: initial"*@
+
+
+                    <button class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" id=""
+                            onclick="createModal('@Url.Action("NuevoSubCriterio", "SubCriterios", new {id=ViewBag.CriterioID })')">
+                        @*<i class="fa fa-list"></i>*@
+                        <span>
+                            Nuevo Sub Criterio
+                        </span>
+                    </button>
+
+
+                </div>
+                @*<div class="col-sm-4">
+                <a href="#custom-modal" class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
+                   data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add New Agent</a>
+            </div>*@
+            </div>
+            <table class=" table table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Codigo</th>
+                        <th>Descripci&oacute;n</th>
+                        <th>Ponderacion</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SubCriterios)
+                    {
+                        string selectedRow = "";
+                        string editicon = "fa-circle-o";
+                        if (item.SubCriterioID == ViewBag.SubCriterioID)
+                        {
+                            selectedRow = "success";
+                            editicon = "fa-dot-circle-o";
+                        }
+
+                        <tr class="@selectedRow">
+                            <td>
+                                <a href="@Url.Action("Index", new { id = ViewBag.GuiaID, criterioId = item.CriterioID, subcriterioId = item.SubCriterioID })" class="table-action-btn h3"><i class="fa @editicon text-purple"></i></a>
+                            </td>
+                            <td>@item.Codigo</td>
+                            <td>@item.Descripcion</td>
+                            <td>@item.Ponderacion</td>
+                            <td>@item.Estado</td>
+                            <td class="actions">
+                                @Html.Hidden("SubCriterioID", item.SubCriterioID)
+                                
+                                <a href="#" onclick="createModal('@Url.Action("EditarSubCriterioPartial", "SubCriterios", new {id=item.SubCriterioID })')"
+                                   class="table-action-btn h3"><i class="fa fa-pencil text-primary"></i></a>
+
+                                @{
+                                    if (!item.Estado)
+                                    {
+                                        <a href="@Url.Action("InactivarSubCriterioGuia", "SubCriterios", new { id = item.SubCriterioID })" class="table-action-btn h3"><i class="fa fa-toggle-off text-danger"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("InactivarSubCriterioGuia", "SubCriterios", new { id = item.SubCriterioID })" class="table-action-btn h3"><i class="fa fa-toggle-on text-success"></i></a>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+}
+
+@if (Model.Ejemplos != null)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-th"></span>&nbsp;Ejemplos de: @Model.SubCriterios.Where(s => s.SubCriterioID == ViewBag.SubCriterioID).First().SubCriterioDescripcionCompleta</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    @*@Html.ActionLink("Nuevo Criterio", "CrearCriterio", null,
+                new { @class = "btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30", @data_animation="fadein", @data_plugin="custommodal"
+                , @data_overlayspeed="200", @data_overlaycolor="#36404a"}) style="width:100%;white-space: unset;text-align: initial"*@
+
+
+                    <button class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" id=""
+                            onclick="createModal('@Url.Action("NuevoEjemplo", "Ejemplos", new {id=ViewBag.SubCriterioID })')">
+                        @*<i class="fa fa-list"></i>*@
+                        <span>
+                            Nuevo Ejemplo
+                        </span>
+                    </button>
+
+
+                </div>
+                @*<div class="col-sm-4">
+                <a href="#custom-modal" class="btn btn-success btn-rounded btn-md waves-effect waves-light m-b-30" data-animation="fadein" data-plugin="custommodal"
+                   data-overlaySpeed="200" data-overlayColor="#36404a"><i class="md md-add"></i>Add New Agent</a>
+            </div>*@
+            </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+
+                        <th>Codigo</th>
+                        <th>Descripci&oacute;n</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Ejemplos)
+                    {
+
+                    <tr>
+                        <td>@item.Codigo</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Estado</td>
+                        <td class="actions">
+                            @Html.Hidden("EjemploID", item.EjemploID)
+                           
+                            <a href="#" onclick="createModal('@Url.Action("EditarEjemploPartial", "Ejemplos", new {id=item.EjemploID })')"
+                               class="table-action-btn h3"><i class="fa fa-pencil text-primary"></i></a>
+                            @{
+                                if (!item.Estado)
+                                {
+                                    <a href="@Url.Action("InactivarEjemploGuia", "Ejemplos", new { id = item.EjemploID })" class="table-action-btn h3"><i class="fa fa-toggle-off text-danger"></i></a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("InactivarEjemploGuia", "Ejemplos", new { id = item.EjemploID })" class="table-action-btn h3"><i class="fa fa-toggle-on text-success"></i></a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
+
+
+@section sideMenu
+{
+
+    <ul class="nav navbar-nav navbar-left">
+        <li>
+            <button class="button-menu-mobile open-left waves-effect waves-light">
+                <i class="mdi mdi-menu"></i>
+            </button>
+        </li>
+        <li class="hidden-xs">
+
+
+            @*"EditarGuia", "Guia", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "form-horizontal", @role = "form" })*@
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @role = "search", @class = "app-search" }))
+            {
+                @Html.TextBox("Busqueda", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "Guia a buscar..." })
+                @Html.ActionLink(".", "", null, new { @class = "fa fa-search" });
+
+
+            }
+
+        </li>
+
+        @*<li class="hidden-xs">@Html.ActionLink("Crear SubCriterios", "CrearSubCriterio", null, new { @class = "menu-item waves-effect waves-light" })</li>*@
+        <li class="hidden-xs">@Html.ActionLink("Inicio", "Index", "Home", null, new { @class = "menu-item waves-effect waves-light" })</li>
+
+    </ul>
+}
+
+@section modals
+{
+
+    <div class="modal fade" id="myModal" role="dialog" tabindex="-1" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="modelContent">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div id="custom-modal" class="modal-demo">
+        <button type="button" class="close" onclick="Custombox.close();">
+            <span>&times;</span><span class="sr-only">Close</span>
+        </button>
+        <h4 class="custom-modal-title">Add New Agent</h4>
+        <div class="custom-modal-text text-left">
+
+
+            <form>
+
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter name">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Contact number</label>
+                    <input type="text" class="form-control" id="position" placeholder="Enter number">
+                </div>
+
+
+                <button type="submit" class="btn btn-default waves-effect waves-light">Save</button>
+                <button type="button" class="btn btn-danger waves-effect waves-light m-l-10">Cancel</button>
+            </form>
+
+
+
+
+        </div>
+    </div>
+
+}
+@section scripts
+{
+
+    <!-- Modal-Effect -->
+    <script src="~/plugins/custombox/js/custombox.min.js"></script>
+    <script src="~/plugins/custombox/js/legacy.min.js"></script>
+
+    <script>
+        function createModal(url) {
+            $('#modelContent').load(url);
+            $('#myModal').modal('show');
+        }
+    </script>
+}

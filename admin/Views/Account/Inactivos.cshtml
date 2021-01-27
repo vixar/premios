@@ -1,0 +1,365 @@
+﻿@model IEnumerable<ProyectoCalidad.Domain.Entities.ApplicationUser>
+
+@{
+    ViewBag.Title = "Index";
+    var organismos = ViewBag.organismos;
+    var mensaje = ViewBag.mensaje;
+}
+@section Style{
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <!-- DataTables -->
+    <link href="~/plugins/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedHeader.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/scroller.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.colVis.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/datatables/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="~/plugins/tooltipster/tooltipster.bundle.min.css">
+
+    <!-- Plugins css-->
+    <link href="~/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/plugins/multiselect/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="~/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+}
+
+<h2>Registro de Usuarios Inactivos</h2>
+
+<hr />
+<div class="panel panel-border panel-primary">
+    <div class="panel-heading">
+    </div>
+    <div class="card-box table-responsive panel panel-border panel-primary">
+
+        <div class="">
+
+            <h4>Exportar tabla:</h4>
+            <table id="datatable-buttons" class="table table-striped  table-colored table-info">
+                <thead>
+                    <tr>
+                        <th>
+                            Fecha Creación / Modificaci&oacute;n
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Apellido)
+                        </th>
+                        <th>
+                            Instituci&oacute;n
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumeroDocumentoIdentidad)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Role)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Estado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @{
+                                    if (item.FechaModificacion != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.FechaModificacion)
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.FechaCreacion)
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nombre)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Apellido)
+                            </td>
+                            <td>
+
+                                @{
+                                    IList<ProyectoCalidad.Domain.Entities.Organismo> ListaOrganismos = ViewBag.organismos;
+                                    var org = ListaOrganismos.Where(o => o.OrganismoID == item.InstitucionPublicaID).FirstOrDefault();
+
+                                    if (org != null)
+                                    {
+                                        @org.Nombre;
+                                    }
+                                    else
+                                    {
+                                        @Html.Label("No Asignado");
+                                    }
+                                }
+
+
+                                @*@item.InstitucionPublicaID
+                                    @for (int i = 0; i < ViewBag.organismos.Count; i++)
+                                    {
+                                        var o = ViewBag.organismos[i];
+                                        if (o.OrganismoID == item.InstitucionPublicaID)
+                                        {
+
+                                            @o.Nombre
+
+                                        }
+                                        break;
+
+                                    }*@
+                            </td>
+                            @*@foreach (var o in organismos)
+                                {
+                                    if (o.OrganismoID == item.InstitucionPublicaID)
+                                    {
+                                        <td>
+                                            @o.Nombre
+                                        </td>
+                                    }
+
+
+                                }*@
+
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumeroDocumentoIdentidad)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            @if (item.IsActive)
+                            {
+                                <td>
+                                    Activo
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    Inactivo
+
+                                </td>
+                            }
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-custom dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Acciones <span class="caret"></span></button>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="@Url.Action("Edit", new {id = item.Id})"><i class="mdi mdi-pencil"></i> Editar</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("ResetPassword", "Account", new {id = item.Id})"> <i class="mdi mdi-lock-open"></i> Reiniciar <br /> Contraseña</a>
+
+                                        </li>
+
+                                        <li>
+                                            @*<a onclick="ActivarUsuario('@item.Id')" type="button"><i class="mdi mdi-power"></i> Activar </a>*@
+                                            <a onclick="ActivarUsuario()" href="@Url.Action("ActivarUsuario", "Account", new {id = item.Id})"><i class="mdi mdi-power"></i> Activar </a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+
+                                @*<a href="#" target="new_blank" data-toggle="tooltip" data-placement="top" title="" data-original-title="280 square feet"><i class="mdi mdi-view-grid"></i><span>280</span></a>*@
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+<div id="coverScreen" class="LockOn">
+</div>
+
+@section Scripts {
+    <script src="~/plugins/sweetalert2.all.min.js"></script>
+
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.bootstrap.js"></script>
+    <script src="~/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/buttons.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/jszip.min.js"></script>
+    <script src="~/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.keyTable.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/plugins/datatables/responsive.bootstrap.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.scroller.min.js"></script>
+    <script src="~/plugins/datatables/dataTables.colVis.js"></script>
+    <script src="~/plugins/datatables/dataTables.fixedColumns.min.js"></script>
+
+    <script src="~/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+    <script src="~/plugins/multiselect/js/jquery.multi-select.js"></script>
+    <script src="~/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+    <script src="~/plugins/select2/js/select2.min.js"></script>
+    <script src="~/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script src="~/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js"></script>
+    <script src="~/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <script src="~/plugins/autocomplete/jquery.mockjax.js"></script>
+    <script src="~/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+    <script src="~/plugins/autocomplete/countries.js"></script>
+
+    <!-- init -->
+    <script src="~/Scripts/pages/jquery.datatables.init.js"></script>
+    <script>
+
+
+        function desactivarUsuario(url) {
+            swal.fire({
+                type: 'success',
+                title: 'URL',
+                html: url
+            });
+            //$.ajax({
+            //    type: 'GET',
+            //    URL: url,
+            //    success: function(data) {
+            //        if (data.success) {
+
+            //        } else {
+
+            //        }
+            //    }
+            //});
+        }
+
+        function ActivarUsuario(id) {
+
+            $("#coverScreen").show();
+
+            //Swal.fire({
+            //    title: 'Está seguro?',
+            //    text: "Va activar un usuario",
+            //    type: 'warning',
+            //    showCancelButton: true,
+            //    confirmButtonColor: '#3085d6',
+            //    cancelButtonColor: '#d33',
+            //    confirmButtonText: 'Activar'
+            //}).then((result) => {
+            //    $("#coverScreen").show();
+            //    if (result.value) {
+
+            //        $.ajax({
+            //            type: "GET",
+
+            //            url: "/Account/ActivarUsuario?id=" + id,
+
+            //            success: function(data) {
+
+            //                console.log("data", data);
+
+            //                if (data === "True") {
+            //                    $("#coverScreen").hide();
+            //                    Swal.fire({
+            //                        title: 'Activado!',
+            //                        text: 'El usuario está activo ahora.',
+            //                        type: 'success',
+            //                    });
+
+            //                } else {
+            //                    $("#coverScreen").hide();
+            //                    Swal.fire(
+            //                        'Hubo un error!',
+            //                        'Ocurrió un problema en la operación',
+            //                        'error'
+            //                    );
+            //                }
+            //            }
+            //        });
+
+            //    }
+            //});
+
+
+        }
+
+        $(document).ready(function() {
+            $("#coverScreen").hide();
+            //MENSAJES
+
+            if ('@mensaje.tipo'.length > 0) {
+
+                Swal.fire({
+                    type: '@mensaje.tipo',
+                    title: '@mensaje.mensaje',
+                    html: '@mensaje.texto'
+                });
+
+            }
+
+
+            //-->END
+
+
+            $('#datatable').dataTable({
+            });
+
+            $('#datatable-keytable').DataTable({ keys: true });
+            $('#datatable-responsive').DataTable();
+            $('#datatable-colvid').DataTable({
+                "dom": 'C<"clear">lfrtip',
+                "colVis": {
+                    "buttonText": "Change columns"
+                }
+            });
+            $('#datatable-scroller').DataTable({
+                ajax: "~/plugins/datatables/json/scroller-demo.json",
+                deferRender: true,
+                scrollY: 380,
+                scrollCollapse: true,
+                scroller: true
+            });
+            var table = $('#datatable-fixed-header').DataTable({ fixedHeader: true });
+            var table = $('#datatable-fixed-col').DataTable({
+                scrollY: "300px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                fixedColumns: {
+                    leftColumns: 1,
+                    rightColumns: 1
+                }
+            });
+        });
+        TableManageButtons.init();
+
+        function createModal(url) {
+            $('#modelContent').load(url);
+            $('#myModal').modal('show');
+        }
+    </script>
+
+}
